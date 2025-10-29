@@ -30,12 +30,11 @@
 
 #include "os_linuxbsd.h"
 
-#include "main/main.h"
+#include "core/templates/hash_set.h"
+#include "core/templates/a_hash_set.h"
 
-#include <unistd.h>
-#include <climits>
-#include <clocale>
-#include <cstdlib>
+#include <iostream>
+#include <ostream>
 
 #if defined(SANITIZERS_ENABLED)
 #include <sys/resource.h>
@@ -59,41 +58,79 @@ int main(int argc, char *argv[]) {
 	struct rlimit stack_lim = { 0x1E00000, 0x1E00000 };
 	setrlimit(RLIMIT_STACK, &stack_lim);
 #endif
+	volatile size_t volatile_size_t = 0;
 
-	OS_LinuxBSD os;
+	for (const int size : { 8, 64, 1024, 4096, 20000 }) {
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < 20000000 / size; run++) {
+				auto t0 = std::chrono::high_resolution_clock::now();
+				AHashSet<Variant> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				auto t2 = std::chrono::high_resolution_clock::now();
 
-	setlocale(LC_CTYPE, "");
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+			}
 
-	// We must override main when testing is enabled
-	TEST_MAIN_OVERRIDE
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
 
-	char *cwd = (char *)malloc(PATH_MAX);
-	ERR_FAIL_NULL_V(cwd, ERR_OUT_OF_MEMORY);
-	char *ret = getcwd(cwd, PATH_MAX);
-
-	Error err = Main::setup(argv[0], argc - 1, &argv[1]);
-
-	if (err != OK) {
-		free(cwd);
-		if (err == ERR_HELP) { // Returned by --help and --version, so success.
-			return EXIT_SUCCESS;
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
 		}
-		return EXIT_FAILURE;
-	}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < 20000000 / size; run++) {
+				AHashSet<Variant> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.erase(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+			}
 
-	if (Main::start() == EXIT_SUCCESS) {
-		os.run();
-	} else {
-		os.set_exit_code(EXIT_FAILURE);
-	}
-	Main::cleanup();
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < 20000000 / size; run++) {
+				AHashSet<Variant> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					total += set.has(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 
-	if (ret) { // Previous getcwd was successful
-		if (chdir(cwd) != 0) {
-			ERR_PRINT("Couldn't return to previous working directory.");
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
 		}
 	}
-	free(cwd);
-
-	return os.get_exit_code();
 }
