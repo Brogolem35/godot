@@ -105,9 +105,9 @@ protected:
 		return (p_meta_idx - original_idx + p_capacity + 1) & p_capacity;
 	}
 
-	virtual const TKey &_get_key(uint32_t idx) const = 0;
-	virtual void _resize_elements(uint32_t p_new_capacity) = 0;
-	virtual bool _is_elements_valid() const = 0;
+	_FORCE_INLINE_ virtual const TKey &_get_key(uint32_t idx) const = 0;
+	_FORCE_INLINE_ virtual void _resize_elements(uint32_t p_new_capacity) = 0;
+	_FORCE_INLINE_ virtual bool _is_elements_valid() const = 0;
 
 	_FORCE_INLINE_ uint32_t _hash(const TKey &p_key) const {
 		uint32_t hash = Hasher::hash(p_key);
