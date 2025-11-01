@@ -142,6 +142,7 @@ private:
 		}
 
 		if (metadata.hash == EMPTY_HASH) {
+			r_meta_idx = meta_idx;
 			return false;
 		}
 
@@ -157,10 +158,12 @@ private:
 			}
 
 			if (metadata.hash == EMPTY_HASH) {
+				r_meta_idx = meta_idx;
 				return false;
 			}
 
 			if (distance > _get_probe_length(meta_idx, metadata.hash, _capacity_mask)) {
+				r_meta_idx = meta_idx;
 				return false;
 			}
 
@@ -169,19 +172,10 @@ private:
 		}
 	}
 
-	uint32_t _insert_metadata(uint32_t p_hash, uint32_t p_element_idx) {
-		uint32_t meta_idx = p_hash & _capacity_mask;
-
-		if (_metadata[meta_idx].hash == EMPTY_HASH) {
-			_metadata[meta_idx] = Metadata{ p_hash, p_element_idx };
-			return meta_idx;
-		}
-
-		uint32_t distance = 1;
-		meta_idx = (meta_idx + 1) & _capacity_mask;
-		Metadata metadata;
-		metadata.hash = p_hash;
-		metadata.element_idx = p_element_idx;
+	uint32_t _insert_metadata(uint32_t p_hash, uint32_t p_element_idx, uint32_t p_dist_hint = 0) {
+		uint32_t distance = p_dist_hint;
+		uint32_t meta_idx = (p_hash + distance) & _capacity_mask;
+		Metadata metadata = { p_hash, p_element_idx };
 
 		while (true) {
 			if (_metadata[meta_idx].hash == EMPTY_HASH) {
@@ -230,22 +224,24 @@ private:
 		Memory::free_static(old_map_data);
 	}
 
-	int32_t _insert_element(const TKey &p_key, const TValue &p_value, uint32_t p_hash) {
+	int32_t _insert_element(const TKey &p_key, const TValue &p_value, uint32_t p_hash, uint32_t p_dist_hint = 0) {
 		if (unlikely(_elements == nullptr)) {
 			// Allocate on demand to save memory.
 
 			uint32_t real_capacity = _capacity_mask + 1;
 			_metadata = reinterpret_cast<Metadata *>(Memory::alloc_static_zeroed(sizeof(Metadata) * real_capacity));
 			_elements = reinterpret_cast<MapKeyValue *>(Memory::alloc_static(sizeof(MapKeyValue) * (_get_resize_count(_capacity_mask) + 1)));
+			p_dist_hint = 0;
 		}
 
 		if (unlikely(_size > _get_resize_count(_capacity_mask))) {
 			_resize_and_rehash(_capacity_mask * 2);
+			p_dist_hint = 0;
 		}
 
 		memnew_placement(&_elements[_size], MapKeyValue(p_key, p_value));
 
-		_insert_metadata(p_hash, _size);
+		_insert_metadata(p_hash, _size, p_dist_hint);
 		_size++;
 		return _size - 1;
 	}
@@ -384,9 +380,13 @@ public:
 		if (p_old_key == p_new_key) {
 			return true;
 		}
+
+		uint32_t dummy_idx1 = 0;
+		uint32_t dummy_idx2 = 0;
+		ERR_FAIL_COND_V(_lookup_idx(p_new_key, dummy_idx1, dummy_idx2), false);
+
 		uint32_t meta_idx = 0;
 		uint32_t element_idx = 0;
-		ERR_FAIL_COND_V(_lookup_idx(p_new_key, element_idx, meta_idx), false);
 		ERR_FAIL_COND_V(!_lookup_idx(p_old_key, element_idx, meta_idx), false);
 		MapKeyValue &element = _elements[element_idx];
 		const_cast<TKey &>(element.key) = p_new_key;
@@ -600,7 +600,7 @@ public:
 		if (exists) {
 			return _elements[element_idx].value;
 		} else {
-			element_idx = _insert_element(p_key, TValue(), hash);
+			element_idx = _insert_element(p_key, TValue(), hash, _get_probe_length(meta_idx, hash, _capacity_mask));
 			return _elements[element_idx].value;
 		}
 	}
@@ -614,7 +614,7 @@ public:
 		bool exists = _lookup_idx_with_hash(p_key, element_idx, meta_idx, hash);
 
 		if (!exists) {
-			element_idx = _insert_element(p_key, p_value, hash);
+			element_idx = _insert_element(p_key, p_value, hash, _get_probe_length(meta_idx, hash, _capacity_mask));
 		} else {
 			_elements[element_idx].value = p_value;
 		}
