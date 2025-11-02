@@ -142,7 +142,7 @@ private:
 		}
 
 		if (metadata.hash == EMPTY_HASH) {
-			r_meta_idx = meta_idx;
+			r_meta_idx = 0;
 			return false;
 		}
 
@@ -158,12 +158,12 @@ private:
 			}
 
 			if (metadata.hash == EMPTY_HASH) {
-				r_meta_idx = meta_idx;
+				r_meta_idx = distance;
 				return false;
 			}
 
 			if (distance > _get_probe_length(meta_idx, metadata.hash, _capacity_mask)) {
-				r_meta_idx = meta_idx;
+				r_meta_idx = distance;
 				return false;
 			}
 
@@ -232,9 +232,7 @@ private:
 			_metadata = reinterpret_cast<Metadata *>(Memory::alloc_static_zeroed(sizeof(Metadata) * real_capacity));
 			_elements = reinterpret_cast<MapKeyValue *>(Memory::alloc_static(sizeof(MapKeyValue) * (_get_resize_count(_capacity_mask) + 1)));
 			p_dist_hint = 0;
-		}
-
-		if (unlikely(_size > _get_resize_count(_capacity_mask))) {
+		} else if (unlikely(_size > _get_resize_count(_capacity_mask))) {
 			_resize_and_rehash(_capacity_mask * 2);
 			p_dist_hint = 0;
 		}
@@ -600,7 +598,7 @@ public:
 		if (exists) {
 			return _elements[element_idx].value;
 		} else {
-			element_idx = _insert_element(p_key, TValue(), hash, _get_probe_length(meta_idx, hash, _capacity_mask));
+			element_idx = _insert_element(p_key, TValue(), hash, meta_idx);
 			return _elements[element_idx].value;
 		}
 	}
@@ -614,7 +612,7 @@ public:
 		bool exists = _lookup_idx_with_hash(p_key, element_idx, meta_idx, hash);
 
 		if (!exists) {
-			element_idx = _insert_element(p_key, p_value, hash, _get_probe_length(meta_idx, hash, _capacity_mask));
+			element_idx = _insert_element(p_key, p_value, hash, meta_idx);
 		} else {
 			_elements[element_idx].value = p_value;
 		}
