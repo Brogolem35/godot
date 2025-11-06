@@ -28,10 +28,17 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
+#ifdef _WIN32
+#include <intrin.h>
+#else
+#include <x86intrin.h>
+#endif
+
+
 #include "os_linuxbsd.h"
 
-#include "core/templates/hash_set.h"
 #include "core/templates/a_hash_set.h"
+#include "core/templates/hash_set.h"
 
 #include <iostream>
 #include <ostream>
@@ -52,11 +59,12 @@ extern "C" const char *pck_section_dummy_call() {
 }
 #endif
 
-volatile int32_t big_arr[1024*1024*4] = {0};
-volatile int32_t big_arr2[1024*1024*4] = {1};
+unsigned int _IA32_TSC_AUX;
+volatile int32_t big_arr[1024 * 1024 * 8] = { 0 };
+volatile int32_t big_arr2[1024 * 1024 * 8] = { 1 };
 [[gnu::noipa]]
 __attribute__((noinline)) void cache_flush() {
-	memcpy((void*)big_arr, (void*)big_arr2, sizeof(big_arr));
+	memcpy((void *)big_arr, (void *)big_arr2, sizeof(big_arr));
 }
 
 int main(int argc, char *argv[]) {
@@ -75,76 +83,76 @@ int main(int argc, char *argv[]) {
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
 			for (int run = 0; run < run_len / size; run++) {
-				auto t0 = std::chrono::high_resolution_clock::now();
 				HashSet<Variant> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
 				}
-				auto t2 = std::chrono::high_resolution_clock::now();
-
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
-				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
 			}
 
 			std::cout << "insert:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 
 			std::cout << "insert existing:" << size << std::endl;
-			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+			std::cout << time_ns1 << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				HashSet<Variant> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 			}
 
 			std::cout << "erase:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				HashSet<Variant> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
 				size_t total = 0;
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 
 				// Prevent compiling this out.
 				volatile_size_t = total;
 			}
 
 			std::cout << "get:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 
 		// HashSet<int32_t>
@@ -153,76 +161,76 @@ int main(int argc, char *argv[]) {
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
 			for (int run = 0; run < run_len / size; run++) {
-				auto t0 = std::chrono::high_resolution_clock::now();
 				HashSet<int32_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
 				}
-				auto t2 = std::chrono::high_resolution_clock::now();
-
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
-				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
 			}
 
 			std::cout << "insert:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 
 			std::cout << "insert existing:" << size << std::endl;
-			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+			std::cout << time_ns1 << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				HashSet<int32_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 			}
 
 			std::cout << "erase:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				HashSet<int32_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
 				size_t total = 0;
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 
 				// Prevent compiling this out.
 				volatile_size_t = total;
 			}
 
 			std::cout << "get:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 
 		// HashSet<int16_t>
@@ -231,76 +239,76 @@ int main(int argc, char *argv[]) {
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
 			for (int run = 0; run < run_len / size; run++) {
-				auto t0 = std::chrono::high_resolution_clock::now();
 				HashSet<int16_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
 				}
-				auto t2 = std::chrono::high_resolution_clock::now();
-
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
-				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
 			}
 
 			std::cout << "insert:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 
 			std::cout << "insert existing:" << size << std::endl;
-			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+			std::cout << time_ns1 << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				HashSet<int16_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 			}
 
 			std::cout << "erase:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				HashSet<int16_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
 				size_t total = 0;
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 
 				// Prevent compiling this out.
 				volatile_size_t = total;
 			}
 
 			std::cout << "get:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 
 		// HashSet<int64_t>
@@ -309,76 +317,76 @@ int main(int argc, char *argv[]) {
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
 			for (int run = 0; run < run_len / size; run++) {
-				auto t0 = std::chrono::high_resolution_clock::now();
 				HashSet<int64_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
 				}
-				auto t2 = std::chrono::high_resolution_clock::now();
-
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
-				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
 			}
 
 			std::cout << "insert:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 
 			std::cout << "insert existing:" << size << std::endl;
-			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+			std::cout << time_ns1 << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				HashSet<int64_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 			}
 
 			std::cout << "erase:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				HashSet<int64_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
 				size_t total = 0;
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 
 				// Prevent compiling this out.
 				volatile_size_t = total;
 			}
 
 			std::cout << "get:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 	}
 
@@ -389,76 +397,76 @@ int main(int argc, char *argv[]) {
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
 			for (int run = 0; run < run_len / size; run++) {
-				auto t0 = std::chrono::high_resolution_clock::now();
 				AHashSet<Variant> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
 				}
-				auto t2 = std::chrono::high_resolution_clock::now();
-
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
-				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
 			}
 
 			std::cout << "insert:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 
 			std::cout << "insert existing:" << size << std::endl;
-			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+			std::cout << time_ns1 << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				AHashSet<Variant> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 			}
 
 			std::cout << "erase:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				AHashSet<Variant> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
 				size_t total = 0;
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 
 				// Prevent compiling this out.
 				volatile_size_t = total;
 			}
 
 			std::cout << "get:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 
 		// AHashSet<int32_t>
@@ -467,76 +475,76 @@ int main(int argc, char *argv[]) {
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
 			for (int run = 0; run < run_len / size; run++) {
-				auto t0 = std::chrono::high_resolution_clock::now();
 				AHashSet<int32_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
 				}
-				auto t2 = std::chrono::high_resolution_clock::now();
-
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
-				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
 			}
 
 			std::cout << "insert:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 
 			std::cout << "insert existing:" << size << std::endl;
-			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+			std::cout << time_ns1 << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				AHashSet<int32_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 			}
 
 			std::cout << "erase:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				AHashSet<int32_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
 				size_t total = 0;
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 
 				// Prevent compiling this out.
 				volatile_size_t = total;
 			}
 
 			std::cout << "get:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 
 		// AHashSet<int16_t>
@@ -545,76 +553,76 @@ int main(int argc, char *argv[]) {
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
 			for (int run = 0; run < run_len / size; run++) {
-				auto t0 = std::chrono::high_resolution_clock::now();
 				AHashSet<int16_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
 				}
-				auto t2 = std::chrono::high_resolution_clock::now();
-
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
-				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
 			}
 
 			std::cout << "insert:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 
 			std::cout << "insert existing:" << size << std::endl;
-			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+			std::cout << time_ns1 << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				AHashSet<int16_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 			}
 
 			std::cout << "erase:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				AHashSet<int16_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
 				size_t total = 0;
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 
 				// Prevent compiling this out.
 				volatile_size_t = total;
 			}
 
 			std::cout << "get:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 
 		// AHashSet<int64_t>
@@ -623,76 +631,76 @@ int main(int argc, char *argv[]) {
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
 			for (int run = 0; run < run_len / size; run++) {
-				auto t0 = std::chrono::high_resolution_clock::now();
 				AHashSet<int64_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
 					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
 				}
-				auto t2 = std::chrono::high_resolution_clock::now();
-
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
-				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
 			}
 
 			std::cout << "insert:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 
 			std::cout << "insert existing:" << size << std::endl;
-			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+			std::cout << time_ns1 << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				AHashSet<int64_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 			}
 
 			std::cout << "erase:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 		{
 			size_t time_ns = 0;
 			for (int run = 0; run < run_len / size; run++) {
 				AHashSet<int64_t> set;
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					set.insert(idx);
 				}
 				size_t total = 0;
-				auto t0 = std::chrono::high_resolution_clock::now();
-				for (int idx = 0; idx < size; idx ++) {
+				for (int idx = 0; idx < size; idx++) {
 					// Test
 					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
 					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
 				}
-				auto t1 = std::chrono::high_resolution_clock::now();
-				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
 
 				// Prevent compiling this out.
 				volatile_size_t = total;
 			}
 
 			std::cout << "get:" << size << std::endl;
-			std::cout << time_ns / 1000 / 1000 << "ms\n";
+			std::cout << time_ns << "\n";
 		}
 	}
 }
