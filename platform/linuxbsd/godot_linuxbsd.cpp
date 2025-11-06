@@ -52,28 +52,40 @@ extern "C" const char *pck_section_dummy_call() {
 }
 #endif
 
+volatile int32_t big_arr[1024*1024*4] = {0};
+volatile int32_t big_arr2[1024*1024*4] = {1};
+[[gnu::noipa]]
+__attribute__((noinline)) void cache_flush() {
+	memcpy((void*)big_arr, (void*)big_arr2, sizeof(big_arr));
+}
+
 int main(int argc, char *argv[]) {
 #if defined(SANITIZERS_ENABLED)
 	// Note: Set stack size to be at least 30 MB (vs 8 MB default) to avoid overflow, address sanitizer can increase stack usage up to 3 times.
 	struct rlimit stack_lim = { 0x1E00000, 0x1E00000 };
 	setrlimit(RLIMIT_STACK, &stack_lim);
 #endif
+	constexpr int run_len = 20000;
 	volatile size_t volatile_size_t = 0;
 
-	for (const int size : { 8, 64, 1024, 4096, 20000 }) {
+	for (const int size : { 1, 2, 8, 64, 1024, 4096, 20000 }) {
+		// HashSet<Variant>
+		std::cout << "HashSet<Variant>" << size << std::endl;
 		{
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
-			for (int run = 0; run < 20000000 / size; run++) {
+			for (int run = 0; run < run_len / size; run++) {
 				auto t0 = std::chrono::high_resolution_clock::now();
-				AHashSet<Variant> set;
+				HashSet<Variant> set;
 				for (int idx = 0; idx < size; idx ++) {
 					// Test
+					cache_flush();
 					set.insert(idx);
 				}
 				auto t1 = std::chrono::high_resolution_clock::now();
 				for (int idx = 0; idx < size; idx ++) {
 					// Test
+					cache_flush();
 					set.insert(idx);
 				}
 				auto t2 = std::chrono::high_resolution_clock::now();
@@ -90,8 +102,8 @@ int main(int argc, char *argv[]) {
 		}
 		{
 			size_t time_ns = 0;
-			for (int run = 0; run < 20000000 / size; run++) {
-				AHashSet<Variant> set;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<Variant> set;
 				for (int idx = 0; idx < size; idx ++) {
 					// Test
 					set.insert(idx);
@@ -99,6 +111,7 @@ int main(int argc, char *argv[]) {
 				auto t0 = std::chrono::high_resolution_clock::now();
 				for (int idx = 0; idx < size; idx ++) {
 					// Test
+					cache_flush();
 					set.erase(idx);
 				}
 				auto t1 = std::chrono::high_resolution_clock::now();
@@ -110,7 +123,321 @@ int main(int argc, char *argv[]) {
 		}
 		{
 			size_t time_ns = 0;
-			for (int run = 0; run < 20000000 / size; run++) {
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<Variant> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					total += set.has(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+
+		// HashSet<int32_t>
+		std::cout << "HashSet<int32_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				auto t0 = std::chrono::high_resolution_clock::now();
+				HashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t2 = std::chrono::high_resolution_clock::now();
+
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.erase(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					total += set.has(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+
+		// HashSet<int16_t>
+		std::cout << "HashSet<int16_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				auto t0 = std::chrono::high_resolution_clock::now();
+				HashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t2 = std::chrono::high_resolution_clock::now();
+
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.erase(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					total += set.has(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+
+		// HashSet<int64_t>
+		std::cout << "HashSet<int64_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				auto t0 = std::chrono::high_resolution_clock::now();
+				HashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t2 = std::chrono::high_resolution_clock::now();
+
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.erase(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					total += set.has(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+	}
+
+	for (const int size : { 1, 2, 8, 64, 1024, 4096, 20000 }) {
+		// AHashSet<Variant>
+		std::cout << "AHashSet<Variant>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				auto t0 = std::chrono::high_resolution_clock::now();
+				AHashSet<Variant> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t2 = std::chrono::high_resolution_clock::now();
+
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				AHashSet<Variant> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.erase(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
 				AHashSet<Variant> set;
 				for (int idx = 0; idx < size; idx ++) {
 					// Test
@@ -120,6 +447,241 @@ int main(int argc, char *argv[]) {
 				auto t0 = std::chrono::high_resolution_clock::now();
 				for (int idx = 0; idx < size; idx ++) {
 					// Test
+					cache_flush();
+					total += set.has(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+
+		// AHashSet<int32_t>
+		std::cout << "AHashSet<int32_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				auto t0 = std::chrono::high_resolution_clock::now();
+				AHashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t2 = std::chrono::high_resolution_clock::now();
+
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				AHashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.erase(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				AHashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					total += set.has(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+
+		// AHashSet<int16_t>
+		std::cout << "AHashSet<int16_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				auto t0 = std::chrono::high_resolution_clock::now();
+				AHashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t2 = std::chrono::high_resolution_clock::now();
+
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				AHashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.erase(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				AHashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					total += set.has(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+
+		// AHashSet<int64_t>
+		std::cout << "AHashSet<int64_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				auto t0 = std::chrono::high_resolution_clock::now();
+				AHashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.insert(idx);
+				}
+				auto t2 = std::chrono::high_resolution_clock::now();
+
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+				time_ns1 += std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				AHashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
+					set.erase(idx);
+				}
+				auto t1 = std::chrono::high_resolution_clock::now();
+				time_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count();
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns / 1000 / 1000 << "ms\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				AHashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				auto t0 = std::chrono::high_resolution_clock::now();
+				for (int idx = 0; idx < size; idx ++) {
+					// Test
+					cache_flush();
 					total += set.has(idx);
 				}
 				auto t1 = std::chrono::high_resolution_clock::now();
