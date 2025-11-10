@@ -236,7 +236,7 @@ void Particles2DEditorPlugin::_selection_changed() {
 	}
 
 	// Turn gizmos on for nodes that are newly selected.
-	HashSet<const Node *> nodes_in_current_selection;
+	AHashSet<const Node *> nodes_in_current_selection;
 	for (Node *node : current_selection) {
 		nodes_in_current_selection.insert(node);
 		if (!selected_particles.has(node)) {

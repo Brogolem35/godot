@@ -274,7 +274,7 @@ EditorDebuggerRemoteObjects *EditorDebuggerInspector::set_objects(const Array &p
 
 	remote_objects->prop_list.clear();
 	int new_props_added = 0;
-	HashSet<String> changed;
+	AHashSet<String> changed;
 	for (KeyValue<String, UsageData> &KV : usage) {
 		const PropertyInfo &pinfo = KV.value.prop.first;
 		Variant var = KV.value.values[remote_objects->remote_object_ids[0]];

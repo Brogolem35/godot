@@ -78,8 +78,8 @@ class AnimationBezierTrackEdit : public Control {
 	};
 
 	RBMap<int, RBMap<int, Rect2>> subtrack_icons;
-	HashSet<int> locked_tracks;
-	HashSet<int> hidden_tracks;
+	AHashSet<int> locked_tracks;
+	AHashSet<int> hidden_tracks;
 	int solo_track = -1;
 	bool is_filtered = false;
 

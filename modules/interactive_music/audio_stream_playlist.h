@@ -51,7 +51,7 @@ private:
 
 	int stream_count = 0;
 	Ref<AudioStream> audio_streams[MAX_STREAMS];
-	HashSet<AudioStreamPlaybackPlaylist *> playbacks;
+	AHashSet<AudioStreamPlaybackPlaylist *> playbacks;
 
 public:
 	virtual double get_bpm() const override;

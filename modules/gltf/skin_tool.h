@@ -45,7 +45,7 @@ using SkinSkeletonIndex = int;
 class SkinTool {
 public:
 	static String _sanitize_bone_name(const String &p_name);
-	static String _gen_unique_bone_name(HashSet<String> &r_unique_names, const String &p_name);
+	static String _gen_unique_bone_name(AHashSet<String> &r_unique_names, const String &p_name);
 	static SkinNodeIndex _find_highest_node(Vector<Ref<GLTFNode>> &r_nodes, const Vector<SkinNodeIndex> &p_subset);
 	static bool _capture_nodes_in_skin(const Vector<Ref<GLTFNode>> &p_nodes, Ref<GLTFSkin> p_skin, const SkinNodeIndex p_node_index);
 	static void _capture_nodes_for_multirooted_skin(Vector<Ref<GLTFNode>> &r_nodes, Ref<GLTFSkin> p_skin);
@@ -53,7 +53,7 @@ public:
 			Vector<Ref<GLTFNode>> &r_nodes,
 			const SkinNodeIndex p_node_index,
 			RBSet<SkinNodeIndex> &r_all_skin_nodes,
-			HashSet<SkinNodeIndex> &r_child_visited_set);
+			AHashSet<SkinNodeIndex> &r_child_visited_set);
 	static Error _reparent_non_joint_skeleton_subtrees(
 			Vector<Ref<GLTFNode>> &r_nodes,
 			Ref<GLTFSkeleton> p_skeleton,
@@ -66,7 +66,7 @@ public:
 			Vector<Ref<GLTFSkin>> &r_skins,
 			Vector<Ref<GLTFSkeleton>> &r_skeletons,
 			Vector<Ref<GLTFNode>> &r_nodes);
-	static String _gen_unique_name(HashSet<String> &unique_names, const String &p_name);
+	static String _gen_unique_name(AHashSet<String> &unique_names, const String &p_name);
 	static bool _skins_are_same(const Ref<Skin> p_skin_a, const Ref<Skin> p_skin_b);
 	static void _remove_duplicate_skins(Vector<Ref<GLTFSkin>> &r_skins);
 	static void _check_if_parent_needs_to_become_joint(
@@ -92,12 +92,12 @@ public:
 			const Vector<GLTFNodeIndex> &p_single_skeleton_root,
 			bool p_turn_non_joint_descendants_into_bones);
 	static Error _create_skeletons(
-			HashSet<String> &r_unique_names,
+			AHashSet<String> &r_unique_names,
 			Vector<Ref<GLTFSkin>> &r_skins,
 			Vector<Ref<GLTFNode>> &r_nodes,
 			HashMap<ObjectID, GLTFSkeletonIndex> &r_skeleton3d_to_fbx_skeleton,
 			Vector<Ref<GLTFSkeleton>> &r_skeletons,
 			HashMap<GLTFNodeIndex, Node *> &r_scene_nodes,
 			int p_naming_version);
-	static Error _create_skins(Vector<Ref<GLTFSkin>> &skins, Vector<Ref<GLTFNode>> &nodes, bool use_named_skin_binds, HashSet<String> &unique_names);
+	static Error _create_skins(Vector<Ref<GLTFSkin>> &skins, Vector<Ref<GLTFNode>> &nodes, bool use_named_skin_binds, AHashSet<String> &unique_names);
 };

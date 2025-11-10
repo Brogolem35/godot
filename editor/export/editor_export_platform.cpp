@@ -59,7 +59,7 @@
 #include "scene/resources/texture.h"
 
 class EditorExportSaveProxy {
-	HashSet<String> saved_paths;
+	AHashSet<String> saved_paths;
 	EditorExportPlatform::EditorExportSaveFunction save_func;
 	bool tracking_saves = false;
 
@@ -459,7 +459,7 @@ Ref<EditorExportPreset> EditorExportPlatform::create_preset() {
 	return preset;
 }
 
-void EditorExportPlatform::_export_find_resources(EditorFileSystemDirectory *p_dir, HashSet<String> &p_paths) {
+void EditorExportPlatform::_export_find_resources(EditorFileSystemDirectory *p_dir, AHashSet<String> &p_paths) {
 	for (int i = 0; i < p_dir->get_subdir_count(); i++) {
 		_export_find_resources(p_dir->get_subdir(i), p_paths);
 	}
@@ -472,7 +472,7 @@ void EditorExportPlatform::_export_find_resources(EditorFileSystemDirectory *p_d
 	}
 }
 
-void EditorExportPlatform::_export_find_customized_resources(const Ref<EditorExportPreset> &p_preset, EditorFileSystemDirectory *p_dir, EditorExportPreset::FileExportMode p_mode, HashSet<String> &p_paths) {
+void EditorExportPlatform::_export_find_customized_resources(const Ref<EditorExportPreset> &p_preset, EditorFileSystemDirectory *p_dir, EditorExportPreset::FileExportMode p_mode, AHashSet<String> &p_paths) {
 	for (int i = 0; i < p_dir->get_subdir_count(); i++) {
 		EditorFileSystemDirectory *subdir = p_dir->get_subdir(i);
 		_export_find_customized_resources(p_preset, subdir, p_preset->get_file_export_mode(subdir->get_path(), p_mode), p_paths);
@@ -490,7 +490,7 @@ void EditorExportPlatform::_export_find_customized_resources(const Ref<EditorExp
 	}
 }
 
-void EditorExportPlatform::_export_find_dependencies(const String &p_path, HashSet<String> &p_paths) {
+void EditorExportPlatform::_export_find_dependencies(const String &p_path, AHashSet<String> &p_paths) {
 	if (p_paths.has(p_path)) {
 		return;
 	}
@@ -511,7 +511,7 @@ void EditorExportPlatform::_export_find_dependencies(const String &p_path, HashS
 	}
 }
 
-void EditorExportPlatform::_edit_files_with_filter(Ref<DirAccess> &da, const Vector<String> &p_filters, HashSet<String> &r_list, bool exclude) {
+void EditorExportPlatform::_edit_files_with_filter(Ref<DirAccess> &da, const Vector<String> &p_filters, AHashSet<String> &r_list, bool exclude) {
 	da->list_dir_begin();
 	String cur_dir = da->get_current_dir().replace_char('\\', '/');
 	if (!cur_dir.ends_with("/")) {
@@ -559,7 +559,7 @@ void EditorExportPlatform::_edit_files_with_filter(Ref<DirAccess> &da, const Vec
 	}
 }
 
-void EditorExportPlatform::_edit_filter_list(HashSet<String> &r_list, const String &p_filter, bool exclude) {
+void EditorExportPlatform::_edit_filter_list(AHashSet<String> &r_list, const String &p_filter, bool exclude) {
 	if (p_filter.is_empty()) {
 		return;
 	}
@@ -578,13 +578,13 @@ void EditorExportPlatform::_edit_filter_list(HashSet<String> &r_list, const Stri
 	_edit_files_with_filter(da, filters, r_list, exclude);
 }
 
-HashSet<String> EditorExportPlatform::get_features(const Ref<EditorExportPreset> &p_preset, bool p_debug) const {
+AHashSet<String> EditorExportPlatform::get_features(const Ref<EditorExportPreset> &p_preset, bool p_debug) const {
 	Ref<EditorExportPlatform> platform = p_preset->get_platform();
 	List<String> feature_list;
 	platform->get_platform_features(&feature_list);
 	platform->get_preset_features(p_preset, &feature_list);
 
-	HashSet<String> result;
+	AHashSet<String> result;
 	for (const String &E : feature_list) {
 		result.insert(E);
 	}
@@ -619,7 +619,7 @@ HashSet<String> EditorExportPlatform::get_features(const Ref<EditorExportPreset>
 }
 
 EditorExportPlatform::ExportNotifier::ExportNotifier(EditorExportPlatform &p_platform, const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, BitField<EditorExportPlatform::DebugFlags> p_flags) {
-	HashSet<String> features = p_platform.get_features(p_preset, p_debug);
+	AHashSet<String> features = p_platform.get_features(p_preset, p_debug);
 	Vector<Ref<EditorExportPlugin>> export_plugins = EditorExport::get_singleton()->get_export_plugins();
 	//initial export plugin callback
 	for (int i = 0; i < export_plugins.size(); i++) {
@@ -1089,7 +1089,7 @@ Error EditorExportPlatform::_export_project_files(const Ref<EditorExportPreset> 
 
 Error EditorExportPlatform::export_project_files(const Ref<EditorExportPreset> &p_preset, bool p_debug, EditorExportSaveFunction p_save_func, EditorExportRemoveFunction p_remove_func, void *p_udata, EditorExportSaveSharedObject p_so_func) {
 	//figure out paths of files that will be exported
-	HashSet<String> paths;
+	AHashSet<String> paths;
 	Vector<String> path_remaps;
 
 	if (p_preset->get_export_filter() == EditorExportPreset::EXPORT_ALL_RESOURCES) {
@@ -1238,7 +1238,7 @@ Error EditorExportPlatform::export_project_files(const Ref<EditorExportPreset> &
 	// Always sort by name, to so if for some reason they are re-arranged, it still works.
 	export_plugins.sort_custom<SortByName>();
 
-	HashSet<String> features = get_features(p_preset, p_debug);
+	AHashSet<String> features = get_features(p_preset, p_debug);
 	PackedStringArray features_psa;
 	for (const String &feature : features) {
 		features_psa.push_back(feature);
@@ -1446,7 +1446,7 @@ Error EditorExportPlatform::export_project_files(const Ref<EditorExportPreset> &
 			} else {
 				// File is imported and not customized, replace by what it imports.
 				Vector<String> remaps = config->get_section_keys("remap");
-				HashSet<String> remap_features;
+				AHashSet<String> remap_features;
 
 				for (const String &F : remaps) {
 					String remap = F;
@@ -1636,7 +1636,7 @@ Error EditorExportPlatform::export_project_files(const Ref<EditorExportPreset> &
 	}
 
 	if (p_remove_func) {
-		HashSet<String> currently_loaded_paths = PackedData::get_singleton()->get_file_paths();
+		AHashSet<String> currently_loaded_paths = PackedData::get_singleton()->get_file_paths();
 		for (const String &path : currently_loaded_paths) {
 			if (!save_proxy.has_saved(path)) {
 				err = p_remove_func(p_udata, path);
@@ -1650,7 +1650,7 @@ Error EditorExportPlatform::export_project_files(const Ref<EditorExportPreset> &
 	return OK;
 }
 
-Vector<uint8_t> EditorExportPlatform::_filter_extension_list_config_file(const String &p_config_path, const HashSet<String> &p_paths) {
+Vector<uint8_t> EditorExportPlatform::_filter_extension_list_config_file(const String &p_config_path, const AHashSet<String> &p_paths) {
 	Ref<FileAccess> f = FileAccess::open(p_config_path, FileAccess::READ);
 	if (f.is_null()) {
 		ERR_FAIL_V_MSG(Vector<uint8_t>(), "Can't open file from path '" + String(p_config_path) + "'.");

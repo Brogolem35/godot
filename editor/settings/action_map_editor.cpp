@@ -442,7 +442,7 @@ void ActionMapEditor::update_action_list(const Vector<ActionInfo> &p_action_info
 		selected_item.second = action_tree->get_selected_column();
 	}
 
-	HashSet<String> collapsed_actions;
+	AHashSet<String> collapsed_actions;
 	TreeItem *root = action_tree->get_root();
 	if (root) {
 		for (TreeItem *child = root->get_first_child(); child; child = child->get_next()) {

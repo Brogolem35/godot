@@ -2295,7 +2295,7 @@ Node *Node::find_common_parent_with(const Node *p_node) const {
 		return const_cast<Node *>(p_node);
 	}
 
-	HashSet<const Node *> visited;
+	AHashSet<const Node *> visited;
 
 	const Node *n = this;
 
@@ -2327,7 +2327,7 @@ NodePath Node::get_path_to(const Node *p_node, bool p_use_unique_path) const {
 		return NodePath(".");
 	}
 
-	HashSet<const Node *> visited;
+	AHashSet<const Node *> visited;
 
 	const Node *n = this;
 
@@ -2749,7 +2749,7 @@ bool Node::is_part_of_edited_scene() const {
 }
 #endif
 
-void Node::get_storable_properties(HashSet<StringName> &r_storable_properties) const {
+void Node::get_storable_properties(AHashSet<StringName> &r_storable_properties) const {
 	ERR_THREAD_GUARD
 	List<PropertyInfo> property_list;
 	get_property_list(&property_list);

@@ -36,7 +36,7 @@ class PackedSceneEditorTranslationParserPlugin : public EditorTranslationParserP
 	GDCLASS(PackedSceneEditorTranslationParserPlugin, EditorTranslationParserPlugin);
 
 	// Scene Node's properties that contain translation strings.
-	HashSet<String> lookup_properties;
+	AHashSet<String> lookup_properties;
 	// Properties from specific Nodes that should be ignored.
 	HashMap<String, Vector<String>> exception_list;
 

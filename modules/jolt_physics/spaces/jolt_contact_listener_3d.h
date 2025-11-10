@@ -32,7 +32,7 @@
 
 #include "core/os/mutex.h"
 #include "core/templates/hash_map.h"
-#include "core/templates/hash_set.h"
+#include "core/templates/a_hash_set.h"
 #include "core/templates/hashfuncs.h"
 #include "core/templates/local_vector.h"
 #include "core/templates/safe_refcount.h"
@@ -84,9 +84,9 @@ class JoltContactListener3D final
 	};
 
 	HashMap<JPH::SubShapeIDPair, Manifold, ShapePairHasher> manifolds_by_shape_pair;
-	HashSet<JPH::SubShapeIDPair, ShapePairHasher> area_overlaps;
-	HashSet<JPH::SubShapeIDPair, ShapePairHasher> area_enters;
-	HashSet<JPH::SubShapeIDPair, ShapePairHasher> area_exits;
+	AHashSet<JPH::SubShapeIDPair, ShapePairHasher> area_overlaps;
+	AHashSet<JPH::SubShapeIDPair, ShapePairHasher> area_enters;
+	AHashSet<JPH::SubShapeIDPair, ShapePairHasher> area_exits;
 	Mutex write_mutex;
 	JoltSpace3D *space = nullptr;
 

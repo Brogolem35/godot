@@ -2423,7 +2423,7 @@ Control *Control::find_next_valid_focus() const {
 	}
 
 	Control *from = const_cast<Control *>(this);
-	HashSet<Control *> checked;
+	AHashSet<Control *> checked;
 	bool ac_enabled = get_tree() && get_tree()->is_accessibility_enabled();
 
 	// Index of the current `Control` subtree within the containing `Window`.
@@ -2530,7 +2530,7 @@ Control *Control::find_prev_valid_focus() const {
 	}
 
 	Control *from = const_cast<Control *>(this);
-	HashSet<Control *> checked;
+	AHashSet<Control *> checked;
 	bool ac_enabled = get_tree() && get_tree()->is_accessibility_enabled();
 
 	// Index of the current `Control` subtree within the containing `Window`.

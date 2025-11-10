@@ -254,7 +254,7 @@ void EditorFileSystem::scan_for_uid() {
 
 	// Load extensions for which an .import should exists.
 	List<String> extensionsl;
-	HashSet<String> import_extensions;
+	AHashSet<String> import_extensions;
 	ResourceFormatImporter::get_singleton()->get_recognized_extensions(&extensionsl);
 	for (const String &E : extensionsl) {
 		import_extensions.insert(E);
@@ -267,7 +267,7 @@ void EditorFileSystem::scan_for_uid() {
 	ResourceUID::scan_for_uid_on_startup = nullptr;
 }
 
-void EditorFileSystem::_scan_for_uid_directory(const ScannedDirectory *p_scan_dir, const HashSet<String> &p_import_extensions) {
+void EditorFileSystem::_scan_for_uid_directory(const ScannedDirectory *p_scan_dir, const AHashSet<String> &p_import_extensions) {
 	for (ScannedDirectory *scan_sub_dir : p_scan_dir->subdirs) {
 		_scan_for_uid_directory(scan_sub_dir, p_import_extensions);
 	}
@@ -299,8 +299,8 @@ void EditorFileSystem::_scan_for_uid_directory(const ScannedDirectory *p_scan_di
 
 void EditorFileSystem::_first_scan_filesystem() {
 	EditorProgress ep = EditorProgress("first_scan_filesystem", TTR("Project initialization"), 5);
-	HashSet<String> existing_class_names;
-	HashSet<String> extensions;
+	AHashSet<String> existing_class_names;
+	AHashSet<String> extensions;
 
 	if (!first_scan_root_dir) {
 		ep.step(TTR("Scanning file structure..."), 0, true);
@@ -345,7 +345,7 @@ void EditorFileSystem::_first_scan_filesystem() {
 	ep.step(TTR("Starting file scan..."), 5, true);
 }
 
-void EditorFileSystem::_first_scan_process_scripts(const ScannedDirectory *p_scan_dir, List<String> &p_gdextension_extensions, HashSet<String> &p_existing_class_names, HashSet<String> &p_extensions) {
+void EditorFileSystem::_first_scan_process_scripts(const ScannedDirectory *p_scan_dir, List<String> &p_gdextension_extensions, AHashSet<String> &p_existing_class_names, AHashSet<String> &p_extensions) {
 	for (ScannedDirectory *scan_sub_dir : p_scan_dir->subdirs) {
 		_first_scan_process_scripts(scan_sub_dir, p_gdextension_extensions, p_existing_class_names, p_extensions);
 	}
@@ -498,14 +498,14 @@ void EditorFileSystem::_scan_filesystem() {
 	new_filesystem->parent = nullptr;
 
 	ScannedDirectory *sd;
-	HashSet<String> *processed_files = nullptr;
+	AHashSet<String> *processed_files = nullptr;
 	// On the first scan, the first_scan_root_dir is created in _first_scan_filesystem.
 	if (first_scan) {
 		sd = first_scan_root_dir;
 		// Will be updated on scan.
 		ResourceUID::get_singleton()->clear();
 		ResourceUID::scan_for_uid_on_startup = nullptr;
-		processed_files = memnew(HashSet<String>());
+		processed_files = memnew(AHashSet<String>());
 	} else {
 		Ref<DirAccess> d = DirAccess::create(DirAccess::ACCESS_RESOURCES);
 		sd = memnew(ScannedDirectory);
@@ -1198,7 +1198,7 @@ int EditorFileSystem::_scan_new_dir(ScannedDirectory *p_dir, Ref<DirAccess> &da)
 	return nb_files_total_scan;
 }
 
-void EditorFileSystem::_process_file_system(const ScannedDirectory *p_scan_dir, EditorFileSystemDirectory *p_dir, ScanProgress &p_progress, HashSet<String> *r_processed_files) {
+void EditorFileSystem::_process_file_system(const ScannedDirectory *p_scan_dir, EditorFileSystemDirectory *p_dir, ScanProgress &p_progress, AHashSet<String> *r_processed_files) {
 	p_dir->modified_time = FileAccess::get_modified_time(p_scan_dir->full_path);
 
 	for (ScannedDirectory *scan_sub_dir : p_scan_dir->subdirs) {
@@ -1387,7 +1387,7 @@ void EditorFileSystem::_process_file_system(const ScannedDirectory *p_scan_dir, 
 	}
 }
 
-void EditorFileSystem::_process_removed_files(const HashSet<String> &p_processed_files) {
+void EditorFileSystem::_process_removed_files(const AHashSet<String> &p_processed_files) {
 	for (const KeyValue<String, EditorFileSystem::FileCache> &kv : file_cache) {
 		if (!p_processed_files.has(kv.key)) {
 			if (ClassDB::is_parent_class(kv.value.type, SNAME("Script")) || ClassDB::is_parent_class(kv.value.type, SNAME("PackedScene"))) {
@@ -1648,7 +1648,7 @@ void EditorFileSystem::_thread_func_sources(void *_userdata) {
 	efs->scanning_changes_done.set();
 }
 
-bool EditorFileSystem::_remove_invalid_global_class_names(const HashSet<String> &p_existing_class_names) {
+bool EditorFileSystem::_remove_invalid_global_class_names(const AHashSet<String> &p_existing_class_names) {
 	LocalVector<StringName> global_classes;
 	bool must_save = false;
 	ScriptServer::get_global_class_list(global_classes);
@@ -2323,7 +2323,7 @@ void EditorFileSystem::_update_scene_groups() {
 				continue;
 			}
 
-			const HashSet<StringName> scene_groups = PackedScene::get_scene_groups(path);
+			const AHashSet<StringName> scene_groups = PackedScene::get_scene_groups(path);
 			if (!scene_groups.is_empty()) {
 				ProjectSettings::get_singleton()->add_scene_groups_cache(path, scene_groups);
 			}
@@ -2354,7 +2354,7 @@ void EditorFileSystem::_queue_update_scene_groups(const String &p_path) {
 	update_scene_paths.insert(p_path);
 }
 
-void EditorFileSystem::_get_all_scenes(EditorFileSystemDirectory *p_dir, HashSet<String> &r_list) {
+void EditorFileSystem::_get_all_scenes(EditorFileSystemDirectory *p_dir, AHashSet<String> &r_list) {
 	for (int i = 0; i < p_dir->get_file_count(); i++) {
 		if (p_dir->get_file_type(i) == SNAME("PackedScene")) {
 			r_list.insert(p_dir->get_file_path(i));
@@ -2538,7 +2538,7 @@ void EditorFileSystem::_notify_filesystem_changed() {
 	filesystem_changed_queued = false;
 }
 
-HashSet<String> EditorFileSystem::get_valid_extensions() const {
+AHashSet<String> EditorFileSystem::get_valid_extensions() const {
 	return valid_extensions;
 }
 
@@ -3047,7 +3047,7 @@ Error EditorFileSystem::_reimport_file(const String &p_file, const HashMap<Strin
 	return OK;
 }
 
-void EditorFileSystem::_find_group_files(EditorFileSystemDirectory *efd, HashMap<String, Vector<String>> &group_files, HashSet<String> &groups_to_reimport) {
+void EditorFileSystem::_find_group_files(EditorFileSystemDirectory *efd, HashMap<String, Vector<String>> &group_files, AHashSet<String> &groups_to_reimport) {
 	int fc = efd->files.size();
 	const EditorFileSystemDirectory::FileInfo *const *files = efd->files.ptr();
 	for (int i = 0; i < fc; i++) {
@@ -3228,7 +3228,7 @@ void EditorFileSystem::reimport_files(const Vector<String> &p_files) {
 
 	Vector<ImportFile> reimport_files;
 
-	HashSet<String> groups_to_reimport;
+	AHashSet<String> groups_to_reimport;
 
 	for (int i = 0; i < p_files.size(); i++) {
 		ep->step(TTR("Preparing files to reimport..."), i, false);
@@ -3644,7 +3644,7 @@ ResourceUID::ID EditorFileSystem::_resource_saver_get_resource_id_for_path(const
 	}
 }
 
-static void _scan_extensions_dir(EditorFileSystemDirectory *d, HashSet<String> &extensions) {
+static void _scan_extensions_dir(EditorFileSystemDirectory *d, AHashSet<String> &extensions) {
 	int fc = d->get_file_count();
 	for (int i = 0; i < fc; i++) {
 		if (d->get_file_type(i) == SNAME("GDExtension")) {
@@ -3658,7 +3658,7 @@ static void _scan_extensions_dir(EditorFileSystemDirectory *d, HashSet<String> &
 }
 bool EditorFileSystem::_scan_extensions() {
 	EditorFileSystemDirectory *d = get_filesystem();
-	HashSet<String> extensions;
+	AHashSet<String> extensions;
 
 	_scan_extensions_dir(d, extensions);
 

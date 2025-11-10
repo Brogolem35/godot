@@ -42,7 +42,7 @@ class ShaderInclude : public Resource {
 private:
 	String code;
 	String include_path;
-	HashSet<Ref<ShaderInclude>> dependencies;
+	AHashSet<Ref<ShaderInclude>> dependencies;
 	void _dependency_changed();
 
 protected:

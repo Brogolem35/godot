@@ -1193,7 +1193,7 @@ Vector<ProjectList::Item> ProjectList::get_selected_projects() const {
 	return items;
 }
 
-const HashSet<String> &ProjectList::get_selected_project_keys() const {
+const AHashSet<String> &ProjectList::get_selected_project_keys() const {
 	// Faster if that's all you need
 	return _selected_project_paths;
 }

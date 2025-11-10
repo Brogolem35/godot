@@ -51,7 +51,7 @@ public:
 	static Transform3D _as_xform(const ufbx_matrix &p_mat);
 	static String _as_string(const ufbx_string &p_string);
 	static Vector3 _as_vec3(const ufbx_vec3 &p_vector);
-	static String _gen_unique_name(HashSet<String> &unique_names, const String &p_name);
+	static String _gen_unique_name(AHashSet<String> &unique_names, const String &p_name);
 
 public:
 	Error append_from_file(String p_path, Ref<GLTFState> p_state, uint32_t p_flags = 0, String p_base_path = String()) override;

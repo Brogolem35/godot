@@ -1362,7 +1362,7 @@ void EditorProperty::_update_flags() {
 		}
 		pin_hidden = false;
 		{
-			HashSet<StringName> storable_properties;
+			AHashSet<StringName> storable_properties;
 			node->get_storable_properties(storable_properties);
 			if (storable_properties.has(node->get_property_store_alias(property))) {
 				can_pin = true;
@@ -5054,7 +5054,7 @@ void EditorInspector::expand_all_folding() {
 }
 
 void EditorInspector::expand_revertable() {
-	HashSet<EditorInspectorSection *> sections_to_unfold[2];
+	AHashSet<EditorInspectorSection *> sections_to_unfold[2];
 	for (EditorInspectorSection *E : sections) {
 		if (E->has_revertable_properties()) {
 			sections_to_unfold[0].insert(E);

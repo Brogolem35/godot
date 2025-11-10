@@ -101,7 +101,7 @@ struct LightInstance {
 
 	Rect2 directional_rect;
 
-	HashSet<RID> shadow_atlases; // Shadow atlases where this light is registered.
+	AHashSet<RID> shadow_atlases; // Shadow atlases where this light is registered.
 
 	int32_t gl_id = -1;
 	int32_t shadow_id = -1;

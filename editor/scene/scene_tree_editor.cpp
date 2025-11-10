@@ -1684,7 +1684,7 @@ Node *SceneTreeEditor::get_selected() {
 	return selected;
 }
 
-void SceneTreeEditor::_update_marking_list(const HashSet<Node *> &p_marked) {
+void SceneTreeEditor::_update_marking_list(const AHashSet<Node *> &p_marked) {
 	for (Node *N : p_marked) {
 		HashMap<Node *, CachedNode>::Iterator I = node_cache.get(N);
 		if (I) {
@@ -1694,7 +1694,7 @@ void SceneTreeEditor::_update_marking_list(const HashSet<Node *> &p_marked) {
 	}
 }
 
-void SceneTreeEditor::set_marked(const HashSet<Node *> &p_marked, bool p_selectable, bool p_children_selectable) {
+void SceneTreeEditor::set_marked(const AHashSet<Node *> &p_marked, bool p_selectable, bool p_children_selectable) {
 	_update_if_clean();
 
 	_update_marking_list(marked);
@@ -1708,7 +1708,7 @@ void SceneTreeEditor::set_marked(const HashSet<Node *> &p_marked, bool p_selecta
 }
 
 void SceneTreeEditor::set_marked(Node *p_marked, bool p_selectable, bool p_children_selectable) {
-	HashSet<Node *> s;
+	AHashSet<Node *> s;
 	if (p_marked) {
 		s.insert(p_marked);
 	}
@@ -2534,7 +2534,7 @@ void SceneTreeEditor::NodeCache::mark_children_dirty(Node *p_node, bool p_recurs
 }
 
 void SceneTreeEditor::NodeCache::delete_pending() {
-	HashSet<CachedNode *>::Iterator I = to_delete.begin();
+	AHashSet<CachedNode *>::Iterator I = to_delete.begin();
 	while (I) {
 		// We want to keep TreeItems around just long enough for a Node removal,
 		// and immediate reinsertion. This is what happens with moves and

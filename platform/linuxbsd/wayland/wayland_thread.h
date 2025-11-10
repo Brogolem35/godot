@@ -249,7 +249,7 @@ public:
 		bool can_maximize = false;
 		bool can_fullscreen = false;
 
-		HashSet<struct wl_output *> wl_outputs;
+		AHashSet<struct wl_output *> wl_outputs;
 
 		// NOTE: If for whatever reason this callback is destroyed _while_ the event
 		// thread is still running, it might be a good idea to set its user data to
@@ -408,7 +408,7 @@ public:
 	};
 
 	struct OfferState {
-		HashSet<String> mime_types;
+		AHashSet<String> mime_types;
 	};
 
 	struct SeatState {

@@ -285,7 +285,7 @@ public:
 	virtual bool has_valid_export_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error, bool &r_missing_templates, bool p_debug = false) const override;
 	virtual bool has_valid_project_configuration(const Ref<EditorExportPreset> &p_preset, String &r_error) const override;
 
-	virtual void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, HashSet<String> &p_features) override {
+	virtual void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, AHashSet<String> &p_features) override {
 	}
 
 	~EditorExportPlatformAppleEmbedded();

@@ -191,8 +191,8 @@ bool SnapshotDataObject::is_class(const String &p_base_class) {
 	return ClassDB::is_parent_class(type_name, p_base_class);
 }
 
-HashSet<ObjectID> SnapshotDataObject::_unique_references(const HashMap<String, ObjectID> &p_refs) {
-	HashSet<ObjectID> obj_set;
+AHashSet<ObjectID> SnapshotDataObject::_unique_references(const HashMap<String, ObjectID> &p_refs) {
+	AHashSet<ObjectID> obj_set;
 
 	for (const KeyValue<String, ObjectID> &pair : p_refs) {
 		obj_set.insert(pair.value);
@@ -201,11 +201,11 @@ HashSet<ObjectID> SnapshotDataObject::_unique_references(const HashMap<String, O
 	return obj_set;
 }
 
-HashSet<ObjectID> SnapshotDataObject::get_unique_outbound_refernces() {
+AHashSet<ObjectID> SnapshotDataObject::get_unique_outbound_refernces() {
 	return _unique_references(outbound_references);
 }
 
-HashSet<ObjectID> SnapshotDataObject::get_unique_inbound_references() {
+AHashSet<ObjectID> SnapshotDataObject::get_unique_inbound_references() {
 	return _unique_references(inbound_references);
 }
 
@@ -250,7 +250,7 @@ void GameStateSnapshot::_get_outbound_references(Variant &p_var, HashMap<String,
 void GameStateSnapshot::_get_rc_cycles(
 		SnapshotDataObject *p_obj,
 		SnapshotDataObject *p_source_obj,
-		HashSet<SnapshotDataObject *> p_traversed_objs,
+		AHashSet<SnapshotDataObject *> p_traversed_objs,
 		LocalVector<String> &r_ret_val,
 		const String &p_current_path) {
 	// We're at the end of this branch and it was a cycle.
@@ -271,7 +271,7 @@ void GameStateSnapshot::_get_rc_cycles(
 
 		SnapshotDataObject *next = objects[next_child.value];
 		if (next != nullptr && next->is_class(RefCounted::get_class_static()) && !next->is_class(WeakRef::get_class_static()) && !p_traversed_objs.has(next)) {
-			HashSet<SnapshotDataObject *> traversed_copy = p_traversed_objs;
+			AHashSet<SnapshotDataObject *> traversed_copy = p_traversed_objs;
 			if (p_obj != p_source_obj) {
 				traversed_copy.insert(p_obj);
 			}
@@ -306,7 +306,7 @@ void GameStateSnapshot::recompute_references() {
 		if (!obj.value->is_class(RefCounted::get_class_static()) || obj.value->is_class(WeakRef::get_class_static())) {
 			continue;
 		}
-		HashSet<SnapshotDataObject *> traversed_objs;
+		AHashSet<SnapshotDataObject *> traversed_objs;
 		LocalVector<String> cycles;
 
 		_get_rc_cycles(obj.value, obj.value, traversed_objs, cycles, "");

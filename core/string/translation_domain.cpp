@@ -262,8 +262,8 @@ bool TranslationDomain::has_translation_for_locale(const String &p_locale) const
 }
 
 // Translation objects that could potentially be used for the given locale.
-HashSet<Ref<Translation>> TranslationDomain::get_potential_translations(const String &p_locale) const {
-	HashSet<Ref<Translation>> res;
+AHashSet<Ref<Translation>> TranslationDomain::get_potential_translations(const String &p_locale) const {
+	AHashSet<Ref<Translation>> res;
 
 	for (const Ref<Translation> &E : translations) {
 		if (TranslationServer::get_singleton()->compare_locales(p_locale, E->get_locale()) > 0) {

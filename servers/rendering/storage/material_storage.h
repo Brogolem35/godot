@@ -70,7 +70,7 @@ public:
 
 	virtual RS::ShaderNativeSourceCode shader_get_native_source_code(RID p_shader) const = 0;
 	virtual void shader_embedded_set_lock() = 0;
-	virtual const HashSet<RID> &shader_embedded_set_get() const = 0;
+	virtual const AHashSet<RID> &shader_embedded_set_get() const = 0;
 	virtual void shader_embedded_set_unlock() = 0;
 
 	/* MATERIAL API */

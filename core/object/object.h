@@ -36,7 +36,7 @@
 #include "core/object/object_id.h"
 #include "core/os/spin_lock.h"
 #include "core/templates/hash_map.h"
-#include "core/templates/hash_set.h"
+#include "core/templates/a_hash_set.h"
 #include "core/templates/list.h"
 #include "core/templates/safe_refcount.h"
 #include "core/variant/variant.h"
@@ -666,7 +666,7 @@ private:
 #ifdef TOOLS_ENABLED
 	bool _edited : 1;
 	uint32_t _edited_version = 0;
-	HashSet<String> editor_section_folding;
+	AHashSet<String> editor_section_folding;
 #endif
 	ScriptInstance *script_instance = nullptr;
 	HashMap<StringName, Variant> metadata;
@@ -1010,7 +1010,7 @@ public:
 	virtual void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options) const;
 	void editor_set_section_unfold(const String &p_section, bool p_unfolded, bool p_initializing = false);
 	bool editor_is_section_unfolded(const String &p_section);
-	const HashSet<String> &editor_get_section_folding() const { return editor_section_folding; }
+	const AHashSet<String> &editor_get_section_folding() const { return editor_section_folding; }
 	void editor_clear_section_folding() { editor_section_folding.clear(); }
 #endif
 

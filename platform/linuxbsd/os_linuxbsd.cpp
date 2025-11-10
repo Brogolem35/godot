@@ -684,7 +684,7 @@ Vector<String> OS_LinuxBSD::get_system_fonts() const {
 		ERR_FAIL_V_MSG(Vector<String>(), "Unable to load fontconfig, system font support is disabled.");
 	}
 
-	HashSet<String> font_names;
+	AHashSet<String> font_names;
 	Vector<String> ret;
 	static const char *allowed_formats[] = { "TrueType", "CFF" };
 	for (size_t i = 0; i < sizeof(allowed_formats) / sizeof(const char *); i++) {

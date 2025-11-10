@@ -219,7 +219,7 @@ class ProjectManager : public Control {
 
 	// Project tag management.
 
-	HashSet<String> tag_set;
+	AHashSet<String> tag_set;
 	PackedStringArray current_project_tags;
 	PackedStringArray forbidden_tag_characters{ "/", "\\", "-" };
 

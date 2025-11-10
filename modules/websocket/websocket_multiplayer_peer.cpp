@@ -289,7 +289,7 @@ void WebSocketMultiplayerPeer::_poll_server() {
 	}
 
 	// Process pending peers.
-	HashSet<int> to_remove;
+	AHashSet<int> to_remove;
 	for (KeyValue<int, PendingPeer> &E : pending_peers) {
 		PendingPeer &peer = E.value;
 		int id = E.key;

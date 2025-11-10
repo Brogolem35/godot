@@ -65,7 +65,7 @@ String ResourceImporterDynamicFont::get_resource_type() const {
 	return "FontFile";
 }
 
-void ResourceImporterDynamicFont::get_build_dependencies(const String &p_path, HashSet<String> *r_dependencies) {
+void ResourceImporterDynamicFont::get_build_dependencies(const String &p_path, AHashSet<String> *r_dependencies) {
 	Ref<FontFile> font = ResourceLoader::load(p_path);
 	if (font.is_valid() && font->is_multichannel_signed_distance_field()) {
 		r_dependencies->insert("module_msdfgen_enabled");

@@ -161,7 +161,7 @@ class DependencyErrorDialog : public ConfirmationDialog {
 	void _check_for_resolved();
 
 public:
-	void show(const String &p_for_file, const HashMap<String, HashSet<String>> &p_report);
+	void show(const String &p_for_file, const HashMap<String, AHashSet<String>> &p_report);
 
 	DependencyErrorDialog();
 };

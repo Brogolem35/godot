@@ -183,7 +183,7 @@ private:
 		RID proxy_to;
 		Vector<RID> proxies;
 
-		HashSet<RID> lightmap_users;
+		AHashSet<RID> lightmap_users;
 
 		RS::TextureDetectCallback detect_3d_callback = nullptr;
 		void *detect_3d_callback_ud = nullptr;

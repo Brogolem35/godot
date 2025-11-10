@@ -54,7 +54,7 @@ class EditorAssetInstaller : public ConfirmationDialog {
 
 	String package_path;
 	String asset_name;
-	HashSet<String> asset_files;
+	AHashSet<String> asset_files;
 	HashMap<String, String> mapped_files;
 	HashMap<String, TreeItem *> file_item_map;
 

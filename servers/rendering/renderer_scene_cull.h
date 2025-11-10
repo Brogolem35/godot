@@ -454,7 +454,7 @@ public:
 		float visibility_range_end_margin = 0.0f;
 		RS::VisibilityRangeFadeMode visibility_range_fade_mode = RS::VISIBILITY_RANGE_FADE_DISABLED;
 		Instance *visibility_parent = nullptr;
-		HashSet<Instance *> visibility_dependencies;
+		AHashSet<Instance *> visibility_dependencies;
 		uint32_t visibility_dependencies_depth = 0;
 		float transparency = 0.0f;
 		Scenario *scenario = nullptr;
@@ -620,16 +620,16 @@ public:
 
 	struct InstanceGeometryData : public InstanceBaseData {
 		RenderGeometryInstance *geometry_instance = nullptr;
-		HashSet<Instance *> lights;
+		AHashSet<Instance *> lights;
 		bool can_cast_shadows;
 		bool material_is_animated;
 		uint32_t projector_count = 0;
 		uint32_t softshadow_count = 0;
 
-		HashSet<Instance *> decals;
-		HashSet<Instance *> reflection_probes;
-		HashSet<Instance *> voxel_gi_instances;
-		HashSet<Instance *> lightmap_captures;
+		AHashSet<Instance *> decals;
+		AHashSet<Instance *> reflection_probes;
+		AHashSet<Instance *> voxel_gi_instances;
+		AHashSet<Instance *> lightmap_captures;
 
 		InstanceGeometryData() {
 			can_cast_shadows = true;
@@ -640,7 +640,7 @@ public:
 	struct InstanceReflectionProbeData : public InstanceBaseData {
 		Instance *owner = nullptr;
 
-		HashSet<Instance *> geometries;
+		AHashSet<Instance *> geometries;
 
 		RID instance;
 		SelfList<InstanceReflectionProbeData> update_list;
@@ -658,7 +658,7 @@ public:
 		RID instance;
 		uint32_t cull_mask = 0xFFFFFFFF;
 
-		HashSet<Instance *> geometries;
+		AHashSet<Instance *> geometries;
 
 		InstanceDecalData() {
 		}
@@ -696,7 +696,7 @@ public:
 		bool uses_projector = false;
 		bool uses_softshadow = false;
 
-		HashSet<Instance *> geometries;
+		AHashSet<Instance *> geometries;
 
 		Instance *baked_light = nullptr;
 
@@ -763,10 +763,10 @@ public:
 	struct InstanceVoxelGIData : public InstanceBaseData {
 		Instance *owner = nullptr;
 
-		HashSet<Instance *> geometries;
-		HashSet<Instance *> dynamic_geometries;
+		AHashSet<Instance *> geometries;
+		AHashSet<Instance *> dynamic_geometries;
 
-		HashSet<Instance *> lights;
+		AHashSet<Instance *> lights;
 
 		struct LightCache {
 			RS::LightType type;
@@ -804,8 +804,8 @@ public:
 
 	struct InstanceLightmapData : public InstanceBaseData {
 		RID instance;
-		HashSet<Instance *> geometries;
-		HashSet<Instance *> users;
+		AHashSet<Instance *> geometries;
+		AHashSet<Instance *> users;
 
 		InstanceLightmapData() {
 		}
@@ -870,7 +870,7 @@ public:
 		}
 	};
 
-	mutable HashSet<Instance *> heightfield_particle_colliders_update_list;
+	mutable AHashSet<Instance *> heightfield_particle_colliders_update_list;
 
 	PagedArrayPool<Instance *> instance_cull_page_pool;
 	PagedArrayPool<RenderGeometryInstance *> geometry_instance_cull_page_pool;

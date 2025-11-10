@@ -73,7 +73,7 @@ private:
 	HashMap<ObjectID, RPCNodeInfo> rpc_data;
 	HashMap<ObjectID, SyncInfo> sync_data;
 	HashMap<ObjectID, NodeInfo> node_data;
-	HashSet<ObjectID> missing_node_data;
+	AHashSet<ObjectID> missing_node_data;
 
 	struct ThemeCache {
 		Ref<Texture2D> node_icon;

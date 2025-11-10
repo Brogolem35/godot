@@ -134,10 +134,10 @@ private:
 	HashMap<DAPVarID, Array> variable_list;
 
 	HashMap<ObjectID, DAPVarID> object_list;
-	HashSet<ObjectID> object_pending_set;
+	AHashSet<ObjectID> object_pending_set;
 
 	HashMap<String, DAP::Variable> eval_list;
-	HashSet<String> eval_pending_list;
+	AHashSet<String> eval_pending_list;
 
 public:
 	friend class DebugAdapterServer;

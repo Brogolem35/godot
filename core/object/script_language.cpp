@@ -299,7 +299,7 @@ void ScriptServer::init_languages() {
 		}
 	}
 
-	HashSet<ScriptLanguage *> langs_to_init;
+	AHashSet<ScriptLanguage *> langs_to_init;
 	{
 		MutexLock lock(languages_mutex);
 		for (int i = 0; i < _language_count; i++) {
@@ -320,7 +320,7 @@ void ScriptServer::init_languages() {
 }
 
 void ScriptServer::finish_languages() {
-	HashSet<ScriptLanguage *> langs_to_finish;
+	AHashSet<ScriptLanguage *> langs_to_finish;
 
 	{
 		MutexLock lock(languages_mutex);
@@ -794,7 +794,7 @@ Variant PlaceHolderScriptInstance::callp(const StringName &p_method, const Varia
 }
 
 void PlaceHolderScriptInstance::update(const List<PropertyInfo> &p_properties, const HashMap<StringName, Variant> &p_values) {
-	HashSet<StringName> new_values;
+	AHashSet<StringName> new_values;
 	for (const PropertyInfo &E : p_properties) {
 		if (E.usage & (PROPERTY_USAGE_GROUP | PROPERTY_USAGE_SUBGROUP | PROPERTY_USAGE_CATEGORY)) {
 			continue;

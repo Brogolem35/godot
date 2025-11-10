@@ -46,7 +46,7 @@ RWLock NavMeshGenerator2D::generator_parsers_rwlock;
 bool NavMeshGenerator2D::use_threads = true;
 bool NavMeshGenerator2D::baking_use_multiple_threads = true;
 bool NavMeshGenerator2D::baking_use_high_priority_threads = true;
-HashSet<Ref<NavigationPolygon>> NavMeshGenerator2D::baking_navmeshes;
+AHashSet<Ref<NavigationPolygon>> NavMeshGenerator2D::baking_navmeshes;
 HashMap<WorkerThreadPool::TaskID, NavMeshGenerator2D::NavMeshGeneratorTask2D *> NavMeshGenerator2D::generator_tasks;
 LocalVector<NavMeshGeometryParser2D *> NavMeshGenerator2D::generator_parsers;
 

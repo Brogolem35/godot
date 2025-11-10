@@ -109,8 +109,8 @@ protected:
 
 	void skip();
 
-	virtual void _export_file(const String &p_path, const String &p_type, const HashSet<String> &p_features);
-	virtual void _export_begin(const HashSet<String> &p_features, bool p_debug, const String &p_path, int p_flags);
+	virtual void _export_file(const String &p_path, const String &p_type, const AHashSet<String> &p_features);
+	virtual void _export_begin(const AHashSet<String> &p_features, bool p_debug, const String &p_path, int p_flags);
 	virtual void _export_end();
 
 	static void _bind_methods();

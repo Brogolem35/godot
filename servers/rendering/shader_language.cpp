@@ -3538,7 +3538,7 @@ const ShaderLanguage::BuiltinFuncDef ShaderLanguage::builtin_func_defs[] = {
 	{ nullptr, TYPE_VOID, { TYPE_VOID }, { "" }, TAG_GLOBAL, false }
 };
 
-HashSet<StringName> global_func_set;
+AHashSet<StringName> global_func_set;
 
 const ShaderLanguage::BuiltinFuncOutArgs ShaderLanguage::builtin_func_out_args[] = {
 	{ "modf", { 1, -1 } },
@@ -5213,7 +5213,7 @@ uint32_t ShaderLanguage::get_datatype_component_count(ShaderLanguage::DataType p
 }
 
 void ShaderLanguage::get_keyword_list(List<String> *r_keywords) {
-	HashSet<String> kws;
+	AHashSet<String> kws;
 
 	int idx = 0;
 
@@ -5250,7 +5250,7 @@ bool ShaderLanguage::is_control_flow_keyword(String p_keyword) {
 }
 
 void ShaderLanguage::get_builtin_funcs(List<String> *r_keywords) {
-	HashSet<String> kws;
+	AHashSet<String> kws;
 
 	int idx = 0;
 
@@ -5631,7 +5631,7 @@ bool ShaderLanguage::_propagate_function_call_sampler_uniform_settings(const Str
 				arg->tex_argument_filter = p_filter;
 				arg->tex_argument_repeat = p_repeat;
 				arg->tex_hint = _sanitize_hint(p_hint);
-				for (KeyValue<StringName, HashSet<int>> &E : arg->tex_argument_connect) {
+				for (KeyValue<StringName, AHashSet<int>> &E : arg->tex_argument_connect) {
 					for (const int &F : E.value) {
 						if (!_propagate_function_call_sampler_uniform_settings(E.key, F, p_filter, p_repeat, p_hint)) {
 							return false;
@@ -5665,7 +5665,7 @@ bool ShaderLanguage::_propagate_function_call_sampler_builtin_reference(const St
 				arg->tex_builtin_check = true;
 				arg->tex_builtin = p_builtin;
 
-				for (KeyValue<StringName, HashSet<int>> &E : arg->tex_argument_connect) {
+				for (KeyValue<StringName, AHashSet<int>> &E : arg->tex_argument_connect) {
 					for (const int &F : E.value) {
 						if (!_propagate_function_call_sampler_builtin_reference(E.key, F, p_builtin)) {
 							return false;
@@ -6493,7 +6493,7 @@ ShaderLanguage::Node *ShaderLanguage::_parse_expression(BlockNode *p_block, cons
 											for (int j = 0; j < base_function->arguments.size(); j++) {
 												if (base_function->arguments[j].name == varname) {
 													if (!base_function->arguments[j].tex_argument_connect.has(call_function->name)) {
-														base_function->arguments.write[j].tex_argument_connect[call_function->name] = HashSet<int>();
+														base_function->arguments.write[j].tex_argument_connect[call_function->name] = AHashSet<int>();
 													}
 													base_function->arguments.write[j].tex_argument_connect[call_function->name].insert(i);
 													found = true;
@@ -9083,7 +9083,7 @@ Error ShaderLanguage::_parse_block(BlockNode *p_block, const FunctionInfo &p_fun
 	return OK;
 }
 
-String ShaderLanguage::_get_shader_type_list(const HashSet<String> &p_shader_types) const {
+String ShaderLanguage::_get_shader_type_list(const AHashSet<String> &p_shader_types) const {
 	// Return a list of shader types as an human-readable string
 	String valid_types;
 	for (const String &E : p_shader_types) {
@@ -9162,7 +9162,7 @@ bool ShaderLanguage::_parse_numeric_constant_expression(const FunctionInfo &p_fu
 	return true;
 }
 
-Error ShaderLanguage::_parse_shader(const HashMap<StringName, FunctionInfo> &p_functions, const Vector<ModeInfo> &p_render_modes, const Vector<ModeInfo> &p_stencil_modes, const HashSet<String> &p_shader_types) {
+Error ShaderLanguage::_parse_shader(const HashMap<StringName, FunctionInfo> &p_functions, const Vector<ModeInfo> &p_render_modes, const Vector<ModeInfo> &p_stencil_modes, const AHashSet<String> &p_shader_types) {
 	Token tk;
 	TkPos prev_pos;
 	Token next;
@@ -9333,7 +9333,7 @@ Error ShaderLanguage::_parse_shader(const HashMap<StringName, FunctionInfo> &p_f
 				st.shader_struct = st_node;
 
 				int member_count = 0;
-				HashSet<String> member_names;
+				AHashSet<String> member_names;
 
 				while (true) { // variables list
 #ifdef DEBUG_ENABLED
@@ -11889,7 +11889,7 @@ Error ShaderLanguage::complete(const String &p_code, const ShaderCompileInfo &p_
 				}
 
 				int idx2 = 0;
-				HashSet<int> out_args;
+				AHashSet<int> out_args;
 				while (builtin_func_out_args[idx2].name != nullptr) {
 					if (builtin_func_out_args[idx2].name == builtin_func_defs[idx].name) {
 						for (int i = 0; i < BuiltinFuncOutArgs::MAX_ARGS; i++) {

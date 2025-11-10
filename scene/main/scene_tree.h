@@ -182,13 +182,13 @@ private:
 	// Safety for when a node is deleted while a group is being called.
 
 	int nodes_removed_on_group_call_lock = 0;
-	HashSet<Node *> nodes_removed_on_group_call; // Skip erased nodes.
+	AHashSet<Node *> nodes_removed_on_group_call; // Skip erased nodes.
 
 	List<ObjectID> delete_queue;
 
 	uint64_t accessibility_upd_per_sec = 0;
 	bool accessibility_force_update = true;
-	HashSet<ObjectID> accessibility_change_queue;
+	AHashSet<ObjectID> accessibility_change_queue;
 	uint64_t accessibility_last_update = 0;
 
 	HashMap<UGCall, Vector<Variant>, UGCall> unique_group_calls;

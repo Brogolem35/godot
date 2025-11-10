@@ -1578,7 +1578,7 @@ void ConnectionsDock::update_tree() {
 			if (base.is_valid()) {
 				List<MethodInfo> base_signals;
 				base->get_script_signal_list(&base_signals);
-				HashSet<String> base_signal_names;
+				AHashSet<String> base_signal_names;
 				for (const MethodInfo &signal : base_signals) {
 					base_signal_names.insert(signal.name);
 				}

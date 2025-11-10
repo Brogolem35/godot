@@ -157,7 +157,7 @@ private:
 		}
 	};
 
-	HashSet<SkinReference *> skin_bindings;
+	AHashSet<SkinReference *> skin_bindings;
 	void _skin_changed();
 
 	mutable LocalVector<Bone> bones;

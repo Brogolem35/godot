@@ -1124,7 +1124,7 @@ static Node *_find_node_for_script(Node *p_base, Node *p_current, const Ref<Scri
 	return nullptr;
 }
 
-static void _find_changed_scripts_for_external_editor(Node *p_base, Node *p_current, HashSet<Ref<Script>> &r_scripts) {
+static void _find_changed_scripts_for_external_editor(Node *p_base, Node *p_current, AHashSet<Ref<Script>> &r_scripts) {
 	if (p_current->get_owner() != p_base && p_base != p_current) {
 		return;
 	}
@@ -1144,7 +1144,7 @@ void ScriptEditor::_update_modified_scripts_for_external_editor(Ref<Script> p_fo
 
 	ERR_FAIL_NULL(get_tree());
 
-	HashSet<Ref<Script>> scripts;
+	AHashSet<Ref<Script>> scripts;
 
 	Node *base = get_tree()->get_edited_scene_root();
 	if (base) {
@@ -1555,7 +1555,7 @@ void ScriptTextEditor::_update_connected_methods() {
 
 	// Add connection icons to methods.
 	Vector<Node *> nodes = _find_all_node_for_script(base, base, script);
-	HashSet<StringName> methods_found;
+	AHashSet<StringName> methods_found;
 	for (int i = 0; i < nodes.size(); i++) {
 		List<Connection> signal_connections;
 		nodes[i]->get_signals_connected_to_this(&signal_connections);

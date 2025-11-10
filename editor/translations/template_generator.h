@@ -38,8 +38,8 @@ class TranslationTemplateGenerator {
 
 	struct MessageData {
 		String plural;
-		HashSet<String> locations;
-		HashSet<String> comments;
+		AHashSet<String> locations;
+		AHashSet<String> comments;
 	};
 
 	using MessageMap = HashMap<Translation::MessageKey, MessageData, Translation::MessageKey>;

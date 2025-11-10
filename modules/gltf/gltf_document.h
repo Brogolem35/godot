@@ -84,7 +84,7 @@ public:
 	static void unregister_all_gltf_document_extensions();
 	static Vector<Ref<GLTFDocumentExtension>> get_all_gltf_document_extensions();
 	static Vector<String> get_supported_gltf_extensions();
-	static HashSet<String> get_supported_gltf_extensions_hashset();
+	static AHashSet<String> get_supported_gltf_extensions_hashset();
 
 	static NodePath _find_material_node_path(Ref<GLTFState> p_state, Ref<Material> p_material);
 	static Ref<GLTFObjectModelProperty> import_object_model_property(Ref<GLTFState> p_state, const String &p_json_pointer);
@@ -104,7 +104,7 @@ public:
 	RootNodeMode get_root_node_mode() const;
 	void set_visibility_mode(VisibilityMode p_visibility_mode);
 	VisibilityMode get_visibility_mode() const;
-	static String _gen_unique_name_static(HashSet<String> &r_unique_names, const String &p_name);
+	static String _gen_unique_name_static(AHashSet<String> &r_unique_names, const String &p_name);
 
 private:
 	void _build_parent_hierarchy(Ref<GLTFState> p_state);

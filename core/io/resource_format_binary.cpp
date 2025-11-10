@@ -933,7 +933,7 @@ String ResourceLoaderBinary::get_unicode_string() {
 	return String::utf8(&str_buf[0], len);
 }
 
-void ResourceLoaderBinary::get_classes_used(Ref<FileAccess> p_f, HashSet<StringName> *p_classes) {
+void ResourceLoaderBinary::get_classes_used(Ref<FileAccess> p_f, AHashSet<StringName> *p_classes) {
 	open(p_f, false, true);
 	if (error) {
 		return;
@@ -1511,7 +1511,7 @@ Error ResourceFormatLoaderBinary::rename_dependencies(const String &p_path, cons
 	return OK;
 }
 
-void ResourceFormatLoaderBinary::get_classes_used(const String &p_path, HashSet<StringName> *r_classes) {
+void ResourceFormatLoaderBinary::get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	ERR_FAIL_COND_MSG(f.is_null(), vformat("Cannot open file '%s'.", p_path));
 
@@ -2325,7 +2325,7 @@ Error ResourceFormatSaverBinaryInstance::save(const String &p_path, const Ref<Re
 	// save internal resource table
 	f->store_32(uint32_t(saved_resources.size())); //amount of internal resources
 	Vector<uint64_t> ofs_pos;
-	HashSet<String> used_unique_ids;
+	AHashSet<String> used_unique_ids;
 
 	for (Ref<Resource> &r : saved_resources) {
 		if (r->is_built_in()) {

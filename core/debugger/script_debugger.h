@@ -41,7 +41,7 @@ class ScriptDebugger {
 	bool skip_breakpoints = false;
 	bool ignore_error_breaks = false;
 
-	HashMap<int, HashSet<StringName>> breakpoints;
+	HashMap<int, AHashSet<StringName>> breakpoints;
 
 	static inline thread_local int lines_left = -1;
 	static inline thread_local int depth = -1;
@@ -75,7 +75,7 @@ public:
 		return breakpoints[p_line].has(p_source);
 	}
 	void clear_breakpoints();
-	const HashMap<int, HashSet<StringName>> &get_breakpoints() const { return breakpoints; }
+	const HashMap<int, AHashSet<StringName>> &get_breakpoints() const { return breakpoints; }
 
 	void debug(ScriptLanguage *p_lang, bool p_can_continue = true, bool p_is_error_breakpoint = false);
 	ScriptLanguage *get_break_language() const;

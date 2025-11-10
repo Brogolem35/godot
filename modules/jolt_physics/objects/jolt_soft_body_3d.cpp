@@ -45,7 +45,7 @@
 namespace {
 
 template <typename TJoltVertex>
-void pin_vertices(const JoltSoftBody3D &p_body, const HashSet<int> &p_pinned_vertices, const LocalVector<int> &p_mesh_to_physics, JPH::Array<TJoltVertex> &r_physics_vertices) {
+void pin_vertices(const JoltSoftBody3D &p_body, const AHashSet<int> &p_pinned_vertices, const LocalVector<int> &p_mesh_to_physics, JPH::Array<TJoltVertex> &r_physics_vertices) {
 	const int mesh_vertex_count = p_mesh_to_physics.size();
 	const int physics_vertex_count = (int)r_physics_vertices.size();
 

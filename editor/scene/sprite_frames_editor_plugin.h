@@ -182,7 +182,7 @@ class SpriteFramesEditor : public HSplitContainer {
 	OptionButton *split_sheet_order = nullptr;
 	EditorFileDialog *file_split_sheet = nullptr;
 	HashMap<int, int> frames_selected; // Key is frame index. Value is selection order.
-	HashSet<int> frames_toggled_by_mouse_hover;
+	AHashSet<int> frames_toggled_by_mouse_hover;
 	Vector<Pair<int, int>> frames_ordered; // First is the index to be ordered by. Second is the actual frame index.
 	int selected_count = 0;
 	bool frames_need_sort = false;

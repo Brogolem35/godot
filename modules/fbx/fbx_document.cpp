@@ -263,7 +263,7 @@ static void _thread_pool_wait_fn(void *user, ufbx_thread_pool_context ctx, uint3
 	pool->pool->wait_for_group_task_completion(pool->groups[group].task_id);
 }
 
-String FBXDocument::_gen_unique_name(HashSet<String> &unique_names, const String &p_name) {
+String FBXDocument::_gen_unique_name(AHashSet<String> &unique_names, const String &p_name) {
 	const String s_name = p_name.validate_node_name();
 
 	String u_name;

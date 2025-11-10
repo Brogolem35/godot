@@ -157,7 +157,7 @@ bool ShaderBakerExportPlugin::_begin_customize_resources(const Ref<EditorExportP
 	// Include all shaders created by embedded materials.
 	RendererRD::MaterialStorage *material_storage = RendererRD::MaterialStorage::get_singleton();
 	material_storage->shader_embedded_set_lock();
-	const HashSet<RID> &rid_set = material_storage->shader_embedded_set_get();
+	const AHashSet<RID> &rid_set = material_storage->shader_embedded_set_get();
 	for (RID rid : rid_set) {
 		RendererRD::MaterialStorage::ShaderData *shader_data = material_storage->shader_get_data(rid);
 		if (shader_data != nullptr) {

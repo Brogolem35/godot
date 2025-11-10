@@ -118,7 +118,7 @@ private:
 	Vector<QuickOpenResultCandidate> candidates;
 
 	AHashMap<StringName, Vector<QuickOpenResultCandidate>> selected_history;
-	HashSet<String> history_set;
+	AHashSet<String> history_set;
 
 	String query;
 	int selection_index = -1;

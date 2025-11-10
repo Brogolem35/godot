@@ -70,7 +70,7 @@ class ScriptTextEditor : public ScriptEditorBase {
 	List<ScriptLanguage::Warning> warnings;
 	List<ScriptLanguage::ScriptError> errors;
 	HashMap<String, List<ScriptLanguage::ScriptError>> depended_errors;
-	HashSet<int> safe_lines;
+	AHashSet<int> safe_lines;
 
 	List<Connection> missing_connections;
 

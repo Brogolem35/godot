@@ -42,7 +42,7 @@ struct ClassData {
 			class_name(p_name), parent_class_name(p_parent) {}
 	String class_name;
 	String parent_class_name;
-	HashSet<String> child_classes;
+	AHashSet<String> child_classes;
 	LocalVector<SnapshotDataObject *> instances;
 	TreeItem *tree_node = nullptr;
 	HashMap<GameStateSnapshot *, int> recursive_instance_count_cache;

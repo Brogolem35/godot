@@ -51,7 +51,7 @@ class World2D : public Resource {
 	mutable RID space;
 #endif // PHYSICS_2D_DISABLED
 
-	HashSet<Viewport *> viewports;
+	AHashSet<Viewport *> viewports;
 
 protected:
 	static void _bind_methods();
@@ -71,7 +71,7 @@ public:
 	void register_viewport(Viewport *p_viewport);
 	void remove_viewport(Viewport *p_viewport);
 
-	_FORCE_INLINE_ const HashSet<Viewport *> &get_viewports() { return viewports; }
+	_FORCE_INLINE_ const AHashSet<Viewport *> &get_viewports() { return viewports; }
 
 	World2D();
 	~World2D();

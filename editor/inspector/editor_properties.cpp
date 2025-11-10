@@ -3237,7 +3237,7 @@ void EditorPropertyResource::_resource_selected(const Ref<Resource> &p_resource,
 	}
 }
 
-static bool _find_recursive_resources(const Variant &v, HashSet<Resource *> &resources_found) {
+static bool _find_recursive_resources(const Variant &v, AHashSet<Resource *> &resources_found) {
 	switch (v.get_type()) {
 		case Variant::ARRAY: {
 			Array a = v;
@@ -3308,7 +3308,7 @@ void EditorPropertyResource::_resource_changed(const Ref<Resource> &p_resource) 
 	Resource *r = Object::cast_to<Resource>(get_edited_object());
 	if (r) {
 		// Check for recursive setting of resource
-		HashSet<Resource *> resources_found;
+		AHashSet<Resource *> resources_found;
 		resources_found.insert(r);
 		bool found = _find_recursive_resources(p_resource, resources_found);
 		if (found) {

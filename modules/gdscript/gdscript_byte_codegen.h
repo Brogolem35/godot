@@ -85,11 +85,11 @@ class GDScriptByteCodeGenerator : public GDScriptCodeGenerator {
 	RBMap<StringName, int> local_constants;
 
 	Vector<StackSlot> locals;
-	HashSet<int> dirty_locals;
+	AHashSet<int> dirty_locals;
 
 	Vector<StackSlot> temporaries;
 	List<int> used_temporaries;
-	HashSet<int> temporaries_pending_clear;
+	AHashSet<int> temporaries_pending_clear;
 	RBMap<Variant::Type, List<int>> temporaries_pool;
 
 	List<GDScriptFunction::StackDebug> stack_debug;

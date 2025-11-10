@@ -70,8 +70,8 @@ class CreateDialog : public ConfirmationDialog {
 	HashMap<String, String> custom_type_parents;
 	HashMap<String, int> custom_type_indices;
 	List<TypeInfo> type_info_list;
-	HashSet<StringName> type_blacklist;
-	HashSet<StringName> custom_type_blocklist;
+	AHashSet<StringName> type_blacklist;
+	AHashSet<StringName> custom_type_blocklist;
 
 	void _update_search();
 	bool _should_hide_type(const StringName &p_type) const;
@@ -122,7 +122,7 @@ public:
 	String get_base_type() const { return base_type; }
 	void select_base();
 
-	void set_type_blocklist(const HashSet<StringName> &p_blocklist) { custom_type_blocklist = p_blocklist; }
+	void set_type_blocklist(const AHashSet<StringName> &p_blocklist) { custom_type_blocklist = p_blocklist; }
 	void set_preferred_search_result_type(const String &p_preferred_type) { preferred_search_result_type = p_preferred_type; }
 
 	void popup_create(bool p_dont_clear, bool p_replace_mode = false, const String &p_current_type = "", const String &p_current_name = "");

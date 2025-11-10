@@ -938,7 +938,7 @@ void RendererSceneCull::instance_set_layer_mask(RID p_instance, uint32_t p_mask)
 		geom->geometry_instance->set_layer_mask(p_mask);
 
 		if (geom->can_cast_shadows) {
-			for (HashSet<RendererSceneCull::Instance *>::Iterator I = geom->lights.begin(); I != geom->lights.end(); ++I) {
+			for (AHashSet<RendererSceneCull::Instance *>::Iterator I = geom->lights.begin(); I != geom->lights.end(); ++I) {
 				InstanceLightData *light = static_cast<InstanceLightData *>((*I)->base_data);
 				light->make_shadow_dirty();
 			}
@@ -1421,7 +1421,7 @@ void RendererSceneCull::instance_set_visibility_parent(RID p_instance, RID p_par
 
 bool RendererSceneCull::_update_instance_visibility_depth(Instance *p_instance) {
 	bool cycle_detected = false;
-	HashSet<Instance *> traversed_nodes;
+	AHashSet<Instance *> traversed_nodes;
 
 	{
 		Instance *instance = p_instance;

@@ -52,7 +52,7 @@ class TranslationDomain : public RefCounted {
 	bool enabled = true;
 
 	String locale_override;
-	HashSet<Ref<Translation>> translations;
+	AHashSet<Ref<Translation>> translations;
 	PseudolocalizationConfig pseudolocalization;
 
 	String _get_override_string(const String &p_message) const;
@@ -72,7 +72,7 @@ public:
 	StringName get_message_from_translations(const String &p_locale, const StringName &p_message, const StringName &p_message_plural, int p_n, const StringName &p_context) const;
 	PackedStringArray get_loaded_locales() const;
 	bool has_translation_for_locale(const String &p_locale) const;
-	HashSet<Ref<Translation>> get_potential_translations(const String &p_locale) const;
+	AHashSet<Ref<Translation>> get_potential_translations(const String &p_locale) const;
 
 public:
 	Ref<Translation> get_translation_object(const String &p_locale) const;

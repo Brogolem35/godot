@@ -370,8 +370,8 @@ void ResourceImporterScene::_pre_fix_global(Node *p_scene, const HashMap<StringN
 			Skeleton3D *skeleton = cast_to<Skeleton3D>(skeletons[i]);
 			NodePath skeleton_path = p_scene->get_path_to(skeleton);
 
-			HashSet<NodePath> existing_pos_tracks;
-			HashSet<NodePath> existing_rot_tracks;
+			AHashSet<NodePath> existing_pos_tracks;
+			AHashSet<NodePath> existing_rot_tracks;
 			for (int trk_i = 0; trk_i < reset_anim->get_track_count(); trk_i++) {
 				NodePath np = reset_anim->track_get_path(trk_i);
 				if (reset_anim->track_get_type(trk_i) == Animation::TYPE_POSITION_3D) {
@@ -461,10 +461,10 @@ static void _pre_gen_shape_list(Ref<ImporterMesh> &mesh, Vector<Ref<Shape3D>> &r
 }
 
 struct ScalableNodeCollection {
-	HashSet<Node3D *> node_3ds;
-	HashSet<Ref<ImporterMesh>> importer_meshes;
-	HashSet<Ref<Skin>> skins;
-	HashSet<Ref<Animation>> animations;
+	AHashSet<Node3D *> node_3ds;
+	AHashSet<Ref<ImporterMesh>> importer_meshes;
+	AHashSet<Ref<Skin>> skins;
+	AHashSet<Ref<Animation>> animations;
 };
 
 void _rescale_importer_mesh(Vector3 p_scale, Ref<ImporterMesh> p_mesh, bool is_shadow = false) {
@@ -1414,7 +1414,7 @@ Node *ResourceImporterScene::_replace_node_with_type_and_script(Node *p_node, St
 	return p_node;
 }
 
-Node *ResourceImporterScene::_post_fix_node(Node *p_node, Node *p_root, HashMap<Ref<ImporterMesh>, Vector<Ref<Shape3D>>> &collision_map, Pair<PackedVector3Array, PackedInt32Array> &r_occluder_arrays, HashSet<Ref<ImporterMesh>> &r_scanned_meshes, const Dictionary &p_node_data, const Dictionary &p_material_data, const Dictionary &p_animation_data, float p_animation_fps, float p_applied_root_scale, const String &p_source_file, const HashMap<StringName, Variant> &p_options) {
+Node *ResourceImporterScene::_post_fix_node(Node *p_node, Node *p_root, HashMap<Ref<ImporterMesh>, Vector<Ref<Shape3D>>> &collision_map, Pair<PackedVector3Array, PackedInt32Array> &r_occluder_arrays, AHashSet<Ref<ImporterMesh>> &r_scanned_meshes, const Dictionary &p_node_data, const Dictionary &p_material_data, const Dictionary &p_animation_data, float p_animation_fps, float p_applied_root_scale, const String &p_source_file, const HashMap<StringName, Variant> &p_options) {
 	// children first
 	for (int i = 0; i < p_node->get_child_count(); i++) {
 		Node *r = _post_fix_node(p_node->get_child(i), p_root, collision_map, r_occluder_arrays, r_scanned_meshes, p_node_data, p_material_data, p_animation_data, p_animation_fps, p_applied_root_scale, p_source_file, p_options);
@@ -2402,7 +2402,7 @@ bool ResourceImporterScene::get_internal_option_visibility(InternalImportCategor
 						prof = bone_map->get_profile();
 					}
 					if (anim.is_valid()) {
-						HashSet<StringName> target_bones;
+						AHashSet<StringName> target_bones;
 						if (bone_map.is_valid() && prof.is_valid()) {
 							for (int target_i = 0; target_i < prof->get_bone_size(); target_i++) {
 								StringName skeleton_bone_name = bone_map->get_skeleton_bone_name(prof->get_bone_name(target_i));
@@ -3172,7 +3172,7 @@ Error ResourceImporterScene::import(ResourceUID::ID p_source_id, const String &p
 
 	_pre_fix_global(scene, p_options);
 
-	HashSet<Ref<ImporterMesh>> scanned_meshes;
+	AHashSet<Ref<ImporterMesh>> scanned_meshes;
 	HashMap<Ref<ImporterMesh>, Vector<Ref<Shape3D>>> collision_map;
 	Pair<PackedVector3Array, PackedInt32Array> occluder_arrays;
 	List<Pair<NodePath, Node *>> node_renames;

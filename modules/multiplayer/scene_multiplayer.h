@@ -112,7 +112,7 @@ private:
 	HashMap<int, PendingPeer> pending_peers; // true if locally finalized.
 	Callable auth_callback;
 	uint64_t auth_timeout = 3000;
-	HashSet<int> connected_peers;
+	AHashSet<int> connected_peers;
 	int remote_sender_id = 0;
 	int remote_sender_override = 0;
 
@@ -182,7 +182,7 @@ public:
 	Error send_bytes(Vector<uint8_t> p_data, int p_to = MultiplayerPeer::TARGET_PEER_BROADCAST, MultiplayerPeer::TransferMode p_mode = MultiplayerPeer::TRANSFER_MODE_RELIABLE, int p_channel = 0);
 	String get_rpc_md5(const Object *p_obj);
 
-	const HashSet<int> get_connected_peers() const { return connected_peers; }
+	const AHashSet<int> get_connected_peers() const { return connected_peers; }
 
 	void set_remote_sender_override(int p_id) { remote_sender_override = p_id; }
 	void set_refuse_new_connections(bool p_refuse);

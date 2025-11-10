@@ -66,7 +66,7 @@ private:
 	String indent_text = "\t";
 
 	bool auto_indent = false;
-	HashSet<char32_t> auto_indent_prefixes;
+	AHashSet<char32_t> auto_indent_prefixes;
 
 	bool indent_using_spaces = false;
 	int _calculate_spaces_till_next_left_indent(int p_column) const;
@@ -221,7 +221,7 @@ private:
 	Rect2i code_completion_scroll_rect;
 	float code_completion_pan_offset = 0.0f;
 
-	HashSet<char32_t> code_completion_prefixes;
+	AHashSet<char32_t> code_completion_prefixes;
 	List<ScriptLanguage::CodeCompletionOption> code_completion_option_submitted;
 	List<ScriptLanguage::CodeCompletionOption> code_completion_option_sources;
 	String code_completion_base;

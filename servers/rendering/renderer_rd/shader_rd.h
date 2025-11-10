@@ -53,7 +53,7 @@ public:
 	};
 
 	typedef Pair<ShaderRD *, RID> ShaderVersionPair;
-	typedef HashSet<ShaderVersionPair> ShaderVersionPairSet;
+	typedef AHashSet<ShaderVersionPair> ShaderVersionPairSet;
 
 private:
 	//versions

@@ -84,7 +84,7 @@ bool ResourceFormatLoader::handles_type(const String &p_type) const {
 	return success;
 }
 
-void ResourceFormatLoader::get_classes_used(const String &p_path, HashSet<StringName> *r_classes) {
+void ResourceFormatLoader::get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) {
 	Vector<String> ret;
 	if (GDVIRTUAL_CALL(_get_classes_used, p_path, ret)) {
 		for (int i = 0; i < ret.size(); i++) {
@@ -1136,7 +1136,7 @@ Error ResourceLoader::rename_dependencies(const String &p_path, const HashMap<St
 	return OK; // ??
 }
 
-void ResourceLoader::get_classes_used(const String &p_path, HashSet<StringName> *r_classes) {
+void ResourceLoader::get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) {
 	String local_path = _validate_local_path(p_path);
 
 	for (int i = 0; i < loader_count; i++) {

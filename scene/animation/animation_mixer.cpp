@@ -1135,7 +1135,7 @@ void AnimationMixer::_blend_calc_total_weight() {
 		int track_weights_count = ai.playback_info.track_weights.size();
 		ERR_CONTINUE_EDMSG(!animation_track_num_to_track_cache.has(a), "No animation in cache.");
 		LocalVector<TrackCache *> &track_num_to_track_cache = animation_track_num_to_track_cache[a];
-		thread_local HashSet<Animation::TypeHash, HashHasher> processed_hashes;
+		thread_local AHashSet<Animation::TypeHash, HashHasher> processed_hashes;
 		processed_hashes.clear();
 		const LocalVector<Animation::Track *> &tracks = a->get_tracks();
 		Animation::Track *const *tracks_ptr = tracks.ptr();

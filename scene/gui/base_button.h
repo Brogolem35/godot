@@ -152,7 +152,7 @@ VARIANT_ENUM_CAST(BaseButton::ActionMode)
 class ButtonGroup : public Resource {
 	GDCLASS(ButtonGroup, Resource);
 	friend class BaseButton;
-	HashSet<BaseButton *> buttons;
+	AHashSet<BaseButton *> buttons;
 	bool allow_unpress = false;
 
 protected:

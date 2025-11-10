@@ -742,14 +742,14 @@ enum {
 	BUTTON_ID_OPEN_DEPS_EDITOR,
 };
 
-void DependencyErrorDialog::show(const String &p_for_file, const HashMap<String, HashSet<String>> &p_report) {
+void DependencyErrorDialog::show(const String &p_for_file, const HashMap<String, AHashSet<String>> &p_report) {
 	for_file = p_for_file;
 
 	// TRANSLATORS: The placeholder is a filename.
 	set_title(vformat(TTR("Error loading: %s"), p_for_file.get_file()));
 
-	HashMap<String, HashSet<String>> missing_to_owners;
-	for (const KeyValue<String, HashSet<String>> &E : p_report) {
+	HashMap<String, AHashSet<String>> missing_to_owners;
+	for (const KeyValue<String, AHashSet<String>> &E : p_report) {
 		for (const String &missing : E.value) {
 			missing_to_owners[missing].insert(E.key);
 		}
@@ -759,7 +759,7 @@ void DependencyErrorDialog::show(const String &p_for_file, const HashMap<String,
 	TreeItem *root = files->create_item(nullptr);
 	Ref<Texture2D> folder_icon = get_theme_icon(SNAME("folder"), SNAME("FileDialog"));
 
-	for (const KeyValue<String, HashSet<String>> &E : missing_to_owners) {
+	for (const KeyValue<String, AHashSet<String>> &E : missing_to_owners) {
 		const String &missing_path = E.key.get_slice("::", 0);
 		const String &missing_type = E.key.get_slice("::", 1);
 

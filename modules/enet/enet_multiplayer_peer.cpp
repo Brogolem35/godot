@@ -144,7 +144,7 @@ void ENetMultiplayerPeer::_store_packet(int32_t p_source, ENetConnection::Event 
 }
 
 void ENetMultiplayerPeer::_disconnect_inactive_peers() {
-	HashSet<int> to_drop;
+	AHashSet<int> to_drop;
 	for (const KeyValue<int, Ref<ENetPacketPeer>> &E : peers) {
 		if (E.value->is_active()) {
 			continue;
@@ -228,7 +228,7 @@ void ENetMultiplayerPeer::poll() {
 			} while (hosts.has(0) && hosts[0]->check_events(ret, event) > 0);
 		} break;
 		case MODE_MESH: {
-			HashSet<int> to_drop;
+			AHashSet<int> to_drop;
 			for (KeyValue<int, Ref<ENetConnection>> &E : hosts) {
 				ENetConnection::Event event;
 				ENetConnection::EventType ret = E.value->service(0, event);

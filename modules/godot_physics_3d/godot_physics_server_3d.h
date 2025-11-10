@@ -53,7 +53,7 @@ class GodotPhysicsServer3D : public PhysicsServer3D {
 	bool flushing_queries = false;
 
 	GodotStep3D *stepper = nullptr;
-	HashSet<GodotSpace3D *> active_spaces;
+	AHashSet<GodotSpace3D *> active_spaces;
 
 	mutable RID_PtrOwner<GodotShape3D, true> shape_owner;
 	mutable RID_PtrOwner<GodotSpace3D, true> space_owner;

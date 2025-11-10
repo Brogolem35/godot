@@ -39,8 +39,8 @@
 
 class GDScriptCompiler {
 	const GDScriptParser *parser = nullptr;
-	HashSet<GDScript *> parsed_classes;
-	HashSet<GDScript *> parsing_classes;
+	AHashSet<GDScript *> parsed_classes;
+	AHashSet<GDScript *> parsing_classes;
 	GDScript *main_script = nullptr;
 
 	struct FunctionLambdaInfo {

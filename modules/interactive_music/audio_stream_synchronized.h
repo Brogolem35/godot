@@ -48,7 +48,7 @@ private:
 	int stream_count = 0;
 	Ref<AudioStream> audio_streams[MAX_STREAMS];
 	float audio_stream_volume_db[MAX_STREAMS] = {};
-	HashSet<AudioStreamPlaybackSynchronized *> playbacks;
+	AHashSet<AudioStreamPlaybackSynchronized *> playbacks;
 
 public:
 	virtual double get_bpm() const override;

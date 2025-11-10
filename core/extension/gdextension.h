@@ -53,7 +53,7 @@ class GDExtension : public Resource {
 #ifdef TOOLS_ENABLED
 		bool is_reloading = false;
 		HashMap<StringName, GDExtensionMethodBind *> methods;
-		HashSet<ObjectID> instances;
+		AHashSet<ObjectID> instances;
 
 		struct InstanceState {
 			List<Pair<String, Variant>> properties;
@@ -194,7 +194,7 @@ public:
 	virtual bool handles_type(const String &p_type) const override;
 	virtual String get_resource_type(const String &p_path) const override;
 #ifdef TOOLS_ENABLED
-	virtual void get_classes_used(const String &p_path, HashSet<StringName> *r_classes) override;
+	virtual void get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) override;
 #endif // TOOLS_ENABLED
 };
 

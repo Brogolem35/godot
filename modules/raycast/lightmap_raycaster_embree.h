@@ -55,7 +55,7 @@ private:
 	static void filter_function(const struct RTCFilterFunctionNArguments *p_args);
 
 	HashMap<unsigned int, AlphaTextureData> alpha_textures;
-	HashSet<int> filter_meshes;
+	AHashSet<int> filter_meshes;
 
 public:
 	virtual bool intersect(Ray &p_ray) override;
@@ -66,7 +66,7 @@ public:
 	virtual void set_mesh_alpha_texture(Ref<Image> p_alpha_texture, unsigned int p_id) override;
 	virtual void commit() override;
 
-	virtual void set_mesh_filter(const HashSet<int> &p_mesh_ids) override;
+	virtual void set_mesh_filter(const AHashSet<int> &p_mesh_ids) override;
 	virtual void clear_mesh_filter() override;
 
 	static LightmapRaycaster *create_embree_raycaster();

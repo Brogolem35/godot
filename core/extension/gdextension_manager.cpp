@@ -359,7 +359,7 @@ void GDExtensionManager::reload_extensions() {
 #endif
 }
 
-bool GDExtensionManager::ensure_extensions_loaded(const HashSet<String> &p_extensions) {
+bool GDExtensionManager::ensure_extensions_loaded(const AHashSet<String> &p_extensions) {
 	Vector<String> extensions_added;
 	Vector<String> extensions_removed;
 

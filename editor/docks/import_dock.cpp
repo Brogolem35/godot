@@ -49,7 +49,7 @@ public:
 	List<PropertyInfo> properties;
 	Ref<ResourceImporter> importer;
 	Vector<String> paths;
-	HashSet<StringName> checked;
+	AHashSet<StringName> checked;
 	bool checking = false;
 	bool skip = false;
 	String base_options_path;
@@ -228,7 +228,7 @@ void ImportDock::set_edit_multiple_paths(const Vector<String> &p_paths) {
 
 	// Use the value that is repeated the most.
 	HashMap<String, Dictionary> value_frequency;
-	HashSet<String> extensions;
+	AHashSet<String> extensions;
 
 	for (int i = 0; i < p_paths.size(); i++) {
 		Ref<ConfigFile> config;

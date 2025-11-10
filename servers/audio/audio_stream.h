@@ -224,7 +224,7 @@ class AudioStreamMicrophone : public AudioStream {
 	GDCLASS(AudioStreamMicrophone, AudioStream);
 	friend class AudioStreamPlaybackMicrophone;
 
-	HashSet<AudioStreamPlaybackMicrophone *> playbacks;
+	AHashSet<AudioStreamPlaybackMicrophone *> playbacks;
 
 public:
 	virtual Ref<AudioStreamPlayback> instantiate_playback() override;
@@ -291,7 +291,7 @@ private:
 	static inline PropertyListHelper base_property_helper;
 	PropertyListHelper property_helper;
 
-	HashSet<AudioStreamPlaybackRandomizer *> playbacks;
+	AHashSet<AudioStreamPlaybackRandomizer *> playbacks;
 	Vector<PoolEntry> audio_stream_pool;
 	float random_pitch_scale = 1.0f;
 	float random_volume_offset_db = 0.0f;

@@ -49,9 +49,9 @@ class GDScriptEditorTranslationParserPlugin : public EditorTranslationParserPlug
 	StringName trn_func = "tr_n";
 	StringName atr_func = "atr";
 	StringName atrn_func = "atr_n";
-	HashSet<StringName> assignment_patterns;
-	HashSet<StringName> first_arg_patterns;
-	HashSet<StringName> second_arg_patterns;
+	AHashSet<StringName> assignment_patterns;
+	AHashSet<StringName> first_arg_patterns;
+	AHashSet<StringName> second_arg_patterns;
 	// FileDialog patterns.
 	StringName fd_add_filter = "add_filter";
 	StringName fd_set_filter = "set_filters";

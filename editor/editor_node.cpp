@@ -586,7 +586,7 @@ void EditorNode::_update_translations() {
 		// `get_potential_translations("zh_CN")` could return translations for "zh".
 		if (main->has_translation_for_locale(main->get_locale_override())) {
 			// The set of translation resources for the current locale changed.
-			const HashSet<Ref<Translation>> translations = main->get_potential_translations(main->get_locale_override());
+			const AHashSet<Ref<Translation>> translations = main->get_potential_translations(main->get_locale_override());
 			if (translations != tracked_translations) {
 				_translation_resources_changed();
 			}
@@ -607,7 +607,7 @@ void EditorNode::_translation_resources_changed() {
 
 	const Ref<TranslationDomain> main = TranslationServer::get_singleton()->get_main_domain();
 	if (main->is_enabled()) {
-		const HashSet<Ref<Translation>> translations = main->get_potential_translations(main->get_locale_override());
+		const AHashSet<Ref<Translation>> translations = main->get_potential_translations(main->get_locale_override());
 		tracked_translations.reserve(translations.size());
 		for (const Ref<Translation> &translation : translations) {
 			translation->connect_changed(callable_mp(this, &EditorNode::_queue_translation_notification));
@@ -1040,8 +1040,8 @@ void EditorNode::_notification(int p_what) {
 			}
 
 			if (EditorSettings::get_singleton()->check_changed_settings_in_group("docks/filesystem")) {
-				HashSet<String> updated_textfile_extensions;
-				HashSet<String> updated_other_file_extensions;
+				AHashSet<String> updated_textfile_extensions;
+				AHashSet<String> updated_other_file_extensions;
 				bool extensions_match = true;
 				const Vector<String> textfile_ext = ((String)(EDITOR_GET("docks/filesystem/textfile_extensions"))).split(",", false);
 				for (const String &E : textfile_ext) {
@@ -2223,7 +2223,7 @@ int EditorNode::_save_external_resources(bool p_also_save_external_data) {
 	}
 	flg |= ResourceSaver::FLAG_REPLACE_SUBRESOURCE_PATHS;
 
-	HashSet<String> edited_resources;
+	AHashSet<String> edited_resources;
 	int saved = 0;
 	List<Ref<Resource>> cached;
 	ResourceCache::get_cached_resources(&cached);
@@ -2416,7 +2416,7 @@ void EditorNode::save_scene_if_open(const String &p_scene_path) {
 	}
 }
 
-void EditorNode::save_scene_list(const HashSet<String> &p_scene_paths) {
+void EditorNode::save_scene_list(const AHashSet<String> &p_scene_paths) {
 	for (int i = 0; i < editor_data.get_edited_scene_count(); i++) {
 		Node *scene = editor_data.get_edited_scene_root(i);
 
@@ -2799,7 +2799,7 @@ void EditorNode::edit_item(Object *p_object, Object *p_editing_owner) {
 		List<EditorPropertyResource *> to_fold;
 
 		// If plugin is already associated with another owner, remove it from there first.
-		for (KeyValue<ObjectID, HashSet<EditorPlugin *>> &kv : active_plugins) {
+		for (KeyValue<ObjectID, AHashSet<EditorPlugin *>> &kv : active_plugins) {
 			if (kv.key == owner_id || !kv.value.has(plugin)) {
 				continue;
 			}
@@ -2891,7 +2891,7 @@ void EditorNode::hide_unused_editors(const Object *p_editing_owner) {
 		// If no editing owner is provided, this method will go over all owners and check if they are valid.
 		// This is to sweep properties that were removed from the inspector.
 		List<ObjectID> to_remove;
-		for (KeyValue<ObjectID, HashSet<EditorPlugin *>> &kv : active_plugins) {
+		for (KeyValue<ObjectID, AHashSet<EditorPlugin *>> &kv : active_plugins) {
 			Object *context = ObjectDB::get_instance(kv.key);
 			if (context) {
 				// In case of self-owning plugins, they are disabled here if they can auto hide.
@@ -4152,7 +4152,7 @@ void EditorNode::remove_editor_plugin(EditorPlugin *p_editor, bool p_config_chan
 	singleton->remove_child(p_editor);
 	singleton->editor_data.remove_editor_plugin(p_editor);
 
-	for (KeyValue<ObjectID, HashSet<EditorPlugin *>> &kv : singleton->active_plugins) {
+	for (KeyValue<ObjectID, AHashSet<EditorPlugin *>> &kv : singleton->active_plugins) {
 		kv.value.erase(p_editor);
 	}
 }
@@ -4652,7 +4652,7 @@ Error EditorNode::load_scene(const String &p_scene, bool p_ignore_broken_deps, b
 
 	dependency_errors.erase(lpath); // At least not self path.
 
-	for (KeyValue<String, HashSet<String>> &E : dependency_errors) {
+	for (KeyValue<String, AHashSet<String>> &E : dependency_errors) {
 		String txt = vformat(TTR("Scene '%s' has broken dependencies:"), E.key) + "\n";
 		for (const String &F : E.value) {
 			txt += "\t" + F + "\n";
@@ -5051,7 +5051,7 @@ void EditorNode::get_preload_scene_modification_table(
 void EditorNode::get_preload_modifications_reference_to_nodes(
 		Node *p_root,
 		Node *p_node,
-		HashSet<Node *> &p_excluded_nodes,
+		AHashSet<Node *> &p_excluded_nodes,
 		List<Node *> &p_instance_list_with_children,
 		HashMap<NodePath, ModificationNodeEntry> &p_modification_table) {
 	if (!p_excluded_nodes.find(p_node)) {
@@ -6806,7 +6806,7 @@ void EditorNode::reload_scene(const String &p_path) {
 	scene_tabs->set_current_tab(current_tab);
 }
 
-void EditorNode::find_all_instances_inheriting_path_in_node(Node *p_root, Node *p_node, const String &p_instance_path, HashSet<Node *> &p_instance_list) {
+void EditorNode::find_all_instances_inheriting_path_in_node(Node *p_root, Node *p_node, const String &p_instance_path, AHashSet<Node *> &p_instance_list) {
 	String scene_file_path = p_node->get_scene_file_path();
 
 	bool valid_instance_found = false;
@@ -6867,7 +6867,7 @@ void EditorNode::preload_reimporting_with_path_in_edited_scenes(const List<Strin
 					continue;
 				}
 
-				HashSet<Node *> instances_to_reimport;
+				AHashSet<Node *> instances_to_reimport;
 				find_all_instances_inheriting_path_in_node(edited_scene_root, edited_scene_root, instance_path, instances_to_reimport);
 				if (instances_to_reimport.size() > 0) {
 					editor_data.set_edited_scene(current_scene_idx);

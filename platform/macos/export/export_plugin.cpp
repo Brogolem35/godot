@@ -1816,7 +1816,7 @@ Error EditorExportPlatformMacOS::export_project(const Ref<EditorExportPreset> &p
 			f->store_line("NSHumanReadableCopyright = \"" + p_preset->get("application/copyright").operator String() + "\";");
 		}
 
-		HashSet<String> languages;
+		AHashSet<String> languages;
 		for (const String &E : translations) {
 			Ref<Translation> tr = ResourceLoader::load(E);
 			if (tr.is_valid() && tr->get_locale() != "en") {

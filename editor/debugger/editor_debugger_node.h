@@ -118,7 +118,7 @@ private:
 	CameraOverride camera_override = OVERRIDE_NONE;
 	HashMap<Breakpoint, bool, Breakpoint> breakpoints;
 
-	HashSet<Ref<EditorDebuggerPlugin>> debugger_plugins;
+	AHashSet<Ref<EditorDebuggerPlugin>> debugger_plugins;
 
 	ScriptEditorDebugger *_add_debugger();
 	void _update_errors();

@@ -37,11 +37,11 @@ class GDExtensionExportPlugin : public EditorExportPlugin {
 	GDSOFTCLASS(GDExtensionExportPlugin, EditorExportPlugin);
 
 protected:
-	virtual void _export_file(const String &p_path, const String &p_type, const HashSet<String> &p_features) override;
+	virtual void _export_file(const String &p_path, const String &p_type, const AHashSet<String> &p_features) override;
 	virtual String get_name() const override { return "GDExtension"; }
 };
 
-void GDExtensionExportPlugin::_export_file(const String &p_path, const String &p_type, const HashSet<String> &p_features) {
+void GDExtensionExportPlugin::_export_file(const String &p_path, const String &p_type, const AHashSet<String> &p_features) {
 	if (p_type != "GDExtension") {
 		return;
 	}
@@ -65,7 +65,7 @@ void GDExtensionExportPlugin::_export_file(const String &p_path, const String &p
 
 	String entry_symbol = config->get_value("configuration", "entry_symbol");
 
-	HashSet<String> all_archs;
+	AHashSet<String> all_archs;
 	all_archs.insert("x86_32");
 	all_archs.insert("x86_64");
 	all_archs.insert("arm32");
@@ -76,8 +76,8 @@ void GDExtensionExportPlugin::_export_file(const String &p_path, const String &p
 	all_archs.insert("loongarch64");
 	all_archs.insert("universal");
 
-	HashSet<String> archs;
-	HashSet<String> features_wo_arch;
+	AHashSet<String> archs;
+	AHashSet<String> features_wo_arch;
 	Vector<String> features_vector;
 	for (const String &tag : p_features) {
 		if (all_archs.has(tag)) {
@@ -92,7 +92,7 @@ void GDExtensionExportPlugin::_export_file(const String &p_path, const String &p
 		archs.insert("unknown_arch"); // Not archs specified, still try to match.
 	}
 
-	HashSet<String> libs_added;
+	AHashSet<String> libs_added;
 	struct FoundLibInfo {
 		int count = 0;
 		Vector<String> libs;

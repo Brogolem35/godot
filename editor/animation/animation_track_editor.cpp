@@ -7190,7 +7190,7 @@ void AnimationTrackEditor::_edit_menu_pressed(int p_option) {
 
 			Ref<Animation> reset = _create_and_get_reset_animation();
 			int reset_tracks = reset->get_track_count();
-			HashSet<int> tracks_added;
+			AHashSet<int> tracks_added;
 
 			for (const KeyValue<SelectedKey, KeyInfo> &E : selection) {
 				const SelectedKey &sk = E.key;
@@ -9172,7 +9172,7 @@ void AnimationMarkerEdit::_move_selection_commit() {
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	undo_redo->create_action(TTR("Animation Move Markers"));
 
-	for (HashSet<StringName>::Iterator E = selection.last(); E; --E) {
+	for (AHashSet<StringName>::Iterator E = selection.last(); E; --E) {
 		StringName name = *E;
 		double time = animation->get_marker_time(name);
 		float newpos = time + moving_selection_offset;

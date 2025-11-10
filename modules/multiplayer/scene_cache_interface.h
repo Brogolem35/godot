@@ -60,7 +60,7 @@ private:
 
 	struct PeerInfo {
 		HashMap<int, RecvNode> recv_nodes; // remote cache id, (ObjectID, NodePath)
-		HashSet<ObjectID> sent_nodes;
+		AHashSet<ObjectID> sent_nodes;
 	};
 
 	HashMap<ObjectID, NodeCache> nodes_cache;

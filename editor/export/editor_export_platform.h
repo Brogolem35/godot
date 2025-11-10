@@ -115,9 +115,9 @@ private:
 
 	Vector<ExportMessage> messages;
 
-	void _export_find_resources(EditorFileSystemDirectory *p_dir, HashSet<String> &p_paths);
-	void _export_find_customized_resources(const Ref<EditorExportPreset> &p_preset, EditorFileSystemDirectory *p_dir, EditorExportPreset::FileExportMode p_mode, HashSet<String> &p_paths);
-	void _export_find_dependencies(const String &p_path, HashSet<String> &p_paths);
+	void _export_find_resources(EditorFileSystemDirectory *p_dir, AHashSet<String> &p_paths);
+	void _export_find_customized_resources(const Ref<EditorExportPreset> &p_preset, EditorFileSystemDirectory *p_dir, EditorExportPreset::FileExportMode p_mode, AHashSet<String> &p_paths);
+	void _export_find_dependencies(const String &p_path, AHashSet<String> &p_paths);
 
 	static bool _check_hash(const uint8_t *p_hash, const Vector<uint8_t> &p_data);
 
@@ -139,10 +139,10 @@ private:
 	static Error _script_save_file(void *p_userdata, const String &p_path, const Vector<uint8_t> &p_data, int p_file, int p_total, const Vector<String> &p_enc_in_filters, const Vector<String> &p_enc_ex_filters, const Vector<uint8_t> &p_key, uint64_t p_seed);
 	static Error _script_add_shared_object(void *p_userdata, const SharedObject &p_so);
 
-	void _edit_files_with_filter(Ref<DirAccess> &da, const Vector<String> &p_filters, HashSet<String> &r_list, bool exclude);
-	void _edit_filter_list(HashSet<String> &r_list, const String &p_filter, bool exclude);
+	void _edit_files_with_filter(Ref<DirAccess> &da, const Vector<String> &p_filters, AHashSet<String> &r_list, bool exclude);
+	void _edit_filter_list(AHashSet<String> &r_list, const String &p_filter, bool exclude);
 
-	static Vector<uint8_t> _filter_extension_list_config_file(const String &p_config_path, const HashSet<String> &p_paths);
+	static Vector<uint8_t> _filter_extension_list_config_file(const String &p_config_path, const AHashSet<String> &p_paths);
 
 	struct FileExportCache {
 		uint64_t source_modified_time = 0;
@@ -165,7 +165,7 @@ protected:
 		~ExportNotifier();
 	};
 
-	HashSet<String> get_features(const Ref<EditorExportPreset> &p_preset, bool p_debug) const;
+	AHashSet<String> get_features(const Ref<EditorExportPreset> &p_preset, bool p_debug) const;
 
 	Dictionary _find_export_template(const String &p_template_file_name) const {
 		Dictionary ret;
@@ -348,7 +348,7 @@ public:
 	virtual Error export_pack_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Vector<String> &p_patches = Vector<String>(), BitField<EditorExportPlatform::DebugFlags> p_flags = 0);
 	virtual Error export_zip_patch(const Ref<EditorExportPreset> &p_preset, bool p_debug, const String &p_path, const Vector<String> &p_patches = Vector<String>(), BitField<EditorExportPlatform::DebugFlags> p_flags = 0);
 	virtual void get_platform_features(List<String> *r_features) const = 0;
-	virtual void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, HashSet<String> &p_features) {}
+	virtual void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, AHashSet<String> &p_features) {}
 	virtual String get_debug_protocol() const { return "tcp://"; }
 	virtual HashMap<String, Variant> get_custom_project_settings(const Ref<EditorExportPreset> &p_preset) const { return HashMap<String, Variant>(); }
 

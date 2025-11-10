@@ -49,8 +49,8 @@ class DynamicFontImportSettingsData : public RefCounted {
 	List<ResourceImporter::ImportOption> options;
 	DynamicFontImportSettingsDialog *owner = nullptr;
 
-	HashSet<char32_t> selected_chars;
-	HashSet<int32_t> selected_glyphs;
+	AHashSet<char32_t> selected_chars;
+	AHashSet<int32_t> selected_glyphs;
 
 	Ref<FontFile> fd;
 

@@ -300,7 +300,7 @@ String ShaderCompiler::_get_sampler_name(ShaderLanguage::TextureFilter p_filter,
 	return String(name_mapping[p_filter + (p_repeat == ShaderLanguage::REPEAT_ENABLE ? ShaderLanguage::FILTER_DEFAULT : 0)]);
 }
 
-void ShaderCompiler::_dump_function_deps(const SL::ShaderNode *p_node, const StringName &p_for_func, const HashMap<StringName, String> &p_func_code, String &r_to_add, HashSet<StringName> &added) {
+void ShaderCompiler::_dump_function_deps(const SL::ShaderNode *p_node, const StringName &p_for_func, const HashMap<StringName, String> &p_func_code, String &r_to_add, AHashSet<StringName> &added) {
 	int fidx = -1;
 
 	for (int i = 0; i < p_node->vfunctions.size(); i++) {
@@ -775,7 +775,7 @@ String ShaderCompiler::_dump_node_code(const SL::Node *p_node, int p_level, Gene
 
 			//place functions in actual code
 
-			HashSet<StringName> added_funcs_per_stage[STAGE_MAX];
+			AHashSet<StringName> added_funcs_per_stage[STAGE_MAX];
 
 			for (int i = 0; i < pnode->vfunctions.size(); i++) {
 				SL::FunctionNode *fnode = pnode->vfunctions[i].function;

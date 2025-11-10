@@ -198,7 +198,7 @@ private:
 	NodePath live_edit_root;
 	String live_edit_scene;
 
-	HashMap<String, HashSet<Node *>> live_scene_edit_cache;
+	HashMap<String, AHashSet<Node *>> live_scene_edit_cache;
 	HashMap<Node *, HashMap<ObjectID, Node *>> live_edit_remove_list;
 
 	void _send_tree();

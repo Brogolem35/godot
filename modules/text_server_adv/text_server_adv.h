@@ -144,7 +144,7 @@ class TextServerAdvanced : public TextServerExtension {
 	_THREAD_SAFE_CLASS_
 
 	struct NumSystemData {
-		HashSet<StringName> lang;
+		AHashSet<StringName> lang;
 		String digits;
 		String percent_sign;
 		String exp_l;
@@ -324,7 +324,7 @@ class TextServerAdvanced : public TextServerExtension {
 	};
 
 	struct OversamplingLevel {
-		HashSet<FontForSizeAdvanced *> fonts;
+		AHashSet<FontForSizeAdvanced *> fonts;
 		int32_t refcount = 1;
 	};
 
@@ -369,7 +369,7 @@ class TextServerAdvanced : public TextServerExtension {
 		HashMap<Vector2i, FontForSizeAdvanced *> cache;
 
 		bool face_init = false;
-		HashSet<uint32_t> supported_scripts;
+		AHashSet<uint32_t> supported_scripts;
 		Dictionary supported_features;
 		Dictionary supported_varaitions;
 		Dictionary feature_overrides;

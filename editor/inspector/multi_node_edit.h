@@ -76,7 +76,7 @@ public:
 		if (get_node_count() != p_other->get_node_count()) {
 			return false;
 		}
-		HashSet<NodePath> nodes_in_selection;
+		AHashSet<NodePath> nodes_in_selection;
 		for (const NodePath &node : p_other->nodes) {
 			nodes_in_selection.insert(node);
 		}

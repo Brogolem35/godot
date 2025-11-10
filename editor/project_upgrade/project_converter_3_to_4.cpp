@@ -1179,7 +1179,7 @@ bool ProjectConverter3To4::test_array_names() {
 	}
 
 	{
-		HashSet<String> all_functions;
+		AHashSet<String> all_functions;
 
 		// List of excluded functions from builtin types and global namespace, because currently it is not possible to get list of functions from them.
 		// This will be available when https://github.com/godotengine/godot/pull/49053 or similar will be included into Godot.

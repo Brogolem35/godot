@@ -516,8 +516,8 @@ Ref<Texture2D> EditorScriptPreviewPlugin::_generate_from_source_code(const Scrip
 		return Ref<Texture2D>();
 	}
 
-	HashSet<String> control_flow_keywords;
-	HashSet<String> keywords;
+	AHashSet<String> control_flow_keywords;
+	AHashSet<String> keywords;
 
 	if (p_language) {
 		for (const String &keyword : p_language->get_reserved_words()) {

@@ -4028,7 +4028,7 @@ Error GLTFDocument::_parse_images(Ref<GLTFState> p_state, const String &p_base_p
 	// Ref: https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#images
 
 	const Array &images = p_state->json["images"];
-	HashSet<String> used_names;
+	AHashSet<String> used_names;
 	for (int i = 0; i < images.size(); i++) {
 		const Dictionary &dict = images[i];
 
@@ -4443,7 +4443,7 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> p_state) {
 				int32_t height = 0;
 				int32_t width = 0;
 				Ref<Image> ao_image;
-				HashSet<String> common_paths; // For setting name
+				AHashSet<String> common_paths; // For setting name
 				if (has_ao) {
 					height = ao_texture->get_height();
 					width = ao_texture->get_width();
@@ -8540,7 +8540,7 @@ Vector<Ref<GLTFDocumentExtension>> GLTFDocument::get_all_gltf_document_extension
 }
 
 Vector<String> GLTFDocument::get_supported_gltf_extensions() {
-	HashSet<String> set = get_supported_gltf_extensions_hashset();
+	AHashSet<String> set = get_supported_gltf_extensions_hashset();
 	Vector<String> vec;
 	for (const String &s : set) {
 		vec.append(s);
@@ -8549,8 +8549,8 @@ Vector<String> GLTFDocument::get_supported_gltf_extensions() {
 	return vec;
 }
 
-HashSet<String> GLTFDocument::get_supported_gltf_extensions_hashset() {
-	HashSet<String> supported_extensions;
+AHashSet<String> GLTFDocument::get_supported_gltf_extensions_hashset() {
+	AHashSet<String> supported_extensions;
 	// If the extension is supported directly in GLTFDocument, list it here.
 	// Other built-in extensions are supported by GLTFDocumentExtension classes.
 	supported_extensions.insert("GODOT_single_root");
@@ -8961,7 +8961,7 @@ Error GLTFDocument::_parse_gltf_extensions(Ref<GLTFState> p_state) {
 		Vector<String> ext_array = p_state->json["extensionsRequired"];
 		p_state->extensions_required = ext_array;
 	}
-	HashSet<String> supported_extensions = get_supported_gltf_extensions_hashset();
+	AHashSet<String> supported_extensions = get_supported_gltf_extensions_hashset();
 	Error ret = OK;
 	for (int i = 0; i < p_state->extensions_required.size(); i++) {
 		if (!supported_extensions.has(p_state->extensions_required[i])) {
@@ -8988,7 +8988,7 @@ GLTFDocument::VisibilityMode GLTFDocument::get_visibility_mode() const {
 	return _visibility_mode;
 }
 
-String GLTFDocument::_gen_unique_name_static(HashSet<String> &r_unique_names, const String &p_name) {
+String GLTFDocument::_gen_unique_name_static(AHashSet<String> &r_unique_names, const String &p_name) {
 	const String s_name = p_name.validate_node_name();
 
 	String u_name;

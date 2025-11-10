@@ -88,7 +88,7 @@ private:
 
 	static Ref<EditorSettings> singleton;
 
-	HashSet<String> changed_settings;
+	AHashSet<String> changed_settings;
 	mutable String auto_language;
 
 	mutable Ref<ConfigFile> project_metadata;

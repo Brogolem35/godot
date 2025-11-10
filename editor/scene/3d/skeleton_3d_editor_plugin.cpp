@@ -277,7 +277,7 @@ void BonePropertiesEditor::_update_properties() {
 	}
 	int selected = Skeleton3DEditor::get_singleton()->get_selected_bone();
 	List<PropertyInfo> props;
-	HashSet<StringName> meta_seen;
+	AHashSet<StringName> meta_seen;
 	skeleton->get_property_list(&props);
 	for (const PropertyInfo &E : props) {
 		PackedStringArray split = E.name.split("/");

@@ -88,7 +88,7 @@ void LightmapGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 	Ref<Material> material_probes = get_material("lightmap_probe_material", p_gizmo);
 
 	Vector<Vector3> lines;
-	HashSet<Vector2i> lines_found;
+	AHashSet<Vector2i> lines_found;
 
 	Vector<Vector3> points = data->get_capture_points();
 	if (points.is_empty()) {

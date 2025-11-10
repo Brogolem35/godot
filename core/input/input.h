@@ -180,7 +180,7 @@ private:
 	HashMap<int, VelocityTrack> touch_velocity_track;
 	HashMap<int, Joypad> joy_names;
 
-	HashSet<uint32_t> ignored_device_ids;
+	AHashSet<uint32_t> ignored_device_ids;
 
 	int fallback_mapping = -1; // Index of the guid in map_db.
 
@@ -258,7 +258,7 @@ private:
 
 	List<Ref<InputEvent>> buffered_events;
 #ifdef DEBUG_ENABLED
-	HashSet<Ref<InputEvent>> frame_parsed_events;
+	AHashSet<Ref<InputEvent>> frame_parsed_events;
 	uint64_t last_parsed_frame = UINT64_MAX;
 #endif
 

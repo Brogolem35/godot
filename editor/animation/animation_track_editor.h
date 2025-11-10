@@ -289,7 +289,7 @@ class AnimationMarkerEdit : public Control {
 	Control *play_position = nullptr; // Separate control used to draw so updates for only position changed are much faster.
 	float play_position_pos = 0.0f;
 
-	HashSet<StringName> selection;
+	AHashSet<StringName> selection;
 
 	Ref<Animation> animation;
 	bool read_only = false;

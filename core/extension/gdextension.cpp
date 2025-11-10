@@ -895,7 +895,7 @@ String GDExtensionResourceLoader::get_resource_type(const String &p_path) const 
 }
 
 #ifdef TOOLS_ENABLED
-void GDExtensionResourceLoader::get_classes_used(const String &p_path, HashSet<StringName> *r_classes) {
+void GDExtensionResourceLoader::get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) {
 	Ref<GDExtension> gdext = ResourceLoader::load(p_path);
 	if (gdext.is_null()) {
 		return;

@@ -793,13 +793,13 @@ void EditorBuildProfileManager::_find_files(EditorFileSystemDirectory *p_dir, co
 
 		DetectedFile cache;
 
-		HashSet<StringName> classes;
+		AHashSet<StringName> classes;
 		ResourceLoader::get_classes_used(p, &classes);
 		for (const StringName &E : classes) {
 			cache.classes.push_back(E);
 		}
 
-		HashSet<String> build_deps;
+		AHashSet<String> build_deps;
 		ResourceFormatImporter::get_singleton()->get_build_dependencies(p, &build_deps);
 		for (const String &E : build_deps) {
 			cache.build_deps.push_back(E);
@@ -857,7 +857,7 @@ void EditorBuildProfileManager::_detect_from_project() {
 
 	EditorNode::get_singleton()->progress_task_step("detect_classes_from_project", TTRC("Processing Classes Found"), 2);
 
-	HashSet<StringName> used_classes;
+	AHashSet<StringName> used_classes;
 	LocalVector<String> used_build_deps;
 
 	// Find classes and update the disk cache in the process.
@@ -912,7 +912,7 @@ void EditorBuildProfileManager::_detect_from_project() {
 
 	// Filter all classes to discard inherited ones.
 
-	HashSet<StringName> all_used_classes;
+	AHashSet<StringName> all_used_classes;
 
 	for (const StringName &E : used_classes) {
 		StringName c = E;

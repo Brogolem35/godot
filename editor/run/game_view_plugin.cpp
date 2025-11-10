@@ -994,7 +994,7 @@ void GameView::_update_arguments_for_instance(int p_idx, List<String> &r_argumen
 	// Remove duplicates/unwanted parameters.
 	List<String>::Element *E = r_arguments.front();
 	List<String>::Element *user_args_element = nullptr;
-	HashSet<String> remove_args({ "--position", "--resolution", "--screen" });
+	AHashSet<String> remove_args({ "--position", "--resolution", "--screen" });
 #ifdef MACOS_ENABLED
 	// macOS requires the embedded display driver.
 	remove_args.insert("--display-driver");

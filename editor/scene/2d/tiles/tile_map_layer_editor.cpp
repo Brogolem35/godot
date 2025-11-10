@@ -2513,7 +2513,7 @@ HashMap<Vector2i, TileMapCell> TileMapLayerEditorTerrainsPlugin::_draw_terrain_p
 	}
 
 	// Make the painted path a set for faster lookups
-	HashSet<Vector2i> painted_set;
+	AHashSet<Vector2i> painted_set;
 	for (Vector2i coords : p_to_paint) {
 		painted_set.insert(coords);
 	}
@@ -2560,7 +2560,7 @@ HashMap<Vector2i, TileMapCell> TileMapLayerEditorTerrainsPlugin::_draw_terrain_p
 	HashMap<Vector2i, TileSet::TerrainsPattern> terrain_fill_output = edited_layer->terrain_fill_pattern(p_to_paint, p_terrain_set, p_terrains_pattern, false);
 
 	// Make the painted path a set for faster lookups
-	HashSet<Vector2i> painted_set;
+	AHashSet<Vector2i> painted_set;
 	for (Vector2i coords : p_to_paint) {
 		painted_set.insert(coords);
 	}

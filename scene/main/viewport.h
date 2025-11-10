@@ -239,7 +239,7 @@ private:
 	Viewport *parent = nullptr;
 	Viewport *gui_parent = nullptr; // Whose gui.tooltip_popup it is.
 
-	HashSet<CanvasLayer *> canvas_layers;
+	AHashSet<CanvasLayer *> canvas_layers;
 
 	bool use_font_oversampling = true;
 	float font_oversampling = 1.0;
@@ -321,7 +321,7 @@ private:
 	bool use_occlusion_culling = false;
 
 	Ref<ViewportTexture> default_texture;
-	HashSet<ViewportTexture *> viewport_textures;
+	AHashSet<ViewportTexture *> viewport_textures;
 
 	void _update_viewport_path();
 
@@ -394,7 +394,7 @@ private:
 		double tooltip_delay = 0.0;
 		bool roots_order_dirty = false;
 		List<Control *> roots;
-		HashSet<ObjectID> canvas_parents_with_dirty_order;
+		AHashSet<ObjectID> canvas_parents_with_dirty_order;
 		int canvas_sort_index = 0; //for sorting items with canvas as root
 		bool dragging = false; // Is true in the viewport in which dragging started while dragging is active.
 		bool global_dragging = false; // Is true while dragging is active. Only used in root-Viewport and SubViewports that are not children of a SubViewportContainer.
@@ -798,7 +798,7 @@ private:
 #endif // XR_DISABLED
 	friend class AudioListener3D;
 	AudioListener3D *audio_listener_3d = nullptr;
-	HashSet<AudioListener3D *> audio_listener_3d_set;
+	AHashSet<AudioListener3D *> audio_listener_3d_set;
 	bool is_audio_listener_3d_enabled = false;
 	RID internal_audio_listener_3d;
 	void _update_audio_listener_3d();
@@ -817,7 +817,7 @@ private:
 #if DEBUG_ENABLED
 	CameraOverride<Camera3D> camera_3d_override;
 #endif // DEBUG_ENABLED
-	HashSet<Camera3D *> camera_3d_set;
+	AHashSet<Camera3D *> camera_3d_set;
 	void _camera_3d_transform_changed_notify();
 	void _camera_3d_set(Camera3D *p_camera);
 	bool _camera_3d_add(Camera3D *p_camera); //true if first

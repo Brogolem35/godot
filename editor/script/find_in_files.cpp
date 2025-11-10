@@ -99,15 +99,15 @@ void FindInFiles::set_folder(const String &folder) {
 	_root_dir = folder;
 }
 
-void FindInFiles::set_filter(const HashSet<String> &exts) {
+void FindInFiles::set_filter(const AHashSet<String> &exts) {
 	_extension_filter = exts;
 }
 
-void FindInFiles::set_includes(const HashSet<String> &p_include_wildcards) {
+void FindInFiles::set_includes(const AHashSet<String> &p_include_wildcards) {
 	_include_wildcards = p_include_wildcards;
 }
 
-void FindInFiles::set_excludes(const HashSet<String> &p_exclude_wildcards) {
+void FindInFiles::set_excludes(const AHashSet<String> &p_exclude_wildcards) {
 	_exclude_wildcards = p_exclude_wildcards;
 }
 
@@ -300,7 +300,7 @@ void FindInFiles::_scan_file(const String &fpath) {
 	}
 }
 
-bool FindInFiles::_is_file_matched(const HashSet<String> &p_wildcards, const String &p_file_path, bool p_case_sensitive) const {
+bool FindInFiles::_is_file_matched(const AHashSet<String> &p_wildcards, const String &p_file_path, bool p_case_sensitive) const {
 	const String file_path = "/" + p_file_path.replace_char('\\', '/') + "/";
 
 	for (const String &wildcard : p_wildcards) {
@@ -528,9 +528,9 @@ String FindInFilesDialog::get_folder() const {
 	return text.strip_edges();
 }
 
-HashSet<String> FindInFilesDialog::get_filter() const {
+AHashSet<String> FindInFilesDialog::get_filter() const {
 	// Could check the _filters_preferences but it might not have been generated yet.
-	HashSet<String> filters;
+	AHashSet<String> filters;
 	for (int i = 0; i < _filters_container->get_child_count(); ++i) {
 		CheckBox *cb = static_cast<CheckBox *>(_filters_container->get_child(i));
 		if (cb->is_pressed()) {
@@ -540,8 +540,8 @@ HashSet<String> FindInFilesDialog::get_filter() const {
 	return filters;
 }
 
-HashSet<String> FindInFilesDialog::get_includes() const {
-	HashSet<String> includes;
+AHashSet<String> FindInFilesDialog::get_includes() const {
+	AHashSet<String> includes;
 	String text = _includes_line_edit->get_text();
 
 	if (text.is_empty()) {
@@ -555,8 +555,8 @@ HashSet<String> FindInFilesDialog::get_includes() const {
 	return includes;
 }
 
-HashSet<String> FindInFilesDialog::get_excludes() const {
-	HashSet<String> excludes;
+AHashSet<String> FindInFilesDialog::get_excludes() const {
+	AHashSet<String> excludes;
 	String text = _excludes_line_edit->get_text();
 
 	if (text.is_empty()) {

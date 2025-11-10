@@ -42,7 +42,7 @@ void GraphEditArranger::arrange_nodes() {
 	}
 
 	Dictionary node_names;
-	HashSet<StringName> selected_nodes;
+	AHashSet<StringName> selected_nodes;
 
 	bool arrange_entire_graph = true;
 	for (int i = graph_edit->get_child_count() - 1; i >= 0; i--) {
@@ -58,7 +58,7 @@ void GraphEditArranger::arrange_nodes() {
 		}
 	}
 
-	HashMap<StringName, HashSet<StringName>> upper_neighbours;
+	HashMap<StringName, AHashSet<StringName>> upper_neighbours;
 	HashMap<StringName, Pair<int, int>> port_info;
 	Vector2 origin(FLT_MAX, FLT_MAX);
 
@@ -75,7 +75,7 @@ void GraphEditArranger::arrange_nodes() {
 
 		if (graph_element->is_selected() || arrange_entire_graph) {
 			selected_nodes.insert(graph_element->get_name());
-			HashSet<StringName> s;
+			AHashSet<StringName> s;
 
 			for (const Ref<GraphEdit::Connection> &connection : connection_list) {
 				GraphNode *p_from = Object::cast_to<GraphNode>(node_names[connection->from_node]);
@@ -110,7 +110,7 @@ void GraphEditArranger::arrange_nodes() {
 	HashMap<StringName, Vector2> new_positions;
 	Vector2 default_position(FLT_MAX, FLT_MAX);
 	Dictionary inner_shift;
-	HashSet<StringName> block_heads;
+	AHashSet<StringName> block_heads;
 
 	for (const StringName &E : selected_nodes) {
 		inner_shift[E] = 0.0f;
@@ -192,7 +192,7 @@ void GraphEditArranger::arrange_nodes() {
 	arranging_graph = false;
 }
 
-int GraphEditArranger::_set_operations(SET_OPERATIONS p_operation, HashSet<StringName> &r_u, const HashSet<StringName> &r_v) {
+int GraphEditArranger::_set_operations(SET_OPERATIONS p_operation, AHashSet<StringName> &r_u, const AHashSet<StringName> &r_v) {
 	switch (p_operation) {
 		case GraphEditArranger::IS_EQUAL: {
 			for (const StringName &E : r_u) {
@@ -239,17 +239,17 @@ int GraphEditArranger::_set_operations(SET_OPERATIONS p_operation, HashSet<Strin
 	return -1;
 }
 
-HashMap<int, Vector<StringName>> GraphEditArranger::_layering(const HashSet<StringName> &r_selected_nodes, const HashMap<StringName, HashSet<StringName>> &r_upper_neighbours) {
+HashMap<int, Vector<StringName>> GraphEditArranger::_layering(const AHashSet<StringName> &r_selected_nodes, const HashMap<StringName, AHashSet<StringName>> &r_upper_neighbours) {
 	HashMap<int, Vector<StringName>> l;
 
-	HashSet<StringName> p = r_selected_nodes, q = r_selected_nodes, u, z;
+	AHashSet<StringName> p = r_selected_nodes, q = r_selected_nodes, u, z;
 	int current_layer = 0;
 	bool selected = false;
 
 	while (!_set_operations(GraphEditArranger::IS_EQUAL, q, u)) {
 		_set_operations(GraphEditArranger::DIFFERENCE, p, u);
 		for (const StringName &E : p) {
-			HashSet<StringName> n = r_upper_neighbours[E];
+			AHashSet<StringName> n = r_upper_neighbours[E];
 			if (_set_operations(GraphEditArranger::IS_SUBSET, n, z)) {
 				Vector<StringName> t;
 				t.push_back(E);
@@ -312,7 +312,7 @@ Vector<StringName> GraphEditArranger::_split(const Vector<StringName> &r_layer, 
 	return left;
 }
 
-void GraphEditArranger::_horizontal_alignment(Dictionary &r_root, Dictionary &r_align, const HashMap<int, Vector<StringName>> &r_layers, const HashMap<StringName, HashSet<StringName>> &r_upper_neighbours, const HashSet<StringName> &r_selected_nodes) {
+void GraphEditArranger::_horizontal_alignment(Dictionary &r_root, Dictionary &r_align, const HashMap<int, Vector<StringName>> &r_layers, const HashMap<StringName, AHashSet<StringName>> &r_upper_neighbours, const AHashSet<StringName> &r_selected_nodes) {
 	for (const StringName &E : r_selected_nodes) {
 		r_root[E] = E;
 		r_align[E] = E;
@@ -352,7 +352,7 @@ void GraphEditArranger::_horizontal_alignment(Dictionary &r_root, Dictionary &r_
 	}
 }
 
-void GraphEditArranger::_crossing_minimisation(HashMap<int, Vector<StringName>> &r_layers, const HashMap<StringName, HashSet<StringName>> &r_upper_neighbours) {
+void GraphEditArranger::_crossing_minimisation(HashMap<int, Vector<StringName>> &r_layers, const HashMap<StringName, AHashSet<StringName>> &r_upper_neighbours) {
 	if (r_layers.size() == 1) {
 		return;
 	}
@@ -390,7 +390,7 @@ void GraphEditArranger::_crossing_minimisation(HashMap<int, Vector<StringName>> 
 	}
 }
 
-void GraphEditArranger::_calculate_inner_shifts(Dictionary &r_inner_shifts, const Dictionary &r_root, const Dictionary &r_node_names, const Dictionary &r_align, const HashSet<StringName> &r_block_heads, const HashMap<StringName, Pair<int, int>> &r_port_info) {
+void GraphEditArranger::_calculate_inner_shifts(Dictionary &r_inner_shifts, const Dictionary &r_root, const Dictionary &r_node_names, const Dictionary &r_align, const AHashSet<StringName> &r_block_heads, const HashMap<StringName, Pair<int, int>> &r_port_info) {
 	for (const StringName &E : r_block_heads) {
 		real_t left = 0;
 		StringName u = E;

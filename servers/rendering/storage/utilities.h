@@ -116,7 +116,7 @@ public:
 private:
 	friend class Dependency;
 	uint32_t instance_version = 0;
-	HashSet<Dependency *> dependencies;
+	AHashSet<Dependency *> dependencies;
 };
 
 class RendererUtilities {

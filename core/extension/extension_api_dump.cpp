@@ -1540,7 +1540,7 @@ static bool compare_dict_array(const Dictionary &p_old_api, const Dictionary &p_
 	return !failed;
 }
 
-static bool compare_sub_dict_array(HashSet<String> &r_removed_classes_registered, const String &p_outer, const String &p_outer_name, const Dictionary &p_old_api, const Dictionary &p_new_api, const String &p_base_array, const String &p_name_field, const Vector<String> &p_fields_to_compare, bool p_compare_hashes, bool p_compare_operators = false) {
+static bool compare_sub_dict_array(AHashSet<String> &r_removed_classes_registered, const String &p_outer, const String &p_outer_name, const Dictionary &p_old_api, const Dictionary &p_new_api, const String &p_base_array, const String &p_name_field, const Vector<String> &p_fields_to_compare, bool p_compare_hashes, bool p_compare_operators = false) {
 	if (!p_old_api.has(p_outer)) {
 		return true; // May just not have this array and its still good. Probably added recently or optional.
 	}
@@ -1616,7 +1616,7 @@ Error GDExtensionAPIDump::validate_extension_json_file(const String &p_path) {
 
 	bool failed = false;
 
-	HashSet<String> removed_classes_registered;
+	AHashSet<String> removed_classes_registered;
 
 	if (!compare_dict_array(old_api, new_api, "global_constants", "name", Vector<String>({ "value", "is_bitfield" }), false)) {
 		failed = true;

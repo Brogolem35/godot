@@ -58,7 +58,7 @@ private:
 	Ref<CameraAttributes> camera_attributes;
 	Ref<Compositor> compositor;
 
-	HashSet<Camera3D *> cameras;
+	AHashSet<Camera3D *> cameras;
 
 protected:
 	static void _bind_methods();
@@ -87,7 +87,7 @@ public:
 	void set_compositor(const Ref<Compositor> &p_compositor);
 	Ref<Compositor> get_compositor() const;
 
-	_FORCE_INLINE_ const HashSet<Camera3D *> &get_cameras() const { return cameras; }
+	_FORCE_INLINE_ const AHashSet<Camera3D *> &get_cameras() const { return cameras; }
 
 #ifndef PHYSICS_3D_DISABLED
 	PhysicsDirectSpaceState3D *get_direct_space_state();

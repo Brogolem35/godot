@@ -1909,7 +1909,7 @@ void ScriptEditor::notify_script_changed(const Ref<Script> &p_script) {
 
 Vector<String> ScriptEditor::_get_breakpoints() {
 	Vector<String> ret;
-	HashSet<String> loaded_scripts;
+	AHashSet<String> loaded_scripts;
 	for (int i = 0; i < tab_container->get_tab_count(); i++) {
 		ScriptEditorBase *se = Object::cast_to<ScriptEditorBase>(tab_container->get_tab_control(i));
 		if (!se) {
@@ -1949,7 +1949,7 @@ Vector<String> ScriptEditor::_get_breakpoints() {
 }
 
 void ScriptEditor::get_breakpoints(List<String> *p_breakpoints) {
-	HashSet<String> loaded_scripts;
+	AHashSet<String> loaded_scripts;
 	for (int i = 0; i < tab_container->get_tab_count(); i++) {
 		ScriptEditorBase *se = Object::cast_to<ScriptEditorBase>(tab_container->get_tab_control(i));
 		if (!se) {
@@ -2034,7 +2034,7 @@ bool ScriptEditor::is_editor_floating() {
 	return is_floating;
 }
 
-void ScriptEditor::_find_scripts(Node *p_base, Node *p_current, HashSet<Ref<Script>> &used) {
+void ScriptEditor::_find_scripts(Node *p_base, Node *p_current, AHashSet<Ref<Script>> &used) {
 	if (p_current != p_base && p_current->get_owner() != p_base) {
 		return;
 	}
@@ -2249,7 +2249,7 @@ void ScriptEditor::_update_script_names() {
 		return;
 	}
 
-	HashSet<Ref<Script>> used;
+	AHashSet<Ref<Script>> used;
 	Node *edited = EditorNode::get_singleton()->get_edited_scene();
 	if (edited && EDITOR_GET("text_editor/script_list/highlight_scene_scripts")) {
 		_find_scripts(edited, edited, used);
@@ -2736,7 +2736,7 @@ void ScriptEditor::save_current_script() {
 }
 
 void ScriptEditor::save_all_scripts() {
-	HashSet<String> scenes_to_save;
+	AHashSet<String> scenes_to_save;
 
 	for (int i = 0; i < tab_container->get_tab_count(); i++) {
 		ScriptEditorBase *se = Object::cast_to<ScriptEditorBase>(tab_container->get_tab_control(i));
@@ -3518,7 +3518,7 @@ void ScriptEditor::set_window_layout(Ref<ConfigFile> p_layout) {
 
 	restoring_layout = true;
 
-	HashSet<String> loaded_scripts;
+	AHashSet<String> loaded_scripts;
 	List<String> extensions;
 	ResourceLoader::get_recognized_extensions_for_type("Script", &extensions);
 	ResourceLoader::get_recognized_extensions_for_type("JSON", &extensions);

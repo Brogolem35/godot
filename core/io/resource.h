@@ -96,7 +96,7 @@ private:
 	static thread_local inline DuplicateRemapCacheT *thread_duplicate_remap_cache = nullptr;
 
 	Variant _duplicate_recursive(const Variant &p_variant, const DuplicateParams &p_params, uint32_t p_usage = 0) const;
-	void _find_sub_resources(const Variant &p_variant, HashSet<Ref<Resource>> &p_resources_found);
+	void _find_sub_resources(const Variant &p_variant, AHashSet<Ref<Resource>> &p_resources_found);
 
 	// Only for binding the deep duplicate method, so it doesn't need actual members.
 	enum DeepDuplicateMode : int;

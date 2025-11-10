@@ -85,8 +85,8 @@ class GDScriptCache {
 	HashMap<String, Ref<GDScript>> shallow_gdscript_cache;
 	HashMap<String, Ref<GDScript>> full_gdscript_cache;
 	HashMap<String, Ref<GDScript>> static_gdscript_cache;
-	HashMap<String, HashSet<String>> dependencies;
-	HashMap<String, HashSet<String>> parser_inverse_dependencies;
+	HashMap<String, AHashSet<String>> dependencies;
+	HashMap<String, AHashSet<String>> parser_inverse_dependencies;
 
 	friend class GDScript;
 	friend class GDScriptParserRef;

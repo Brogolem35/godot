@@ -62,7 +62,7 @@ static Array _sanitize_node_pinned_properties(Node *p_node) {
 	if (pinned.is_empty()) {
 		return Array();
 	}
-	HashSet<StringName> storable_properties;
+	AHashSet<StringName> storable_properties;
 	p_node->get_storable_properties(storable_properties);
 	int i = 0;
 	do {
@@ -787,7 +787,7 @@ static int _vm_get_variant(const Variant &p_variant, HashMap<Variant, int> &vari
 	return idx;
 }
 
-Error SceneState::_parse_node(Node *p_owner, Node *p_node, int p_parent_idx, HashMap<StringName, int> &name_map, HashMap<Variant, int> &variant_map, HashMap<Node *, int> &node_map, HashMap<Node *, int> &nodepath_map, HashSet<int32_t> &ids_saved) {
+Error SceneState::_parse_node(Node *p_owner, Node *p_node, int p_parent_idx, HashMap<StringName, int> &name_map, HashMap<Variant, int> &variant_map, HashMap<Node *, int> &node_map, HashMap<Node *, int> &nodepath_map, AHashSet<int32_t> &ids_saved) {
 	// this function handles all the work related to properly packing scenes, be it
 	// instantiated or inherited.
 	// given the complexity of this process, an attempt will be made to properly
@@ -1352,7 +1352,7 @@ Error SceneState::pack(Node *p_scene) {
 	HashMap<Variant, int> variant_map;
 	HashMap<Node *, int> node_map;
 	HashMap<Node *, int> nodepath_map;
-	HashSet<int32_t> ids_saved;
+	AHashSet<int32_t> ids_saved;
 
 	// If using scene inheritance, pack the scene it inherits from.
 	if (scene->get_scene_inherited_state().is_valid()) {
@@ -2374,8 +2374,8 @@ bool SceneState::rename_group_references(const StringName &p_old_name, const Str
 	return edited;
 }
 
-HashSet<StringName> SceneState::get_all_groups() {
-	HashSet<StringName> ret;
+AHashSet<StringName> SceneState::get_all_groups() {
+	AHashSet<StringName> ret;
 	for (const NodeData &node : nodes) {
 		for (const int &group : node.groups) {
 			ret.insert(names[group]);
@@ -2515,7 +2515,7 @@ void PackedScene::recreate_state() {
 }
 
 #ifdef TOOLS_ENABLED
-HashSet<StringName> PackedScene::get_scene_groups(const String &p_path) {
+AHashSet<StringName> PackedScene::get_scene_groups(const String &p_path) {
 	{
 		Ref<PackedScene> packed_scene = ResourceCache::get_ref(p_path);
 		if (packed_scene.is_valid()) {
@@ -2525,9 +2525,9 @@ HashSet<StringName> PackedScene::get_scene_groups(const String &p_path) {
 
 	if (p_path.get_extension() == "tscn") {
 		Ref<FileAccess> scene_file = FileAccess::open(p_path, FileAccess::READ);
-		ERR_FAIL_COND_V(scene_file.is_null(), HashSet<StringName>());
+		ERR_FAIL_COND_V(scene_file.is_null(), AHashSet<StringName>());
 
-		HashSet<StringName> ret;
+		AHashSet<StringName> ret;
 		while (!scene_file->eof_reached()) {
 			const String line = scene_file->get_line();
 			if (!line.begins_with("[node")) {
@@ -2558,7 +2558,7 @@ HashSet<StringName> PackedScene::get_scene_groups(const String &p_path) {
 		return ret;
 	} else {
 		Ref<PackedScene> packed_scene = ResourceLoader::load(p_path);
-		ERR_FAIL_COND_V(packed_scene.is_null(), HashSet<StringName>());
+		ERR_FAIL_COND_V(packed_scene.is_null(), AHashSet<StringName>());
 		return packed_scene->get_state()->get_all_groups();
 	}
 }

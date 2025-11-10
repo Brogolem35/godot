@@ -70,7 +70,7 @@ public:
 
 	void add_platform_feature(const String &p_feature);
 	virtual void get_platform_features(List<String> *r_features) const override;
-	virtual void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, HashSet<String> &p_features) override;
+	virtual void resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, AHashSet<String> &p_features) override;
 
 	int get_chmod_flags() const;
 	void set_chmod_flags(int p_flags);

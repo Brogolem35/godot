@@ -44,7 +44,7 @@ class Range : public Control {
 		bool exp_ratio = false;
 		bool allow_greater = false;
 		bool allow_lesser = false;
-		HashSet<Range *> owners;
+		AHashSet<Range *> owners;
 		void emit_value_changed();
 		void emit_changed();
 		void redraw_owners();

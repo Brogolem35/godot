@@ -79,7 +79,7 @@ public:
 	virtual void get_recognized_extensions_for_type(const String &p_type, List<String> *p_extensions) const;
 	virtual bool recognize_path(const String &p_path, const String &p_for_type = String()) const;
 	virtual bool handles_type(const String &p_type) const;
-	virtual void get_classes_used(const String &p_path, HashSet<StringName> *r_classes);
+	virtual void get_classes_used(const String &p_path, AHashSet<StringName> *r_classes);
 	virtual String get_resource_type(const String &p_path) const;
 	virtual String get_resource_script_class(const String &p_path) const;
 	virtual ResourceUID::ID get_resource_uid(const String &p_path) const;
@@ -191,7 +191,7 @@ private:
 		Error error = OK;
 		Ref<Resource> resource;
 		bool use_sub_threads = false;
-		HashSet<String> sub_tasks;
+		AHashSet<String> sub_tasks;
 
 		struct ResourceChangedConnection {
 			Resource *source = nullptr;
@@ -240,7 +240,7 @@ public:
 	static void get_recognized_extensions_for_type(const String &p_type, List<String> *p_extensions);
 	static void add_resource_format_loader(Ref<ResourceFormatLoader> p_format_loader, bool p_at_front = false);
 	static void remove_resource_format_loader(Ref<ResourceFormatLoader> p_format_loader);
-	static void get_classes_used(const String &p_path, HashSet<StringName> *r_classes);
+	static void get_classes_used(const String &p_path, AHashSet<StringName> *r_classes);
 	static String get_resource_type(const String &p_path);
 	static String get_resource_script_class(const String &p_path);
 	static ResourceUID::ID get_resource_uid(const String &p_path);

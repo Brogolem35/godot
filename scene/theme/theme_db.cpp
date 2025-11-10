@@ -378,7 +378,7 @@ void ThemeDB::get_class_items(const StringName &p_class_name, List<ThemeItemBind
 		class_name = ClassDB::get_parent_class_nocheck(class_name);
 	}
 
-	HashSet<StringName> inherited_props;
+	AHashSet<StringName> inherited_props;
 	for (const StringName &theme_type : class_hierarchy) {
 		HashMap<StringName, List<ThemeItemBind>>::Iterator E = theme_item_binds_list.find(theme_type);
 		if (E) {

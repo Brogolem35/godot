@@ -152,7 +152,7 @@ class FoldableGroup : public Resource {
 
 	friend class FoldableContainer;
 
-	HashSet<FoldableContainer *> containers;
+	AHashSet<FoldableContainer *> containers;
 	bool allow_folding_all = false;
 	bool updating_group = false;
 

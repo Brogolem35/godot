@@ -50,7 +50,7 @@ private:
 	mutable RID_Owner<DummyShader> shader_owner;
 
 	ShaderCompiler dummy_compiler;
-	HashSet<RID> dummy_embedded_set;
+	AHashSet<RID> dummy_embedded_set;
 
 	struct DummyMaterial {
 		RID shader;
@@ -103,7 +103,7 @@ public:
 
 	virtual RS::ShaderNativeSourceCode shader_get_native_source_code(RID p_shader) const override { return RS::ShaderNativeSourceCode(); }
 	virtual void shader_embedded_set_lock() override {}
-	virtual const HashSet<RID> &shader_embedded_set_get() const override { return dummy_embedded_set; }
+	virtual const AHashSet<RID> &shader_embedded_set_get() const override { return dummy_embedded_set; }
 	virtual void shader_embedded_set_unlock() override {}
 
 	/* MATERIAL API */

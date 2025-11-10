@@ -46,7 +46,7 @@ class DPITexture : public Texture2D {
 	Size2 size_override;
 
 	struct ScalingLevel {
-		HashSet<DPITexture *> textures;
+		AHashSet<DPITexture *> textures;
 		int32_t refcount = 1;
 	};
 	static Mutex mutex;

@@ -316,7 +316,7 @@ void SceneRPCInterface::_send_rpc(Node *p_node, int p_to, uint16_t p_rpc_id, con
 	}
 
 	// See if all peers have cached path (if so, call can be fast) while building the RPC target list.
-	HashSet<int> targets;
+	AHashSet<int> targets;
 	int psc_id = -1;
 	bool has_all_peers = true;
 	const ObjectID oid = p_node->get_instance_id();

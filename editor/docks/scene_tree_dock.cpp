@@ -990,7 +990,7 @@ void SceneTreeDock::_tool_selected(int p_tool, bool p_confirm_override) {
 			}
 
 			List<Node *> nodes = editor_selection->get_top_selected_node_list();
-			HashSet<Node *> nodeset;
+			AHashSet<Node *> nodeset;
 			for (Node *E : nodes) {
 				nodeset.insert(E);
 			}
@@ -2151,8 +2151,8 @@ bool SceneTreeDock::_check_node_path_recursive(Node *p_root_node, Variant &r_var
 	return false;
 }
 
-void SceneTreeDock::perform_node_renames(Node *p_base, HashMap<Node *, NodePath> *p_renames, HashMap<Ref<Animation>, HashSet<int>> *r_rem_anims) {
-	HashMap<Ref<Animation>, HashSet<int>> rem_anims;
+void SceneTreeDock::perform_node_renames(Node *p_base, HashMap<Node *, NodePath> *p_renames, HashMap<Ref<Animation>, AHashSet<int>> *r_rem_anims) {
+	HashMap<Ref<Animation>, AHashSet<int>> rem_anims;
 	if (!r_rem_anims) {
 		r_rem_anims = &rem_anims;
 	}
@@ -2197,14 +2197,14 @@ void SceneTreeDock::perform_node_renames(Node *p_base, HashMap<Node *, NodePath>
 					for (const StringName &E : anims) {
 						Ref<Animation> anim = mixer->get_animation(E);
 						if (!r_rem_anims->has(anim)) {
-							r_rem_anims->insert(anim, HashSet<int>());
-							HashSet<int> &ran = r_rem_anims->find(anim)->value;
+							r_rem_anims->insert(anim, AHashSet<int>());
+							AHashSet<int> &ran = r_rem_anims->find(anim)->value;
 							for (int i = 0; i < anim->get_track_count(); i++) {
 								ran.insert(i);
 							}
 						}
 
-						HashSet<int> &ran = r_rem_anims->find(anim)->value;
+						AHashSet<int> &ran = r_rem_anims->find(anim)->value;
 
 						if (anim.is_null() || EditorNode::get_singleton()->is_resource_read_only(anim)) {
 							continue;

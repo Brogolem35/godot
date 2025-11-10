@@ -78,7 +78,7 @@ struct Shader {
 	String path_hint;
 	RS::ShaderMode mode;
 	HashMap<StringName, HashMap<int, RID>> default_texture_parameter;
-	HashSet<Material *> owners;
+	AHashSet<Material *> owners;
 };
 
 /* Material structs */
@@ -429,7 +429,7 @@ struct GlobalShaderUniforms {
 		BUFFER_DIRTY_REGION_SIZE = 1024
 	};
 	struct Variable {
-		HashSet<RID> texture_materials; // materials using this
+		AHashSet<RID> texture_materials; // materials using this
 
 		RS::GlobalShaderParameterType type;
 		Variant value;
@@ -505,7 +505,7 @@ private:
 	mutable RID_Owner<Material, true> material_owner;
 
 	SelfList<Material>::List material_update_list;
-	HashSet<RID> dummy_embedded_set;
+	AHashSet<RID> dummy_embedded_set;
 
 public:
 	static MaterialStorage *get_singleton();
@@ -612,7 +612,7 @@ public:
 
 	virtual RS::ShaderNativeSourceCode shader_get_native_source_code(RID p_shader) const override;
 	virtual void shader_embedded_set_lock() override {}
-	virtual const HashSet<RID> &shader_embedded_set_get() const override { return dummy_embedded_set; }
+	virtual const AHashSet<RID> &shader_embedded_set_get() const override { return dummy_embedded_set; }
 	virtual void shader_embedded_set_unlock() override {}
 
 	/* MATERIAL API */

@@ -100,13 +100,13 @@ protected:
 	bool project_loaded = false;
 	List<String> input_presets;
 
-	HashSet<String> custom_features;
+	AHashSet<String> custom_features;
 	HashMap<StringName, LocalVector<Pair<StringName, StringName>>> feature_overrides;
 
 	LocalVector<String> hidden_prefixes;
 	HashMap<StringName, AutoloadInfo> autoloads;
 	HashMap<StringName, String> global_groups;
-	HashMap<StringName, HashSet<StringName>> scene_groups_cache;
+	HashMap<StringName, AHashSet<StringName>> scene_groups_cache;
 
 	Array global_class_list;
 	bool is_global_class_list_loaded = false;
@@ -221,8 +221,8 @@ public:
 	void remove_global_group(const StringName &p_name);
 	bool has_global_group(const StringName &p_name) const;
 
-	const HashMap<StringName, HashSet<StringName>> &get_scene_groups_cache() const;
-	void add_scene_groups_cache(const StringName &p_path, const HashSet<StringName> &p_cache);
+	const HashMap<StringName, AHashSet<StringName>> &get_scene_groups_cache() const;
+	void add_scene_groups_cache(const StringName &p_path, const AHashSet<StringName> &p_cache);
 	void remove_scene_groups_cache(const StringName &p_path);
 	void save_scene_groups_cache();
 	String get_scene_groups_cache_path() const;

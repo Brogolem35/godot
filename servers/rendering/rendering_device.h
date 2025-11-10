@@ -109,8 +109,8 @@ public:
 	};
 
 private:
-	HashMap<RID, HashSet<RID>> dependency_map; // IDs to IDs that depend on it.
-	HashMap<RID, HashSet<RID>> reverse_dependency_map; // Same as above, but in reverse.
+	HashMap<RID, AHashSet<RID>> dependency_map; // IDs to IDs that depend on it.
+	HashMap<RID, AHashSet<RID>> reverse_dependency_map; // Same as above, but in reverse.
 
 	void _add_dependency(RID p_id, RID p_depends_on);
 	void _free_dependencies(RID p_id);
@@ -801,7 +801,7 @@ private:
 		Vector<uint64_t> offsets;
 		Vector<int32_t> transfer_worker_indices;
 		Vector<uint64_t> transfer_worker_operations;
-		HashSet<RID> untracked_buffers;
+		AHashSet<RID> untracked_buffers;
 	};
 
 	RID_Owner<VertexArray, true> vertex_array_owner;

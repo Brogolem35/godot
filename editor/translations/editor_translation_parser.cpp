@@ -96,7 +96,7 @@ void EditorTranslationParserPlugin::_bind_methods() {
 /////////////////////////
 
 void EditorTranslationParser::get_recognized_extensions(List<String> *r_extensions) const {
-	HashSet<String> extensions;
+	AHashSet<String> extensions;
 	List<String> temp;
 	for (int i = 0; i < standard_parsers.size(); i++) {
 		standard_parsers[i]->get_recognized_extensions(&temp);

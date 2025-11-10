@@ -239,7 +239,7 @@ private:
 		Vector3 emitter_velocity;
 		float interp_to_end = 0.0;
 
-		HashSet<RID> collisions;
+		AHashSet<RID> collisions;
 
 		Dependency dependency;
 

@@ -66,7 +66,7 @@ private:
 	bool notify_selection_queued = false;
 	bool selection_surpassed_limit = false;
 	bool selection_uncollapse_all = false;
-	HashSet<ObjectID> unfold_cache;
+	AHashSet<ObjectID> unfold_cache;
 	PopupMenu *item_menu = nullptr;
 	EditorFileDialog *file_dialog = nullptr;
 	AcceptDialog *accept = nullptr;

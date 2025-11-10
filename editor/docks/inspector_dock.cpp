@@ -323,7 +323,7 @@ void InspectorDock::_prepare_history() {
 
 	history_menu->get_popup()->clear();
 
-	HashSet<ObjectID> already;
+	AHashSet<ObjectID> already;
 	for (int i = editor_history->get_history_len() - 1; i >= history_to; i--) {
 		ObjectID id = editor_history->get_history_obj(i);
 		Object *obj = ObjectDB::get_instance(id);

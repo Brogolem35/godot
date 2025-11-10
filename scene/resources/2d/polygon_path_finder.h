@@ -37,7 +37,7 @@ class PolygonPathFinder : public Resource {
 
 	struct Point {
 		Vector2 pos;
-		HashSet<int> connections;
+		AHashSet<int> connections;
 		float distance = 0.0;
 		float penalty = 0.0;
 		int prev = 0;
@@ -69,7 +69,7 @@ class PolygonPathFinder : public Resource {
 	Rect2 bounds;
 
 	Vector<Point> points;
-	HashSet<Edge, Edge> edges;
+	AHashSet<Edge, Edge> edges;
 
 	bool _is_point_inside(const Vector2 &p_point) const;
 

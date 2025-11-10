@@ -55,7 +55,7 @@ Ref<DPITexture> editor_generate_icon(int p_index, float p_scale, float p_saturat
 float get_gizmo_handle_scale(const String &p_gizmo_handle_name, float p_gizmo_handle_scale) {
 	if (p_gizmo_handle_scale > 1.0f) {
 		// The names of the icons that require additional scaling.
-		static HashSet<StringName> gizmo_to_scale;
+		static AHashSet<StringName> gizmo_to_scale;
 		if (gizmo_to_scale.is_empty()) {
 			gizmo_to_scale.insert("EditorHandle");
 			gizmo_to_scale.insert("EditorHandleAdd");
@@ -105,7 +105,7 @@ void editor_register_icons(const Ref<Theme> &p_theme, bool p_dark_theme, float p
 	Dictionary color_conversion_map = p_dark_theme ? color_conversion_map_dark : color_conversion_map_light;
 
 	// The names of the icons used in native menus.
-	HashSet<StringName> native_menu_icons;
+	AHashSet<StringName> native_menu_icons;
 	native_menu_icons.insert("HelpSearch");
 	native_menu_icons.insert("ActionCopy");
 	native_menu_icons.insert("Heart");
@@ -117,10 +117,10 @@ void editor_register_icons(const Ref<Theme> &p_theme, bool p_dark_theme, float p
 	native_menu_icons.insert("History");
 
 	// The names of the icons to exclude from the standard color conversion.
-	HashSet<StringName> conversion_exceptions = EditorColorMap::get_color_conversion_exceptions();
+	AHashSet<StringName> conversion_exceptions = EditorColorMap::get_color_conversion_exceptions();
 
 	// The names of the icons to exclude when adjusting for saturation.
-	HashSet<StringName> saturation_exceptions;
+	AHashSet<StringName> saturation_exceptions;
 	saturation_exceptions.insert("DefaultProjectIcon");
 	saturation_exceptions.insert("Godot");
 	saturation_exceptions.insert("Logo");
@@ -129,7 +129,7 @@ void editor_register_icons(const Ref<Theme> &p_theme, bool p_dark_theme, float p
 	// It is used on some icons (checkbox, radio, toggle, etc.), regardless of the dark
 	// or light mode.
 	Dictionary accent_color_map;
-	HashSet<StringName> accent_color_icons;
+	AHashSet<StringName> accent_color_icons;
 
 	const Color accent_color = p_theme->get_color(SNAME("accent_color"), EditorStringName(Editor));
 	accent_color_map[Color::html("699ce8")] = accent_color;

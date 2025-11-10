@@ -306,7 +306,7 @@ protected:
 	RootMotionCache root_motion_cache;
 	AHashMap<Animation::TypeHash, TrackCache *, HashHasher> track_cache;
 	AHashMap<Ref<Animation>, LocalVector<TrackCache *>> animation_track_num_to_track_cache;
-	HashSet<TrackCache *> playing_caches;
+	AHashSet<TrackCache *> playing_caches;
 	Vector<Node *> playing_audio_stream_players;
 
 	// Helpers.

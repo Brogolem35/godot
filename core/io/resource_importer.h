@@ -77,10 +77,10 @@ public:
 	virtual void get_dependencies(const String &p_path, List<String> *p_dependencies, bool p_add_types = false) override;
 	virtual bool is_imported(const String &p_path) const override { return recognize_path(p_path); }
 	virtual String get_import_group_file(const String &p_path) const override;
-	virtual void get_classes_used(const String &p_path, HashSet<StringName> *r_classes) override;
+	virtual void get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) override;
 	virtual bool exists(const String &p_path) const override;
 
-	void get_build_dependencies(const String &p_path, HashSet<String> *r_dependencies);
+	void get_build_dependencies(const String &p_path, AHashSet<String> *r_dependencies);
 
 	virtual int get_import_order(const String &p_path) const override;
 
@@ -162,7 +162,7 @@ public:
 	virtual bool are_import_settings_valid(const String &p_path, const Dictionary &p_meta) const { return true; }
 	virtual String get_import_settings_string() const { return String(); }
 
-	virtual void get_build_dependencies(const String &p_path, HashSet<String> *r_build_dependencies);
+	virtual void get_build_dependencies(const String &p_path, AHashSet<String> *r_build_dependencies);
 };
 
 VARIANT_ENUM_CAST(ResourceImporter::ImportOrder);

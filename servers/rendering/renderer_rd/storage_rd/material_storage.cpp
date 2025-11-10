@@ -2186,7 +2186,7 @@ void MaterialStorage::shader_embedded_set_lock() {
 	embedded_set_mutex.lock();
 }
 
-const HashSet<RID> &MaterialStorage::shader_embedded_set_get() const {
+const AHashSet<RID> &MaterialStorage::shader_embedded_set_get() const {
 	return embedded_set;
 }
 

@@ -50,7 +50,7 @@ private:
 
 	LocalVector<SpawnableScene> spawnable_scenes;
 
-	HashSet<ResourceUID::ID> spawnable_ids;
+	AHashSet<ResourceUID::ID> spawnable_ids;
 	NodePath spawn_path;
 
 	struct SpawnInfo {

@@ -98,7 +98,7 @@ void Shader::set_code(const String &p_code) {
 		// Preprocessor must run here and not in the server because:
 		// 1) Need to keep track of include dependencies at resource level
 		// 2) Server does not do interaction with Resource filetypes, this is a scene level feature.
-		HashSet<Ref<ShaderInclude>> new_include_dependencies;
+		AHashSet<Ref<ShaderInclude>> new_include_dependencies;
 		ShaderPreprocessor preprocessor;
 		Error result = preprocessor.preprocess(p_code, path, preprocessed_code, nullptr, nullptr, nullptr, &new_include_dependencies);
 		if (result == OK) {

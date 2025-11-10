@@ -346,7 +346,7 @@ RID OpenXRRenderModelExtension::render_model_create(XrRenderModelIdEXT p_render_
 	render_model.xr_render_model_id = p_render_model_id;
 
 	// Get a list of supported glTF extensions.
-	const HashSet<String> supported_gltf_extensions_hash_set = GLTFDocument::get_supported_gltf_extensions_hashset();
+	const AHashSet<String> supported_gltf_extensions_hash_set = GLTFDocument::get_supported_gltf_extensions_hashset();
 	Vector<CharString> supported_gltf_extensions_char_string; // Just for temp storage of our c-strings.
 	supported_gltf_extensions_char_string.resize(supported_gltf_extensions_hash_set.size());
 	int64_t supported_gltf_extension_index = 0;

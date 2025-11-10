@@ -97,7 +97,7 @@ void StaticRaycasterEmbree::commit() {
 	rtcCommitScene(embree_scene);
 }
 
-void StaticRaycasterEmbree::set_mesh_filter(const HashSet<int> &p_mesh_ids) {
+void StaticRaycasterEmbree::set_mesh_filter(const AHashSet<int> &p_mesh_ids) {
 	for (const int &E : p_mesh_ids) {
 		rtcDisableGeometry(rtcGetGeometry(embree_scene, E));
 	}

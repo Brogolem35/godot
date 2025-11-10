@@ -265,7 +265,7 @@ void SkinTool::_recurse_children(
 		Vector<Ref<GLTFNode>> &nodes,
 		const SkinNodeIndex p_node_index,
 		RBSet<GLTFNodeIndex> &p_all_skin_nodes,
-		HashSet<GLTFNodeIndex> &p_child_visited_set) {
+		AHashSet<GLTFNodeIndex> &p_child_visited_set) {
 	if (p_child_visited_set.has(p_node_index)) {
 		return;
 	}
@@ -319,7 +319,7 @@ Error SkinTool::_determine_skeletons(
 		const Ref<GLTFSkin> skin = skins[skin_i];
 		ERR_CONTINUE(skin.is_null());
 
-		HashSet<GLTFNodeIndex> child_visited_set;
+		AHashSet<GLTFNodeIndex> child_visited_set;
 		RBSet<GLTFNodeIndex> all_skin_nodes;
 		for (int i = 0; i < skin->joints.size(); ++i) {
 			all_skin_nodes.insert(skin->joints[i]);
@@ -558,18 +558,18 @@ Error SkinTool::_determine_skeleton_roots(
 }
 
 Error SkinTool::_create_skeletons(
-		HashSet<String> &unique_names,
+		AHashSet<String> &unique_names,
 		Vector<Ref<GLTFSkin>> &skins,
 		Vector<Ref<GLTFNode>> &nodes,
 		HashMap<ObjectID, GLTFSkeletonIndex> &skeleton3d_to_gltf_skeleton,
 		Vector<Ref<GLTFSkeleton>> &skeletons,
 		HashMap<GLTFNodeIndex, Node *> &scene_nodes,
 		int p_naming_version) {
-	// This is the syntax to duplicate a Godot HashSet.
-	HashSet<String> unique_node_names(unique_names);
+	// This is the syntax to duplicate a Godot AHashSet.
+	AHashSet<String> unique_node_names(unique_names);
 	for (SkinSkeletonIndex skel_i = 0; skel_i < skeletons.size(); ++skel_i) {
 		Ref<GLTFSkeleton> gltf_skeleton = skeletons.write[skel_i];
-		HashSet<String> skel_unique_names(unique_node_names);
+		AHashSet<String> skel_unique_names(unique_node_names);
 
 		Skeleton3D *skeleton = memnew(Skeleton3D);
 		gltf_skeleton->godot_skeleton = skeleton;
@@ -679,7 +679,7 @@ Error SkinTool::_map_skin_joints_indices_to_skeleton_bone_indices(
 	return OK;
 }
 
-Error SkinTool::_create_skins(Vector<Ref<GLTFSkin>> &skins, Vector<Ref<GLTFNode>> &nodes, bool use_named_skin_binds, HashSet<String> &unique_names) {
+Error SkinTool::_create_skins(Vector<Ref<GLTFSkin>> &skins, Vector<Ref<GLTFNode>> &nodes, bool use_named_skin_binds, AHashSet<String> &unique_names) {
 	for (GLTFSkinIndex skin_i = 0; skin_i < skins.size(); ++skin_i) {
 		Ref<GLTFSkin> gltf_skin = skins.write[skin_i];
 		ERR_CONTINUE(gltf_skin.is_null());
@@ -729,7 +729,7 @@ Error SkinTool::_create_skins(Vector<Ref<GLTFSkin>> &skins, Vector<Ref<GLTFNode>
 
 // FIXME: Duplicated from FBXDocument, very similar code in GLTFDocument too,
 // and even below in this class for bone names.
-String SkinTool::_gen_unique_name(HashSet<String> &unique_names, const String &p_name) {
+String SkinTool::_gen_unique_name(AHashSet<String> &unique_names, const String &p_name) {
 	const String s_name = p_name.validate_node_name();
 
 	String u_name;
@@ -789,7 +789,7 @@ void SkinTool::_remove_duplicate_skins(Vector<Ref<GLTFSkin>> &r_skins) {
 	}
 }
 
-String SkinTool::_gen_unique_bone_name(HashSet<String> &r_unique_names, const String &p_name) {
+String SkinTool::_gen_unique_bone_name(AHashSet<String> &r_unique_names, const String &p_name) {
 	String s_name = _sanitize_bone_name(p_name);
 	if (s_name.is_empty()) {
 		s_name = "bone";

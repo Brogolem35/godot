@@ -1359,9 +1359,9 @@ private:
 	bool is_ignoring_warnings = false;
 	List<GDScriptWarning> warnings;
 	List<PendingWarning> pending_warnings;
-	HashSet<int> warning_ignored_lines[GDScriptWarning::WARNING_MAX];
+	AHashSet<int> warning_ignored_lines[GDScriptWarning::WARNING_MAX];
 	int warning_ignore_start_lines[GDScriptWarning::WARNING_MAX];
-	HashSet<int> unsafe_lines;
+	AHashSet<int> unsafe_lines;
 #endif
 
 	GDScriptTokenizer *tokenizer = nullptr;
@@ -1617,7 +1617,7 @@ public:
 	}
 #ifdef DEBUG_ENABLED
 	const List<GDScriptWarning> &get_warnings() const { return warnings; }
-	const HashSet<int> &get_unsafe_lines() const { return unsafe_lines; }
+	const AHashSet<int> &get_unsafe_lines() const { return unsafe_lines; }
 	int get_last_line_number() const { return current.end_line; }
 #endif
 

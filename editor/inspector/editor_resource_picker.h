@@ -51,8 +51,8 @@ class EditorResourcePicker : public HBoxContainer {
 	bool dropping = false;
 
 	Vector<String> inheritors_array;
-	mutable HashSet<StringName> allowed_types_without_convert;
-	mutable HashSet<StringName> allowed_types_with_convert;
+	mutable AHashSet<StringName> allowed_types_without_convert;
+	mutable AHashSet<StringName> allowed_types_with_convert;
 
 	Button *assign_button = nullptr;
 	Button *make_unique_button = nullptr;
@@ -109,7 +109,7 @@ class EditorResourcePicker : public HBoxContainer {
 	String _get_resource_type(const Ref<Resource> &p_resource) const;
 	void _ensure_allowed_types() const;
 	bool _is_drop_valid(const Dictionary &p_drag_data) const;
-	bool _is_type_valid(const String &p_type_name, const HashSet<StringName> &p_allowed_types) const;
+	bool _is_type_valid(const String &p_type_name, const AHashSet<StringName> &p_allowed_types) const;
 	bool _is_custom_type_script() const;
 
 	Variant get_drag_data_fw(const Point2 &p_point, Control *p_from);

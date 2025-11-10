@@ -3976,7 +3976,7 @@ int Main::start() {
 
 		DocTools docsrc;
 		HashMap<String, String> doc_data_classes;
-		HashSet<String> checked_paths;
+		AHashSet<String> checked_paths;
 		print_line("Loading docs...");
 
 		const bool gdextension_docs = gen_flags.has_flag(DocTools::GENERATE_FLAG_EXTENSION_CLASSES_ONLY);

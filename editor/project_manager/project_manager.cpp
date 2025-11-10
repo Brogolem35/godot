@@ -453,7 +453,7 @@ void ProjectManager::_scan_projects() {
 }
 
 void ProjectManager::_run_project() {
-	const HashSet<String> &selected_list = project_list->get_selected_project_keys();
+	const AHashSet<String> &selected_list = project_list->get_selected_project_keys();
 
 	if (selected_list.size() < 1) {
 		return;
@@ -506,7 +506,7 @@ void ProjectManager::_open_selected_projects() {
 	// This is especially important for the Web project manager.
 	loading_label->show();
 
-	const HashSet<String> &selected_list = project_list->get_selected_project_keys();
+	const AHashSet<String> &selected_list = project_list->get_selected_project_keys();
 	for (const String &path : selected_list) {
 		String conf = path.path_join("project.godot");
 
@@ -553,7 +553,7 @@ void ProjectManager::_open_selected_projects() {
 }
 
 void ProjectManager::_open_selected_projects_check_warnings() {
-	const HashSet<String> &selected_list = project_list->get_selected_project_keys();
+	const AHashSet<String> &selected_list = project_list->get_selected_project_keys();
 	if (selected_list.size() < 1) {
 		return;
 	}
@@ -754,7 +754,7 @@ void ProjectManager::_show_project_in_file_manager() {
 }
 
 void ProjectManager::_erase_project() {
-	const HashSet<String> &selected_list = project_list->get_selected_project_keys();
+	const AHashSet<String> &selected_list = project_list->get_selected_project_keys();
 
 	if (selected_list.is_empty()) {
 		return;
@@ -1257,7 +1257,7 @@ void ProjectManager::_files_dropped(PackedStringArray p_files) {
 		return;
 	}
 
-	HashSet<String> folders_set;
+	AHashSet<String> folders_set;
 	Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 	for (int i = 0; i < p_files.size(); i++) {
 		const String &file = p_files[i];

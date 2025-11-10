@@ -90,7 +90,7 @@ class SceneState : public RefCounted {
 
 	Vector<ConnectionData> connections;
 
-	Error _parse_node(Node *p_owner, Node *p_node, int p_parent_idx, HashMap<StringName, int> &name_map, HashMap<Variant, int> &variant_map, HashMap<Node *, int> &node_map, HashMap<Node *, int> &nodepath_map, HashSet<int32_t> &ids_saved);
+	Error _parse_node(Node *p_owner, Node *p_node, int p_parent_idx, HashMap<StringName, int> &name_map, HashMap<Variant, int> &variant_map, HashMap<Node *, int> &node_map, HashMap<Node *, int> &nodepath_map, AHashSet<int32_t> &ids_saved);
 	Error _parse_connections(Node *p_owner, Node *p_node, HashMap<StringName, int> &name_map, HashMap<Variant, int> &variant_map, HashMap<Node *, int> &node_map, HashMap<Node *, int> &nodepath_map);
 
 	String path;
@@ -224,7 +224,7 @@ public:
 
 	bool remove_group_references(const StringName &p_name);
 	bool rename_group_references(const StringName &p_old_name, const StringName &p_new_name);
-	HashSet<StringName> get_all_groups();
+	AHashSet<StringName> get_all_groups();
 
 	virtual void set_last_modified_time(uint64_t p_time) { last_modified_time = p_time; }
 	uint64_t get_last_modified_time() const { return last_modified_time; }
@@ -284,7 +284,7 @@ public:
 		state->set_last_modified_time(p_time);
 	}
 
-	static HashSet<StringName> get_scene_groups(const String &p_path);
+	static AHashSet<StringName> get_scene_groups(const String &p_path);
 #endif
 	Ref<SceneState> get_state() const;
 

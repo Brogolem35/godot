@@ -54,7 +54,7 @@ void JSON::_add_indent(String &r_result, const String &p_indent, int p_size) {
 	}
 }
 
-void JSON::_stringify(String &r_result, const Variant &p_var, const String &p_indent, int p_cur_indent, bool p_sort_keys, HashSet<const void *> &p_markers, bool p_full_precision) {
+void JSON::_stringify(String &r_result, const Variant &p_var, const String &p_indent, int p_cur_indent, bool p_sort_keys, AHashSet<const void *> &p_markers, bool p_full_precision) {
 	if (p_cur_indent > Variant::MAX_RECURSION_DEPTH) {
 		r_result += "...";
 		ERR_FAIL_MSG("JSON structure is too deep. Bailing.");
@@ -612,7 +612,7 @@ String JSON::get_parsed_text() const {
 
 String JSON::stringify(const Variant &p_var, const String &p_indent, bool p_sort_keys, bool p_full_precision) {
 	String result;
-	HashSet<const void *> markers;
+	AHashSet<const void *> markers;
 	_stringify(result, p_var, p_indent, 0, p_sort_keys, markers, p_full_precision);
 	return result;
 }

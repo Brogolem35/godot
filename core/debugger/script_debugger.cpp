@@ -44,7 +44,7 @@ void ScriptDebugger::set_depth(int p_depth) {
 
 void ScriptDebugger::insert_breakpoint(int p_line, const StringName &p_source) {
 	if (!breakpoints.has(p_line)) {
-		breakpoints[p_line] = HashSet<StringName>();
+		breakpoints[p_line] = AHashSet<StringName>();
 	}
 	breakpoints[p_line].insert(p_source);
 }

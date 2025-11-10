@@ -149,15 +149,15 @@ RenderingDevice *RenderingDevice::get_singleton() {
 void RenderingDevice::_add_dependency(RID p_id, RID p_depends_on) {
 	_THREAD_SAFE_METHOD_
 
-	HashSet<RID> *set = dependency_map.getptr(p_depends_on);
+	AHashSet<RID> *set = dependency_map.getptr(p_depends_on);
 	if (set == nullptr) {
-		set = &dependency_map.insert(p_depends_on, HashSet<RID>())->value;
+		set = &dependency_map.insert(p_depends_on, AHashSet<RID>())->value;
 	}
 	set->insert(p_id);
 
 	set = reverse_dependency_map.getptr(p_id);
 	if (set == nullptr) {
-		set = &reverse_dependency_map.insert(p_id, HashSet<RID>())->value;
+		set = &reverse_dependency_map.insert(p_id, AHashSet<RID>())->value;
 	}
 	set->insert(p_depends_on);
 }
@@ -167,7 +167,7 @@ void RenderingDevice::_free_dependencies(RID p_id) {
 
 	// Direct dependencies must be freed.
 
-	HashMap<RID, HashSet<RID>>::Iterator E = dependency_map.find(p_id);
+	HashMap<RID, AHashSet<RID>>::Iterator E = dependency_map.find(p_id);
 	if (E) {
 		while (E->value.size()) {
 			free_rid(*E->value.begin());
@@ -180,7 +180,7 @@ void RenderingDevice::_free_dependencies(RID p_id) {
 
 	if (E) {
 		for (const RID &F : E->value) {
-			HashMap<RID, HashSet<RID>>::Iterator G = dependency_map.find(F);
+			HashMap<RID, AHashSet<RID>>::Iterator G = dependency_map.find(F);
 			ERR_CONTINUE(!G);
 			ERR_CONTINUE(!G->value.has(p_id));
 			G->value.erase(p_id);
@@ -3126,7 +3126,7 @@ RenderingDevice::VertexFormatID RenderingDevice::vertex_format_create(const Vect
 		return *idptr;
 	}
 
-	HashSet<int> used_locations;
+	AHashSet<int> used_locations;
 	for (int i = 0; i < p_vertex_descriptions.size(); i++) {
 		ERR_CONTINUE(p_vertex_descriptions[i].format >= DATA_FORMAT_MAX);
 		ERR_FAIL_COND_V(used_locations.has(p_vertex_descriptions[i].location), INVALID_ID);
@@ -6001,7 +6001,7 @@ bool RenderingDevice::_dependency_make_mutable(RID p_id, RID p_resource_id, RDG:
 
 bool RenderingDevice::_dependencies_make_mutable_recursive(RID p_id, RDG::ResourceTracker *p_resource_tracker) {
 	bool made_mutable = false;
-	HashMap<RID, HashSet<RID>>::Iterator E = dependency_map.find(p_id);
+	HashMap<RID, AHashSet<RID>>::Iterator E = dependency_map.find(p_id);
 	if (E) {
 		for (RID rid : E->value) {
 			made_mutable = _dependency_make_mutable(rid, p_id, p_resource_tracker) || made_mutable;

@@ -565,7 +565,7 @@ void EditorInterface::popup_create_dialog(const Callable &p_callback, const Stri
 		get_base_control()->add_child(create_dialog);
 	}
 
-	HashSet<StringName> blocklist;
+	AHashSet<StringName> blocklist;
 	for (const Variant &E : p_custom_type_blocklist) {
 		blocklist.insert(E);
 	}

@@ -282,7 +282,7 @@ void EditorExportPlatformPC::get_platform_features(List<String> *r_features) con
 	r_features->push_back(get_os_name().to_lower()); // OS name is a feature.
 }
 
-void EditorExportPlatformPC::resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, HashSet<String> &p_features) {
+void EditorExportPlatformPC::resolve_platform_feature_priorities(const Ref<EditorExportPreset> &p_preset, AHashSet<String> &p_features) {
 }
 
 int EditorExportPlatformPC::get_chmod_flags() const {

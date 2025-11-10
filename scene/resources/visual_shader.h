@@ -131,11 +131,11 @@ private:
 	TypedArray<Dictionary> _get_node_connections(Type p_type) const;
 
 	HashMap<String, int> modes;
-	HashSet<StringName> flags;
+	AHashSet<StringName> flags;
 
 	bool stencil_enabled = false;
 	HashMap<String, int> stencil_modes;
-	HashSet<StringName> stencil_flags;
+	AHashSet<StringName> stencil_flags;
 	int stencil_reference = 1;
 
 	HashMap<String, Varying> varyings;
@@ -158,7 +158,7 @@ private:
 		bool is_same(const ConnectionKey &p_key) const { return HashMapComparatorDefault<uint64_t>::compare(key, p_key.key); }
 	};
 
-	Error _write_node(Type p_type, StringBuilder *p_global_code, StringBuilder *p_global_code_per_node, HashMap<Type, StringBuilder> *p_global_code_per_func, StringBuilder &r_code, Vector<DefaultTextureParam> &r_def_tex_params, const HashMap<ConnectionKey, const List<Connection>::Element *> &p_input_connections, int p_node, HashSet<int> &r_processed, bool p_for_preview, HashSet<StringName> &r_classes) const;
+	Error _write_node(Type p_type, StringBuilder *p_global_code, StringBuilder *p_global_code_per_node, HashMap<Type, StringBuilder> *p_global_code_per_func, StringBuilder &r_code, Vector<DefaultTextureParam> &r_def_tex_params, const HashMap<ConnectionKey, const List<Connection>::Element *> &p_input_connections, int p_node, AHashSet<int> &r_processed, bool p_for_preview, AHashSet<StringName> &r_classes) const;
 
 	void _input_type_changed(Type p_type, int p_id);
 	bool has_func_name(RenderingServer::ShaderMode p_mode, const String &p_func_name) const;
@@ -736,7 +736,7 @@ protected:
 	bool tint_color_enabled = false;
 	Color tint_color = Color(0.3, 0.3, 0.3, 0.75);
 	bool autoshrink = true;
-	HashSet<int> attached_nodes;
+	AHashSet<int> attached_nodes;
 
 protected:
 	static void _bind_methods();

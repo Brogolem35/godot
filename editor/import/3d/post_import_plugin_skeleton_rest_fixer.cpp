@@ -875,7 +875,7 @@ void PostImportPluginSkeletonRestFixer::internal_process(InternalImportCategory 
 		if (!is_using_modifier && is_rest_changed) {
 			// Fix skin.
 			{
-				HashSet<Ref<Skin>> mutated_skins;
+				AHashSet<Ref<Skin>> mutated_skins;
 				TypedArray<Node> nodes = p_base_scene->find_children("*", "ImporterMeshInstance3D");
 				while (nodes.size()) {
 					ImporterMeshInstance3D *mi = Object::cast_to<ImporterMeshInstance3D>(nodes.pop_back());

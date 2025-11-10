@@ -649,7 +649,7 @@ void GDScript::_update_exports_down(bool p_base_exports_changed) {
 		return;
 	}
 
-	HashSet<ObjectID> copy = inheriters_cache; //might get modified
+	AHashSet<ObjectID> copy = inheriters_cache; //might get modified
 
 	for (const ObjectID &E : copy) {
 		Object *id = ObjectDB::get_instance(E);
@@ -920,7 +920,7 @@ void GDScript::get_constants(HashMap<StringName, Variant> *p_constants) {
 	}
 }
 
-void GDScript::get_members(HashSet<StringName> *p_members) {
+void GDScript::get_members(AHashSet<StringName> *p_members) {
 	if (p_members) {
 		for (const StringName &E : members) {
 			p_members->insert(E);
@@ -3081,7 +3081,7 @@ void ResourceFormatLoaderGDScript::get_dependencies(const String &p_path, List<S
 	}
 }
 
-void ResourceFormatLoaderGDScript::get_classes_used(const String &p_path, HashSet<StringName> *r_classes) {
+void ResourceFormatLoaderGDScript::get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) {
 	Ref<GDScript> scr = ResourceLoader::load(p_path);
 	if (scr.is_null()) {
 		return;

@@ -60,7 +60,7 @@ private:
 	HashMap<StringName, Color> class_names;
 	HashMap<StringName, Color> reserved_keywords;
 	HashMap<StringName, Color> member_keywords;
-	HashSet<StringName> global_functions;
+	AHashSet<StringName> global_functions;
 
 	enum Type {
 		NONE,

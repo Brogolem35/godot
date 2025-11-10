@@ -1177,7 +1177,7 @@ void EditorHelp::_update_doc() {
 	}
 
 	// Properties overview
-	HashSet<String> skip_methods;
+	AHashSet<String> skip_methods;
 
 	bool has_properties = false;
 	bool has_property_descriptions = false;

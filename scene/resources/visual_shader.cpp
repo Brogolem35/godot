@@ -1518,7 +1518,7 @@ String VisualShader::generate_preview_shader(Type p_type, int p_node, int p_port
 	StringBuilder global_code_per_node;
 	HashMap<Type, StringBuilder> global_code_per_func;
 	StringBuilder shader_code;
-	HashSet<StringName> classes;
+	AHashSet<StringName> classes;
 
 	global_code += String() + "shader_type canvas_item;\n";
 
@@ -1553,7 +1553,7 @@ String VisualShader::generate_preview_shader(Type p_type, int p_node, int p_port
 
 	shader_code += "\nvoid fragment() {\n";
 
-	HashSet<int> processed;
+	AHashSet<int> processed;
 	Error err = _write_node(p_type, &global_code, &global_code_per_node, &global_code_per_func, shader_code, default_tex_params, input_connections, p_node, processed, true, classes);
 	ERR_FAIL_COND_V(err != OK, String());
 
@@ -1958,7 +1958,7 @@ void VisualShader::_get_property_list(List<PropertyInfo> *p_list) const {
 	//render modes
 
 	HashMap<String, String> blend_mode_enums;
-	HashSet<String> toggles;
+	AHashSet<String> toggles;
 
 	const Vector<ShaderLanguage::ModeInfo> &rmodes = ShaderTypes::get_singleton()->get_modes(RenderingServer::ShaderMode(shader_mode));
 
@@ -2020,7 +2020,7 @@ void VisualShader::_get_property_list(List<PropertyInfo> *p_list) const {
 		p_list->push_back(PropertyInfo(Variant::INT, vformat("%s/%s", PNAME("stencil"), PNAME("reference")), PROPERTY_HINT_RANGE, "0,255,1"));
 
 		HashMap<String, String> stencil_enums;
-		HashSet<String> stencil_toggles;
+		AHashSet<String> stencil_toggles;
 
 		for (const ShaderLanguage::ModeInfo &info : smodes) {
 			if (!info.options.is_empty()) {
@@ -2091,7 +2091,7 @@ void VisualShader::_validate_property(PropertyInfo &p_property) const {
 	}
 }
 
-Error VisualShader::_write_node(Type type, StringBuilder *p_global_code, StringBuilder *p_global_code_per_node, HashMap<Type, StringBuilder> *p_global_code_per_func, StringBuilder &r_code, Vector<VisualShader::DefaultTextureParam> &r_def_tex_params, const HashMap<ConnectionKey, const List<Connection>::Element *> &p_input_connections, int p_node, HashSet<int> &r_processed, bool p_for_preview, HashSet<StringName> &r_classes) const {
+Error VisualShader::_write_node(Type type, StringBuilder *p_global_code, StringBuilder *p_global_code_per_node, HashMap<Type, StringBuilder> *p_global_code_per_func, StringBuilder &r_code, Vector<VisualShader::DefaultTextureParam> &r_def_tex_params, const HashMap<ConnectionKey, const List<Connection>::Element *> &p_input_connections, int p_node, AHashSet<int> &r_processed, bool p_for_preview, AHashSet<StringName> &r_classes) const {
 	const Ref<VisualShaderNode> vsnode = graph[type].nodes[p_node].node;
 
 	if (vsnode->is_disabled()) {
@@ -2677,7 +2677,7 @@ void VisualShader::_update_shader() const {
 	HashMap<Type, StringBuilder> global_code_per_func;
 	StringBuilder shader_code;
 	Vector<VisualShader::DefaultTextureParam> default_tex_params;
-	HashSet<StringName> classes;
+	AHashSet<StringName> classes;
 	HashMap<int, int> insertion_pos;
 	static const char *shader_mode_str[Shader::MODE_MAX] = { "spatial", "canvas_item", "particles", "sky", "fog" };
 
@@ -2785,7 +2785,7 @@ void VisualShader::_update_shader() const {
 	static const char *func_name[TYPE_MAX] = { "vertex", "fragment", "light", "start", "process", "collide", "start_custom", "process_custom", "sky", "fog" };
 
 	String global_expressions;
-	HashSet<String> used_parameter_names;
+	AHashSet<String> used_parameter_names;
 	List<VisualShaderNodeParameter *> parameters;
 	HashMap<int, List<int>> emitters;
 	HashMap<int, List<int>> varying_setters;
@@ -2887,7 +2887,7 @@ void VisualShader::_update_shader() const {
 	}
 
 	HashMap<int, String> code_map;
-	HashSet<int> empty_funcs;
+	AHashSet<int> empty_funcs;
 
 	for (int i = 0; i < TYPE_MAX; i++) {
 		if (!has_func_name(RenderingServer::ShaderMode(shader_mode), func_name[i])) {
@@ -2898,7 +2898,7 @@ void VisualShader::_update_shader() const {
 		HashMap<ConnectionKey, const List<Connection>::Element *> input_connections;
 
 		StringBuilder func_code;
-		HashSet<int> processed;
+		AHashSet<int> processed;
 
 		bool is_empty_func = false;
 		if (shader_mode != Shader::MODE_PARTICLES && shader_mode != Shader::MODE_SKY && shader_mode != Shader::MODE_FOG) {

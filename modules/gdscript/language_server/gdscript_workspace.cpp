@@ -943,7 +943,7 @@ Error GDScriptWorkspace::resolve_signature(const LSP::TextDocumentPositionParams
 GDScriptWorkspace::GDScriptWorkspace() {}
 
 GDScriptWorkspace::~GDScriptWorkspace() {
-	HashSet<String> cached_parsers;
+	AHashSet<String> cached_parsers;
 
 	for (const KeyValue<String, ExtendGDScriptParser *> &E : parse_results) {
 		cached_parsers.insert(E.key);

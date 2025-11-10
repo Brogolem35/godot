@@ -838,7 +838,7 @@ ObjectID Node3DEditorViewport::_select_ray(const Point2 &p_pos) const {
 		RS::get_singleton()->sdfgi_set_debug_probe_select(pos, ray);
 	}
 
-	HashSet<Ref<EditorNode3DGizmo>> found_gizmos;
+	AHashSet<Ref<EditorNode3DGizmo>> found_gizmos;
 
 	Node *edited_scene = get_tree()->get_edited_scene_root();
 	ObjectID closest;
@@ -902,7 +902,7 @@ void Node3DEditorViewport::_find_items_at_pos(const Point2 &p_pos, Vector<_RayRe
 
 	Vector<Node3D *> nodes_with_gizmos = Node3DEditor::get_singleton()->gizmo_bvh_ray_query(pos, pos + ray * camera->get_far());
 
-	HashSet<Node3D *> found_nodes;
+	AHashSet<Node3D *> found_nodes;
 
 	for (Node3D *spat : nodes_with_gizmos) {
 		if (!spat) {
@@ -1083,7 +1083,7 @@ void Node3DEditorViewport::_select_region() {
 	}
 
 	Vector<Node3D *> nodes_with_gizmos = Node3DEditor::get_singleton()->gizmo_bvh_frustum_query(frustum);
-	HashSet<Node3D *> found_nodes;
+	AHashSet<Node3D *> found_nodes;
 	Vector<Node *> selected;
 
 	Node *edited_scene = get_tree()->get_edited_scene_root();
@@ -4826,7 +4826,7 @@ void Node3DEditorViewport::assign_pending_data_pointers(Node3D *p_preview_node, 
 	accept = p_accept;
 }
 
-void _insert_rid_recursive(Node *node, HashSet<RID> &rids) {
+void _insert_rid_recursive(Node *node, AHashSet<RID> &rids) {
 	CollisionObject3D *co = Object::cast_to<CollisionObject3D>(node);
 
 	if (co) {
@@ -4850,7 +4850,7 @@ Vector3 Node3DEditorViewport::_get_instance_position(const Point2 &p_pos, Node3D
 
 	PhysicsDirectSpaceState3D *ss = get_tree()->get_root()->get_world_3d()->get_direct_space_state();
 
-	HashSet<RID> rids;
+	AHashSet<RID> rids;
 
 	if (!preview_node->is_inside_tree() && !ruler->is_inside_tree()) {
 		const List<Node *> &selection = editor_selection->get_top_selected_node_list();
@@ -8512,8 +8512,8 @@ void Node3DEditor::_refresh_menu_icons() {
 }
 
 template <typename T>
-HashSet<T *> _get_child_nodes(Node *parent_node) {
-	HashSet<T *> nodes = HashSet<T *>();
+AHashSet<T *> _get_child_nodes(Node *parent_node) {
+	AHashSet<T *> nodes = AHashSet<T *>();
 	T *node = Node::cast_to<T>(parent_node);
 	if (node) {
 		nodes.insert(node);
@@ -8521,7 +8521,7 @@ HashSet<T *> _get_child_nodes(Node *parent_node) {
 
 	for (int i = 0; i < parent_node->get_child_count(); i++) {
 		Node *child_node = parent_node->get_child(i);
-		HashSet<T *> child_nodes = _get_child_nodes<T>(child_node);
+		AHashSet<T *> child_nodes = _get_child_nodes<T>(child_node);
 		for (T *I : child_nodes) {
 			nodes.insert(I);
 		}
@@ -8530,13 +8530,13 @@ HashSet<T *> _get_child_nodes(Node *parent_node) {
 	return nodes;
 }
 
-HashSet<RID> _get_physics_bodies_rid(Node *node) {
-	HashSet<RID> rids = HashSet<RID>();
+AHashSet<RID> _get_physics_bodies_rid(Node *node) {
+	AHashSet<RID> rids = AHashSet<RID>();
 	PhysicsBody3D *pb = Node::cast_to<PhysicsBody3D>(node);
 	if (pb) {
 		rids.insert(pb->get_rid());
 	}
-	HashSet<PhysicsBody3D *> child_nodes = _get_child_nodes<PhysicsBody3D>(node);
+	AHashSet<PhysicsBody3D *> child_nodes = _get_child_nodes<PhysicsBody3D>(node);
 	for (const PhysicsBody3D *I : child_nodes) {
 		rids.insert(I->get_rid());
 	}
@@ -8559,13 +8559,13 @@ void Node3DEditor::_snap_selected_nodes_to_floor() {
 			Vector3 position_offset;
 
 			// Priorities for snapping to floor are CollisionShapes, VisualInstances and then origin
-			HashSet<VisualInstance3D *> vi = _get_child_nodes<VisualInstance3D>(sp);
-			HashSet<CollisionShape3D *> cs = _get_child_nodes<CollisionShape3D>(sp);
+			AHashSet<VisualInstance3D *> vi = _get_child_nodes<VisualInstance3D>(sp);
+			AHashSet<CollisionShape3D *> cs = _get_child_nodes<CollisionShape3D>(sp);
 			bool found_valid_shape = false;
 
 			if (cs.size()) {
 				AABB aabb;
-				HashSet<CollisionShape3D *>::Iterator I = cs.begin();
+				AHashSet<CollisionShape3D *>::Iterator I = cs.begin();
 				if ((*I)->get_shape().is_valid()) {
 					CollisionShape3D *collision_shape = *cs.begin();
 					aabb = collision_shape->get_global_transform().xform(collision_shape->get_shape()->get_debug_mesh()->get_aabb());
@@ -8629,7 +8629,7 @@ void Node3DEditor::_snap_selected_nodes_to_floor() {
 			Dictionary d = kv.value;
 			Vector3 from = d["from"];
 			Vector3 to = from - Vector3(0.0, max_snap_height, 0.0);
-			HashSet<RID> excluded = _get_physics_bodies_rid(sp);
+			AHashSet<RID> excluded = _get_physics_bodies_rid(sp);
 
 			PhysicsDirectSpaceState3D::RayParameters ray_params;
 			ray_params.from = from;
@@ -8652,7 +8652,7 @@ void Node3DEditor::_snap_selected_nodes_to_floor() {
 				Dictionary d = kv.value;
 				Vector3 from = d["from"];
 				Vector3 to = from - Vector3(0.0, max_snap_height, 0.0);
-				HashSet<RID> excluded = _get_physics_bodies_rid(sp);
+				AHashSet<RID> excluded = _get_physics_bodies_rid(sp);
 
 				PhysicsDirectSpaceState3D::RayParameters ray_params;
 				ray_params.from = from;

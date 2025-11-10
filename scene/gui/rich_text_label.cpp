@@ -4288,7 +4288,7 @@ void RichTextLabel::add_newline() {
 	queue_redraw();
 }
 
-void RichTextLabel::_remove_frame(HashSet<Item *> &r_erase_list, ItemFrame *p_frame, int p_line, bool p_erase, int p_char_offset, int p_line_offset) {
+void RichTextLabel::_remove_frame(AHashSet<Item *> &r_erase_list, ItemFrame *p_frame, int p_line, bool p_erase, int p_char_offset, int p_line_offset) {
 	Line &l = p_frame->lines[p_line];
 	Item *it_to = (p_line + 1 < (int)p_frame->lines.size()) ? p_frame->lines[p_line + 1].from : nullptr;
 	if (!p_erase) {
@@ -4349,7 +4349,7 @@ bool RichTextLabel::remove_paragraph(int p_paragraph, bool p_no_invalidate) {
 
 		current_char_ofs = 0;
 	} else {
-		HashSet<Item *> erase_list;
+		AHashSet<Item *> erase_list;
 		Line &l = main->lines[p_paragraph];
 		int off = l.char_count;
 		for (int i = p_paragraph; i < (int)main->lines.size(); i++) {
@@ -4359,7 +4359,7 @@ bool RichTextLabel::remove_paragraph(int p_paragraph, bool p_no_invalidate) {
 				_remove_frame(erase_list, main, i, false, off, 1);
 			}
 		}
-		for (HashSet<Item *>::Iterator E = erase_list.begin(); E; ++E) {
+		for (AHashSet<Item *>::Iterator E = erase_list.begin(); E; ++E) {
 			Item *it = *E;
 			if (current_frame == it) {
 				current_frame = main;

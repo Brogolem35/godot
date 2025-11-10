@@ -57,11 +57,11 @@ public:
 	};
 
 private:
-	HashSet<StringName> disabled_classes;
-	HashSet<StringName> disabled_editors;
-	HashMap<StringName, HashSet<StringName>> disabled_properties;
+	AHashSet<StringName> disabled_classes;
+	AHashSet<StringName> disabled_editors;
+	HashMap<StringName, AHashSet<StringName>> disabled_properties;
 
-	HashSet<StringName> collapsed_classes;
+	AHashSet<StringName> collapsed_classes;
 
 	bool features_disabled[FEATURE_MAX];
 	static const char *feature_names[FEATURE_MAX];

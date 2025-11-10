@@ -95,7 +95,7 @@ void TileMapLayer::_debug_update(bool p_force_cleanup) {
 	}
 
 	// List all debug quadrants to update.
-	HashSet<Vector2i> quadrants_to_updates;
+	AHashSet<Vector2i> quadrants_to_updates;
 	if (_debug_was_cleaned_up || anything_changed) {
 		// Update all cells.
 		for (KeyValue<Vector2i, CellData> &kv : tile_map_layer_data) {
@@ -3018,7 +3018,7 @@ void TileMapLayer::set_cells_terrain_connect(TypedArray<Vector2i> p_cells, int p
 	ERR_FAIL_INDEX(p_terrain_set, tile_set->get_terrain_sets_count());
 
 	Vector<Vector2i> cells_vector;
-	HashSet<Vector2i> painted_set;
+	AHashSet<Vector2i> painted_set;
 	for (int i = 0; i < p_cells.size(); i++) {
 		cells_vector.push_back(p_cells[i]);
 		painted_set.insert(p_cells[i]);
@@ -3057,7 +3057,7 @@ void TileMapLayer::set_cells_terrain_path(TypedArray<Vector2i> p_path, int p_ter
 	ERR_FAIL_INDEX(p_terrain_set, tile_set->get_terrain_sets_count());
 
 	Vector<Vector2i> vector_path;
-	HashSet<Vector2i> painted_set;
+	AHashSet<Vector2i> painted_set;
 	for (int i = 0; i < p_path.size(); i++) {
 		vector_path.push_back(p_path[i]);
 		painted_set.insert(p_path[i]);

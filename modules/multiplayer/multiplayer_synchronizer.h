@@ -56,8 +56,8 @@ private:
 	uint64_t sync_interval_usec = 0;
 	uint64_t delta_interval_usec = 0;
 	VisibilityUpdateMode visibility_update_mode = VISIBILITY_PROCESS_IDLE;
-	HashSet<Callable> visibility_filters;
-	HashSet<int> peer_visibility;
+	AHashSet<Callable> visibility_filters;
+	AHashSet<int> peer_visibility;
 	Vector<Watcher> watchers;
 	uint64_t last_watch_usec = 0;
 

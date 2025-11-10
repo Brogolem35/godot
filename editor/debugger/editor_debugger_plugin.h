@@ -38,7 +38,7 @@ class EditorDebuggerSession : public RefCounted {
 	GDCLASS(EditorDebuggerSession, RefCounted);
 
 private:
-	HashSet<Control *> tabs;
+	AHashSet<Control *> tabs;
 
 	ScriptEditorDebugger *debugger = nullptr;
 

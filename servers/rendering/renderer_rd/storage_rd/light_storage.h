@@ -124,7 +124,7 @@ private:
 
 		Rect2 directional_rect;
 
-		HashSet<RID> shadow_atlases; //shadow atlases where this light is registered
+		AHashSet<RID> shadow_atlases; //shadow atlases where this light is registered
 
 		ForwardID forward_id = -1;
 

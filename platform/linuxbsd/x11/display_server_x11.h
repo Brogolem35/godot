@@ -185,7 +185,7 @@ class DisplayServerX11 : public DisplayServer {
 		Vector<Vector2> mpath;
 
 		WindowID transient_parent = INVALID_WINDOW_ID;
-		HashSet<WindowID> transient_children;
+		AHashSet<WindowID> transient_children;
 
 		ObjectID instance_id;
 

@@ -446,7 +446,7 @@ Ref<Resource> Resource::duplicate_for_local_scene(Node *p_for_scene, DuplicateRe
 	return dupe;
 }
 
-void Resource::_find_sub_resources(const Variant &p_variant, HashSet<Ref<Resource>> &p_resources_found) {
+void Resource::_find_sub_resources(const Variant &p_variant, AHashSet<Ref<Resource>> &p_resources_found) {
 	switch (p_variant.get_type()) {
 		case Variant::ARRAY: {
 			Array a = p_variant;
@@ -485,7 +485,7 @@ void Resource::configure_for_local_scene(Node *p_for_scene, DuplicateRemapCacheT
 		}
 		Variant p = get(E.name);
 
-		HashSet<Ref<Resource>> sub_resources;
+		AHashSet<Ref<Resource>> sub_resources;
 		_find_sub_resources(p, sub_resources);
 
 		for (Ref<Resource> sr : sub_resources) {

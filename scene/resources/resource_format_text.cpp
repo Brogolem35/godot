@@ -220,7 +220,7 @@ Ref<PackedScene> ResourceLoaderText::_parse_node_tag(VariantParser::ResourcePars
 				type = SceneState::TYPE_INSTANTIATED; //no type? assume this was instantiated
 			}
 
-			HashSet<StringName> path_properties;
+			AHashSet<StringName> path_properties;
 
 			if (next_tag.fields.has("node_paths")) {
 				Vector<String> paths = next_tag.fields["node_paths"];
@@ -1172,7 +1172,7 @@ void ResourceLoaderText::open(Ref<FileAccess> p_f, bool p_skip_first_tag) {
 	rp.userdata = this;
 }
 
-Error ResourceLoaderText::get_classes_used(HashSet<StringName> *r_classes) {
+Error ResourceLoaderText::get_classes_used(AHashSet<StringName> *r_classes) {
 	if (error) {
 		return error;
 	}
@@ -1467,7 +1467,7 @@ bool ResourceFormatLoaderText::handles_type(const String &p_type) const {
 	return true;
 }
 
-void ResourceFormatLoaderText::get_classes_used(const String &p_path, HashSet<StringName> *r_classes) {
+void ResourceFormatLoaderText::get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) {
 	const String type = get_resource_type(p_path);
 	if (!type.is_empty()) {
 		r_classes->insert(type);
@@ -1793,7 +1793,7 @@ Error ResourceFormatSaverTextInstance::save(const String &p_path, const Ref<Reso
 
 #ifdef TOOLS_ENABLED
 	// Keep order from cached ids.
-	HashSet<String> cached_ids_found;
+	AHashSet<String> cached_ids_found;
 	for (KeyValue<Ref<Resource>, String> &E : external_resources) {
 		String cached_id = E.key->get_id_for_path(local_path);
 		if (cached_id.is_empty() || cached_ids_found.has(cached_id)) {
@@ -1865,7 +1865,7 @@ Error ResourceFormatSaverTextInstance::save(const String &p_path, const Ref<Reso
 		f->store_line(String()); // Separate.
 	}
 
-	HashSet<String> used_unique_ids;
+	AHashSet<String> used_unique_ids;
 
 	for (List<Ref<Resource>>::Element *E = saved_resources.front(); E; E = E->next()) {
 		Ref<Resource> res = E->get();

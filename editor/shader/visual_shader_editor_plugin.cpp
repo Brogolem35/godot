@@ -2112,7 +2112,7 @@ void VisualShaderEditor::_update_preview_parameter_list() {
 	List<PropertyInfo> properties;
 	RenderingServer::get_singleton()->get_shader_parameter_list(visual_shader->get_rid(), &properties);
 
-	HashSet<String> params_to_remove;
+	AHashSet<String> params_to_remove;
 	for (const KeyValue<String, PropertyInfo> &E : parameter_props) {
 		params_to_remove.insert(E.key);
 	}
@@ -2603,7 +2603,7 @@ void VisualShaderEditor::_update_parameters(bool p_update_refs) {
 	}
 }
 
-void VisualShaderEditor::_update_parameter_refs(HashSet<String> &p_deleted_names) {
+void VisualShaderEditor::_update_parameter_refs(AHashSet<String> &p_deleted_names) {
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
 	for (int i = 0; i < VisualShader::TYPE_MAX; i++) {
 		VisualShader::Type type = VisualShader::Type(i);
@@ -3317,7 +3317,7 @@ void VisualShaderEditor::_parameter_line_edit_changed(const String &p_text, int 
 	undo_redo->add_do_method(this, "_update_parameters", true);
 	undo_redo->add_undo_method(this, "_update_parameters", true);
 
-	HashSet<String> changed_names;
+	AHashSet<String> changed_names;
 	changed_names.insert(node->get_parameter_name());
 	_update_parameter_refs(changed_names);
 
@@ -4495,7 +4495,7 @@ void VisualShaderEditor::_delete_nodes(int p_type, const List<int> &p_nodes) {
 		}
 	}
 
-	HashSet<String> parameter_names;
+	AHashSet<String> parameter_names;
 
 	for (const int &F : p_nodes) {
 		Ref<VisualShaderNode> node = visual_shader->get_node(type, F);
@@ -4585,8 +4585,8 @@ void VisualShaderEditor::_convert_constants_to_parameters(bool p_vice_versa) {
 		undo_redo->create_action(TTR("Convert Parameter Node(s) To Constant(s)"));
 	}
 
-	const HashSet<int> &current_set = p_vice_versa ? selected_parameters : selected_constants;
-	HashSet<String> deleted_names;
+	const AHashSet<int> &current_set = p_vice_versa ? selected_parameters : selected_constants;
+	AHashSet<String> deleted_names;
 
 	for (const int &E : current_set) {
 		int node_id = E;
@@ -5416,7 +5416,7 @@ void VisualShaderEditor::_dup_copy_nodes(int p_type, List<CopyItem> &r_items, Li
 	selection_center.x = 0.0f;
 	selection_center.y = 0.0f;
 
-	HashSet<int> nodes;
+	AHashSet<int> nodes;
 
 	for (int i = 0; i < graph->get_child_count(); i++) {
 		GraphElement *graph_element = Object::cast_to<GraphElement>(graph->get_child(i));
@@ -5497,8 +5497,8 @@ void VisualShaderEditor::_dup_paste_nodes(int p_type, List<CopyItem> &r_items, c
 	int base_id = visual_shader->get_valid_node_id(type);
 	int id_from = base_id;
 	HashMap<int, int> connection_remap; // Used for connections and frame attachments.
-	HashSet<int> unsupported_set;
-	HashSet<int> added_set;
+	AHashSet<int> unsupported_set;
+	AHashSet<int> added_set;
 
 	for (CopyItem &item : r_items) {
 		if (item.disabled) {

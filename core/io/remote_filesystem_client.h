@@ -31,12 +31,12 @@
 #pragma once
 
 #include "core/string/ustring.h"
-#include "core/templates/hash_set.h"
+#include "core/templates/a_hash_set.h"
 #include "core/templates/local_vector.h"
 
 class RemoteFilesystemClient {
 	String cache_path;
-	HashSet<String> validated_directories;
+	AHashSet<String> validated_directories;
 
 protected:
 	String _get_cache_path() { return cache_path; }

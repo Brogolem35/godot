@@ -97,8 +97,8 @@ protected:
 	Vector<Ref<GLTFSkin>> skins;
 	Vector<Ref<GLTFCamera>> cameras;
 	Vector<Ref<GLTFLight>> lights;
-	HashSet<String> unique_names;
-	HashSet<String> unique_animation_names;
+	AHashSet<String> unique_names;
+	AHashSet<String> unique_animation_names;
 
 	Vector<Ref<GLTFSkeleton>> skeletons;
 	Vector<Ref<GLTFAnimation>> animations;

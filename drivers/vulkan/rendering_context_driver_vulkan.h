@@ -98,7 +98,7 @@ private:
 	VkInstance instance = VK_NULL_HANDLE;
 	uint32_t instance_api_version = VK_API_VERSION_1_0;
 	HashMap<CharString, bool> requested_instance_extensions;
-	HashSet<CharString> enabled_instance_extension_names;
+	AHashSet<CharString> enabled_instance_extension_names;
 	TightLocalVector<Device> driver_devices;
 	TightLocalVector<VkPhysicalDevice> physical_devices;
 	TightLocalVector<DeviceQueueFamilies> device_queue_families;

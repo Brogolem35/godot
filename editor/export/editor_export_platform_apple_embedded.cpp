@@ -275,7 +275,7 @@ void EditorExportPlatformAppleEmbedded::get_export_options(List<ExportOption> *r
 		r_options->push_back(ExportOption(PropertyInfo(Variant::BOOL, vformat("%s/%s", PNAME("plugins"), found_plugins[i].name)), false));
 	}
 
-	HashSet<String> plist_keys;
+	AHashSet<String> plist_keys;
 
 	for (int i = 0; i < found_plugins.size(); i++) {
 		// Editable plugin plist values
@@ -356,7 +356,7 @@ void EditorExportPlatformAppleEmbedded::get_export_options(List<ExportOption> *r
 	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "icons/icon_1024x1024_dark", PROPERTY_HINT_FILE_PATH, "*.svg,*.png,*.webp,*.jpg,*.jpeg"), ""));
 	r_options->push_back(ExportOption(PropertyInfo(Variant::STRING, "icons/icon_1024x1024_tinted", PROPERTY_HINT_FILE_PATH, "*.svg,*.png,*.webp,*.jpg,*.jpeg"), ""));
 
-	HashSet<String> used_names;
+	AHashSet<String> used_names;
 
 	Vector<IconInfo> icon_infos = get_icon_infos();
 	for (int i = 0; i < icon_infos.size(); ++i) {
@@ -604,7 +604,7 @@ String EditorExportPlatformAppleEmbedded::_process_config_file_line(const Ref<Ed
 		String locale_files;
 		Vector<String> translations = get_project_setting(p_preset, "internationalization/locale/translations");
 		if (translations.size() > 0) {
-			HashSet<String> languages;
+			AHashSet<String> languages;
 			for (const String &E : translations) {
 				Ref<Translation> tr = ResourceLoader::load(E);
 				if (tr.is_valid() && tr->get_locale() != "en") {
@@ -623,7 +623,7 @@ String EditorExportPlatformAppleEmbedded::_process_config_file_line(const Ref<Ed
 		String locale_files;
 		Vector<String> translations = get_project_setting(p_preset, "internationalization/locale/translations");
 		if (translations.size() > 0) {
-			HashSet<String> languages;
+			AHashSet<String> languages;
 			for (const String &E : translations) {
 				Ref<Translation> tr = ResourceLoader::load(E);
 				if (tr.is_valid() && tr->get_locale() != "en") {
@@ -1423,7 +1423,7 @@ Error EditorExportPlatformAppleEmbedded::_export_apple_embedded_plugins(const Re
 	Vector<String> added_embedded_dependenciy_names;
 	HashMap<String, String> plist_values;
 
-	HashSet<String> plugin_linker_flags;
+	AHashSet<String> plugin_linker_flags;
 
 	Error err;
 
@@ -1762,7 +1762,7 @@ Error EditorExportPlatformAppleEmbedded::_export_project_helper(const Ref<Editor
 
 	bool found_library = false;
 
-	HashSet<String> files_to_parse;
+	AHashSet<String> files_to_parse;
 	const String project_file = "godot_apple_embedded.xcodeproj/project.pbxproj";
 	files_to_parse.insert(project_file);
 	files_to_parse.insert("godot_apple_embedded.xcodeproj/project.xcworkspace/contents.xcworkspacedata");
@@ -1934,7 +1934,7 @@ Error EditorExportPlatformAppleEmbedded::_export_project_helper(const Ref<Editor
 			f->store_line("NSPhotoLibraryUsageDescription = \"" + p_preset->get("privacy/photolibrary_usage_description").operator String() + "\";");
 		}
 
-		HashSet<String> languages;
+		AHashSet<String> languages;
 		for (const String &E : translations) {
 			Ref<Translation> tr = ResourceLoader::load(E);
 			if (tr.is_valid() && tr->get_locale() != "en") {

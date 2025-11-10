@@ -461,7 +461,7 @@ class EditorInspectorSection : public Container {
 
 	bool checkbox_only = false;
 
-	HashSet<StringName> revertable_properties;
+	AHashSet<StringName> revertable_properties;
 
 	void _test_unfold();
 	int _get_header_height();
@@ -729,7 +729,7 @@ class EditorInspector : public ScrollContainer {
 	// Map used to cache the instantiated editors.
 	HashMap<StringName, List<EditorProperty *>> editor_property_map;
 	List<EditorInspectorSection *> sections;
-	HashSet<StringName> pending;
+	AHashSet<StringName> pending;
 
 	void _clear(bool p_hide_plugins = true);
 	Object *object = nullptr;
@@ -771,7 +771,7 @@ class EditorInspector : public ScrollContainer {
 	};
 
 	HashMap<StringName, HashMap<StringName, DocCacheInfo>> doc_cache;
-	HashSet<StringName> restart_request_props;
+	AHashSet<StringName> restart_request_props;
 	HashMap<String, String> custom_property_descriptions;
 	HashMap<String, String> doc_property_class_remaps;
 

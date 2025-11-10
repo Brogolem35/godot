@@ -138,7 +138,7 @@ public:
 	ResourceUID::ID get_uid(Ref<FileAccess> p_f);
 	void get_dependencies(Ref<FileAccess> p_f, List<String> *p_dependencies, bool p_add_types);
 	Error rename_dependencies(Ref<FileAccess> p_f, const String &p_path, const HashMap<String, String> &p_map);
-	Error get_classes_used(HashSet<StringName> *r_classes);
+	Error get_classes_used(AHashSet<StringName> *r_classes);
 
 	ResourceLoaderText();
 };
@@ -152,7 +152,7 @@ public:
 	virtual void get_recognized_extensions_for_type(const String &p_type, List<String> *p_extensions) const override;
 	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
 	virtual bool handles_type(const String &p_type) const override;
-	virtual void get_classes_used(const String &p_path, HashSet<StringName> *r_classes) override;
+	virtual void get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) override;
 
 	virtual String get_resource_type(const String &p_path) const override;
 	virtual String get_resource_script_class(const String &p_path) const override;
@@ -182,7 +182,7 @@ class ResourceFormatSaverTextInstance {
 
 	RBMap<NonPersistentKey, Variant> non_persistent_map;
 
-	HashSet<Ref<Resource>> resource_set;
+	AHashSet<Ref<Resource>> resource_set;
 	List<Ref<Resource>> saved_resources;
 	HashMap<Ref<Resource>, String> external_resources;
 	HashMap<Ref<Resource>, String> internal_resources;

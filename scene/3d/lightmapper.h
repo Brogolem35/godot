@@ -107,7 +107,7 @@ public:
 	virtual void set_mesh_alpha_texture(Ref<Image> p_alpha_texture, unsigned int p_id) = 0;
 	virtual void commit() = 0;
 
-	virtual void set_mesh_filter(const HashSet<int> &p_mesh_ids) = 0;
+	virtual void set_mesh_filter(const AHashSet<int> &p_mesh_ids) = 0;
 	virtual void clear_mesh_filter() = 0;
 
 	static Ref<LightmapRaycaster> create();

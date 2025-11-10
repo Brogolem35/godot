@@ -38,7 +38,7 @@ class GameStateSnapshotRef;
 class SnapshotDataObject : public Object {
 	GDCLASS(SnapshotDataObject, Object);
 
-	HashSet<ObjectID> _unique_references(const HashMap<String, ObjectID> &p_refs);
+	AHashSet<ObjectID> _unique_references(const HashMap<String, ObjectID> &p_refs);
 	String _get_script_name(Ref<Script> p_script);
 
 public:
@@ -47,8 +47,8 @@ public:
 	HashMap<String, ObjectID> outbound_references;
 	HashMap<String, ObjectID> inbound_references;
 
-	HashSet<ObjectID> get_unique_outbound_refernces();
-	HashSet<ObjectID> get_unique_inbound_references();
+	AHashSet<ObjectID> get_unique_outbound_refernces();
+	AHashSet<ObjectID> get_unique_inbound_references();
 
 	uint64_t remote_object_id = 0;
 	String type_name;
@@ -81,7 +81,7 @@ class GameStateSnapshot : public Object {
 	GDCLASS(GameStateSnapshot, Object);
 
 	void _get_outbound_references(Variant &p_var, HashMap<String, ObjectID> &r_ret_val, const String &p_current_path = "");
-	void _get_rc_cycles(SnapshotDataObject *p_obj, SnapshotDataObject *p_source_obj, HashSet<SnapshotDataObject *> p_traversed_objs, LocalVector<String> &r_ret_val, const String &p_current_path = "");
+	void _get_rc_cycles(SnapshotDataObject *p_obj, SnapshotDataObject *p_source_obj, AHashSet<SnapshotDataObject *> p_traversed_objs, LocalVector<String> &r_ret_val, const String &p_current_path = "");
 
 public:
 	String name;

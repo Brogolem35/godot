@@ -278,7 +278,7 @@ private:
 	bool _initializing_plugins = false;
 	HashMap<String, EditorPlugin *> addon_name_to_plugin;
 	LocalVector<String> pending_addons;
-	HashMap<ObjectID, HashSet<EditorPlugin *>> active_plugins;
+	HashMap<ObjectID, AHashSet<EditorPlugin *>> active_plugins;
 	bool is_main_screen_editing = false;
 
 	Control *gui_base = nullptr;
@@ -419,7 +419,7 @@ private:
 	BackgroundProgress *progress_hb = nullptr;
 
 	DependencyErrorDialog *dependency_error = nullptr;
-	HashMap<String, HashSet<String>> dependency_errors;
+	HashMap<String, AHashSet<String>> dependency_errors;
 	OrphanResourcesDialog *orphan_resources = nullptr;
 	ConfirmationDialog *open_imported = nullptr;
 	Button *new_inherited_button = nullptr;
@@ -454,7 +454,7 @@ private:
 	bool waiting_for_first_scan = true;
 	bool load_editor_layout_done = false;
 
-	HashSet<Ref<Translation>> tracked_translations;
+	AHashSet<Ref<Translation>> tracked_translations;
 	bool pending_translation_notification = false;
 
 	int current_menu_option = 0;
@@ -462,7 +462,7 @@ private:
 	SubViewport *scene_root = nullptr; // Root of the scene being edited.
 
 	Ref<Resource> saving_resource;
-	HashSet<Ref<Resource>> saving_resources_in_path;
+	AHashSet<Ref<Resource>> saving_resources_in_path;
 	HashMap<Ref<Resource>, List<Node *>> resource_count; // Keeps track of linked Resources from a Scene.
 
 	uint64_t update_spinner_step_msec = 0;
@@ -476,11 +476,11 @@ private:
 	SceneImportSettingsDialog *scene_import_settings = nullptr;
 	AudioStreamImportSettingsDialog *audio_stream_import_settings = nullptr;
 
-	HashSet<String> force_textfile_extensions;
-	HashSet<String> textfile_extensions;
-	HashSet<String> other_file_extensions;
-	HashSet<FileDialog *> file_dialogs;
-	HashSet<EditorFileDialog *> editor_file_dialogs;
+	AHashSet<String> force_textfile_extensions;
+	AHashSet<String> textfile_extensions;
+	AHashSet<String> other_file_extensions;
+	AHashSet<FileDialog *> file_dialogs;
+	AHashSet<EditorFileDialog *> editor_file_dialogs;
 
 	Vector<Ref<EditorResourceConversionPlugin>> resource_conversion_plugins;
 	PrintHandlerList print_handler;
@@ -508,7 +508,7 @@ private:
 	static void _dependency_error_report(const String &p_path, const String &p_dep, const String &p_type) {
 		DEV_ASSERT(Thread::get_caller_id() == Thread::get_main_id());
 		if (!singleton->dependency_errors.has(p_path)) {
-			singleton->dependency_errors[p_path] = HashSet<String>();
+			singleton->dependency_errors[p_path] = AHashSet<String>();
 		}
 		singleton->dependency_errors[p_path].insert(p_dep + "::" + p_type);
 	}
@@ -915,7 +915,7 @@ public:
 	void get_preload_modifications_reference_to_nodes(
 			Node *p_root,
 			Node *p_node,
-			HashSet<Node *> &p_excluded_nodes,
+			AHashSet<Node *> &p_excluded_nodes,
 			List<Node *> &p_instance_list_with_children,
 			HashMap<NodePath, ModificationNodeEntry> &p_modification_table);
 	void get_children_nodes(Node *p_node, List<Node *> &p_nodes);
@@ -978,7 +978,7 @@ public:
 
 	void reload_scene(const String &p_path);
 
-	void find_all_instances_inheriting_path_in_node(Node *p_root, Node *p_node, const String &p_instance_path, HashSet<Node *> &p_instance_list);
+	void find_all_instances_inheriting_path_in_node(Node *p_root, Node *p_node, const String &p_instance_path, AHashSet<Node *> &p_instance_list);
 	void preload_reimporting_with_path_in_edited_scenes(const List<String> &p_scenes);
 	void reload_instances_with_path_in_edited_scenes();
 
@@ -997,7 +997,7 @@ public:
 
 	void save_all_scenes();
 	void save_scene_if_open(const String &p_scene_path);
-	void save_scene_list(const HashSet<String> &p_scene_paths);
+	void save_scene_list(const AHashSet<String> &p_scene_paths);
 	void save_before_run();
 	void try_autosave();
 	void restart_editor(bool p_goto_project_manager = false);

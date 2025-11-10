@@ -81,7 +81,7 @@ class AccessibilityDriverAccessKit : public AccessibilityDriver {
 #endif
 
 		RID root_id;
-		HashSet<RID> update;
+		AHashSet<RID> update;
 	};
 
 	RID focus;

@@ -143,7 +143,7 @@ struct Mesh {
 	List<MeshInstance *> instances;
 
 	RID shadow_mesh;
-	HashSet<Mesh *> shadow_owners;
+	AHashSet<Mesh *> shadow_owners;
 
 	String path;
 

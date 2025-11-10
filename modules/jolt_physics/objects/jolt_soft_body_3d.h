@@ -50,7 +50,7 @@ class JoltSoftBody3D final : public JoltObject3D {
 
 	inline static HashMap<RID, Shared> mesh_to_shared;
 
-	HashSet<int> pinned_vertices;
+	AHashSet<int> pinned_vertices;
 	LocalVector<RID> exceptions;
 	LocalVector<Vector3> normals;
 

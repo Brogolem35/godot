@@ -709,8 +709,8 @@ void SceneDebugger::remove_from_cache(const String &p_filename, Node *p_node) {
 		return;
 	}
 
-	HashMap<String, HashSet<Node *>> &edit_cache = debugger->live_scene_edit_cache;
-	HashMap<String, HashSet<Node *>>::Iterator E = edit_cache.find(p_filename);
+	HashMap<String, AHashSet<Node *>> &edit_cache = debugger->live_scene_edit_cache;
+	HashMap<String, AHashSet<Node *>>::Iterator E = edit_cache.find(p_filename);
 	if (E) {
 		E->value.erase(p_node);
 		if (E->value.is_empty()) {
@@ -789,12 +789,12 @@ SceneDebuggerObject::SceneDebuggerObject(Object *p_obj) {
 }
 
 void SceneDebuggerObject::_parse_script_properties(Script *p_script, ScriptInstance *p_instance) {
-	typedef HashMap<const Script *, HashSet<StringName>> ScriptMemberMap;
+	typedef HashMap<const Script *, AHashSet<StringName>> ScriptMemberMap;
 	typedef HashMap<const Script *, HashMap<StringName, Variant>> ScriptConstantsMap;
 
 	ScriptMemberMap members;
 	if (p_instance) {
-		members[p_script] = HashSet<StringName>();
+		members[p_script] = AHashSet<StringName>();
 		p_script->get_members(&(members[p_script]));
 	}
 
@@ -805,7 +805,7 @@ void SceneDebuggerObject::_parse_script_properties(Script *p_script, ScriptInsta
 	Ref<Script> base = p_script->get_base_script();
 	while (base.is_valid()) {
 		if (p_instance) {
-			members[base.ptr()] = HashSet<StringName>();
+			members[base.ptr()] = AHashSet<StringName>();
 			base->get_members(&(members[base.ptr()]));
 		}
 
@@ -816,7 +816,7 @@ void SceneDebuggerObject::_parse_script_properties(Script *p_script, ScriptInsta
 	}
 
 	// Members
-	for (KeyValue<const Script *, HashSet<StringName>> sm : members) {
+	for (KeyValue<const Script *, AHashSet<StringName>> sm : members) {
 		for (const StringName &E : sm.value) {
 			Variant m;
 			if (p_instance->get(E, m)) {
@@ -1044,7 +1044,7 @@ void LiveEditor::_node_set_func(int p_id, const StringName &p_prop, const Varian
 		base = scene_tree->root->get_node(live_edit_root);
 	}
 
-	HashMap<String, HashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
+	HashMap<String, AHashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
 	if (!E) {
 		return; //scene not editable
 	}
@@ -1115,7 +1115,7 @@ void LiveEditor::_node_call_func(int p_id, const StringName &p_method, const Var
 		base = scene_tree->root->get_node(live_edit_root);
 	}
 
-	HashMap<String, HashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
+	HashMap<String, AHashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
 	if (!E) {
 		return; //scene not editable
 	}
@@ -1227,7 +1227,7 @@ void LiveEditor::_create_node_func(const NodePath &p_parent, const String &p_typ
 		base = scene_tree->root->get_node(live_edit_root);
 	}
 
-	HashMap<String, HashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
+	HashMap<String, AHashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
 	if (!E) {
 		return; //scene not editable
 	}
@@ -1271,7 +1271,7 @@ void LiveEditor::_instance_node_func(const NodePath &p_parent, const String &p_p
 		base = scene_tree->root->get_node(live_edit_root);
 	}
 
-	HashMap<String, HashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
+	HashMap<String, AHashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
 	if (!E) {
 		return; //scene not editable
 	}
@@ -1309,7 +1309,7 @@ void LiveEditor::_remove_node_func(const NodePath &p_at) {
 		base = scene_tree->root->get_node(live_edit_root);
 	}
 
-	HashMap<String, HashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
+	HashMap<String, AHashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
 	if (!E) {
 		return; //scene not editable
 	}
@@ -1345,7 +1345,7 @@ void LiveEditor::_remove_and_keep_node_func(const NodePath &p_at, ObjectID p_kee
 		base = scene_tree->root->get_node(live_edit_root);
 	}
 
-	HashMap<String, HashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
+	HashMap<String, AHashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
 	if (!E) {
 		return; //scene not editable
 	}
@@ -1381,13 +1381,13 @@ void LiveEditor::_restore_node_func(ObjectID p_id, const NodePath &p_at, int p_a
 		base = scene_tree->root->get_node(live_edit_root);
 	}
 
-	HashMap<String, HashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
+	HashMap<String, AHashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
 	if (!E) {
 		return; //scene not editable
 	}
 
-	for (HashSet<Node *>::Iterator F = E->value.begin(); F;) {
-		HashSet<Node *>::Iterator N = F;
+	for (AHashSet<Node *>::Iterator F = E->value.begin(); F;) {
+		AHashSet<Node *>::Iterator N = F;
 		++N;
 
 		Node *n = *F;
@@ -1435,7 +1435,7 @@ void LiveEditor::_duplicate_node_func(const NodePath &p_at, const String &p_new_
 		base = scene_tree->root->get_node(live_edit_root);
 	}
 
-	HashMap<String, HashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
+	HashMap<String, AHashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
 	if (!E) {
 		return; //scene not editable
 	}
@@ -1474,7 +1474,7 @@ void LiveEditor::_reparent_node_func(const NodePath &p_at, const NodePath &p_new
 		base = scene_tree->root->get_node(live_edit_root);
 	}
 
-	HashMap<String, HashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
+	HashMap<String, AHashSet<Node *>>::Iterator E = live_scene_edit_cache.find(live_edit_scene);
 	if (!E) {
 		return; //scene not editable
 	}
@@ -2540,7 +2540,7 @@ void RuntimeNodeSelect::_find_3d_items_at_pos(const Point2 &p_pos, Vector<Select
 	// Start with physical objects.
 	PhysicsDirectSpaceState3D *ss = root->get_world_3d()->get_direct_space_state();
 	PhysicsDirectSpaceState3D::RayResult result;
-	HashSet<RID> excluded;
+	AHashSet<RID> excluded;
 	PhysicsDirectSpaceState3D::RayParameters ray_params;
 	ray_params.from = pos;
 	ray_params.to = to;

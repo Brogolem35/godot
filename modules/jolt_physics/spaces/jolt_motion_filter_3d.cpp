@@ -39,7 +39,7 @@
 #include "jolt_broad_phase_layer.h"
 #include "jolt_space_3d.h"
 
-JoltMotionFilter3D::JoltMotionFilter3D(const JoltBody3D &p_body, const HashSet<RID> &p_excluded_bodies, const HashSet<ObjectID> &p_excluded_objects, bool p_collide_separation_ray) :
+JoltMotionFilter3D::JoltMotionFilter3D(const JoltBody3D &p_body, const AHashSet<RID> &p_excluded_bodies, const AHashSet<ObjectID> &p_excluded_objects, bool p_collide_separation_ray) :
 		body_self(p_body),
 		space(*body_self.get_space()),
 		excluded_bodies(p_excluded_bodies),

@@ -121,7 +121,7 @@ class RenderingDeviceDriverVulkan : public RenderingDeviceDriver {
 	VkPhysicalDeviceFeatures physical_device_features = {};
 	VkPhysicalDeviceFeatures requested_device_features = {};
 	HashMap<CharString, bool> requested_device_extensions;
-	HashSet<CharString> enabled_device_extension_names;
+	AHashSet<CharString> enabled_device_extension_names;
 	TightLocalVector<TightLocalVector<Queue>> queue_families;
 	TightLocalVector<VkQueueFamilyProperties> queue_family_properties;
 	RDD::Capabilities device_capabilities;

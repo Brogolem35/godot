@@ -1450,14 +1450,14 @@ void ProjectSettings::remove_scene_groups_cache(const StringName &p_path) {
 	scene_groups_cache.erase(p_path);
 }
 
-void ProjectSettings::add_scene_groups_cache(const StringName &p_path, const HashSet<StringName> &p_cache) {
+void ProjectSettings::add_scene_groups_cache(const StringName &p_path, const AHashSet<StringName> &p_cache) {
 	scene_groups_cache[p_path] = p_cache;
 }
 
 void ProjectSettings::save_scene_groups_cache() {
 	Ref<ConfigFile> cf;
 	cf.instantiate();
-	for (const KeyValue<StringName, HashSet<StringName>> &E : scene_groups_cache) {
+	for (const KeyValue<StringName, AHashSet<StringName>> &E : scene_groups_cache) {
 		if (E.value.is_empty()) {
 			continue;
 		}
@@ -1481,7 +1481,7 @@ void ProjectSettings::load_scene_groups_cache() {
 		Vector<String> scene_paths = cf->get_sections();
 		for (const String &E : scene_paths) {
 			Array scene_groups = cf->get_value(E, "groups", Array());
-			HashSet<StringName> cache;
+			AHashSet<StringName> cache;
 			for (const Variant &scene_group : scene_groups) {
 				cache.insert(scene_group);
 			}
@@ -1490,7 +1490,7 @@ void ProjectSettings::load_scene_groups_cache() {
 	}
 }
 
-const HashMap<StringName, HashSet<StringName>> &ProjectSettings::get_scene_groups_cache() const {
+const HashMap<StringName, AHashSet<StringName>> &ProjectSettings::get_scene_groups_cache() const {
 	return scene_groups_cache;
 }
 

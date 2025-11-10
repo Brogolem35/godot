@@ -1529,7 +1529,7 @@ void GDScriptAnalyzer::resolve_class_body(GDScriptParser::ClassNode *p_class, co
 
 	// Resolve base abstract class/method implementation requirements.
 	if (!p_class->is_abstract) {
-		HashSet<StringName> implemented_funcs;
+		AHashSet<StringName> implemented_funcs;
 		const GDScriptParser::ClassNode *base_class = p_class;
 		while (base_class != nullptr) {
 			if (!base_class->is_abstract && base_class != p_class) {

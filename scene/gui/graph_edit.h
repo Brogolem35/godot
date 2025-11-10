@@ -268,9 +268,9 @@ private:
 
 	Ref<GraphEditArranger> arranger;
 
-	HashSet<ConnectionType, ConnectionType> valid_connection_types;
-	HashSet<int> valid_left_disconnect_types;
-	HashSet<int> valid_right_disconnect_types;
+	AHashSet<ConnectionType, ConnectionType> valid_connection_types;
+	AHashSet<int> valid_left_disconnect_types;
+	AHashSet<int> valid_right_disconnect_types;
 
 	struct ThemeCache {
 		float base_scale = 1.0;
@@ -308,7 +308,7 @@ private:
 	// of both background nodes (e.g frame nodes) and foreground nodes (connectable nodes).
 	int background_nodes_separator_idx = 0;
 
-	HashMap<StringName, HashSet<StringName>> frame_attached_nodes;
+	HashMap<StringName, AHashSet<StringName>> frame_attached_nodes;
 	HashMap<StringName, StringName> linked_parent_map;
 
 	Dictionary type_names;

@@ -137,13 +137,13 @@ uint8_t *PackedData::get_file_hash(const String &p_path) {
 	return E->value.md5;
 }
 
-HashSet<String> PackedData::get_file_paths() const {
-	HashSet<String> file_paths;
+AHashSet<String> PackedData::get_file_paths() const {
+	AHashSet<String> file_paths;
 	_get_file_paths(root, root->name, file_paths);
 	return file_paths;
 }
 
-void PackedData::_get_file_paths(PackedDir *p_dir, const String &p_parent_dir, HashSet<String> &r_paths) const {
+void PackedData::_get_file_paths(PackedDir *p_dir, const String &p_parent_dir, AHashSet<String> &r_paths) const {
 	for (const String &E : p_dir->files) {
 		r_paths.insert(p_parent_dir.path_join(E));
 	}

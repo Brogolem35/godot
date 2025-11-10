@@ -624,7 +624,7 @@ void QuickOpenResultContainer::update_results() {
 }
 
 void QuickOpenResultContainer::_use_default_candidates() {
-	HashSet<String> existing_paths;
+	AHashSet<String> existing_paths;
 	Vector<QuickOpenResultCandidate> *history = _get_history();
 	if (history) {
 		candidates.append_array(*history);

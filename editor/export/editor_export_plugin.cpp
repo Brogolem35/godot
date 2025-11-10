@@ -322,10 +322,10 @@ Dictionary EditorExportPlugin::_get_export_options_overrides(const Ref<EditorExp
 	return ret;
 }
 
-void EditorExportPlugin::_export_file(const String &p_path, const String &p_type, const HashSet<String> &p_features) {
+void EditorExportPlugin::_export_file(const String &p_path, const String &p_type, const AHashSet<String> &p_features) {
 }
 
-void EditorExportPlugin::_export_begin(const HashSet<String> &p_features, bool p_debug, const String &p_path, int p_flags) {
+void EditorExportPlugin::_export_begin(const AHashSet<String> &p_features, bool p_debug, const String &p_path, int p_flags) {
 }
 
 void EditorExportPlugin::_export_end() {}

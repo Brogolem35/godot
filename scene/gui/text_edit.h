@@ -460,7 +460,7 @@ private:
 
 	int multicaret_edit_count = 0;
 	bool multicaret_edit_merge_queued = false;
-	HashSet<int> multicaret_edit_ignore_carets;
+	AHashSet<int> multicaret_edit_ignore_carets;
 
 	CaretType caret_type = CaretType::CARET_TYPE_LINE;
 

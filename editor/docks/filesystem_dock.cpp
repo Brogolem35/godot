@@ -928,8 +928,8 @@ void FileSystemDock::_search(EditorFileSystemDirectory *p_path, List<FileInfo> *
 
 void FileSystemDock::_update_file_list(bool p_keep_selection) {
 	// Register the previously current and selected items.
-	HashSet<String> previous_selection;
-	HashSet<int> valid_selection;
+	AHashSet<String> previous_selection;
+	AHashSet<int> valid_selection;
 	if (p_keep_selection) {
 		for (int i = 0; i < files->get_item_count(); i++) {
 			if (files->is_selected(i)) {
@@ -1201,22 +1201,22 @@ void FileSystemDock::_update_file_list(bool p_keep_selection) {
 	}
 }
 
-HashSet<String> FileSystemDock::_get_valid_conversions_for_file_paths(const Vector<String> &p_paths) {
-	HashSet<String> all_valid_conversion_to_targets;
+AHashSet<String> FileSystemDock::_get_valid_conversions_for_file_paths(const Vector<String> &p_paths) {
+	AHashSet<String> all_valid_conversion_to_targets;
 	for (const String &fpath : p_paths) {
 		if (fpath.is_empty() || fpath == "res://" || !FileAccess::exists(fpath) || FileAccess::exists(fpath + ".import")) {
-			return HashSet<String>();
+			return AHashSet<String>();
 		}
 
 		Vector<Ref<EditorResourceConversionPlugin>> conversions = EditorNode::get_singleton()->find_resource_conversion_plugin_for_type_name(EditorFileSystem::get_singleton()->get_file_type(fpath));
 
 		if (conversions.is_empty()) {
 			// This resource can't convert to anything, so return an empty list.
-			return HashSet<String>();
+			return AHashSet<String>();
 		}
 
 		// Get a list of all potential conversion-to targets.
-		HashSet<String> current_valid_conversion_to_targets;
+		AHashSet<String> current_valid_conversion_to_targets;
 		for (const Ref<EditorResourceConversionPlugin> &E : conversions) {
 			const String what = E->converts_to();
 			current_valid_conversion_to_targets.insert(what);
@@ -1440,7 +1440,7 @@ void FileSystemDock::_get_all_items_in_dir(EditorFileSystemDirectory *p_efsd, Ve
 	}
 }
 
-void FileSystemDock::_find_file_owners(EditorFileSystemDirectory *p_efsd, const HashSet<String> &p_renames, HashSet<String> &r_file_owners) const {
+void FileSystemDock::_find_file_owners(EditorFileSystemDirectory *p_efsd, const AHashSet<String> &p_renames, AHashSet<String> &r_file_owners) const {
 	for (int i = 0; i < p_efsd->get_subdir_count(); i++) {
 		_find_file_owners(p_efsd->get_subdir(i), p_renames, r_file_owners);
 	}
@@ -1601,7 +1601,7 @@ void FileSystemDock::_update_resource_paths_after_move(const HashMap<String, Str
 	EditorFileSystem::get_singleton()->emit_signal(SNAME("script_classes_updated"));
 }
 
-void FileSystemDock::_update_dependencies_after_move(const HashMap<String, String> &p_renames, const HashSet<String> &p_file_owners) const {
+void FileSystemDock::_update_dependencies_after_move(const HashMap<String, String> &p_renames, const AHashSet<String> &p_file_owners) const {
 	// The following code assumes that the following holds:
 	// 1) EditorFileSystem contains the old paths/folder structure from before the rename/move.
 	// 2) ResourceLoader can use the new paths without needing to call rescan.
@@ -1844,7 +1844,7 @@ void FileSystemDock::_rename_operation_confirm() {
 	}
 
 	HashMap<String, ResourceUID::ID> uids;
-	HashSet<String> file_owners; // The files that use these moved/renamed resource files.
+	AHashSet<String> file_owners; // The files that use these moved/renamed resource files.
 	_before_move(uids, file_owners);
 
 	HashMap<String, String> file_renames;
@@ -1898,7 +1898,7 @@ void FileSystemDock::_convert_dialog_action() {
 	}
 
 	Vector<Ref<Resource>> converted_resources;
-	HashSet<Ref<Resource>> resources_to_erase_history_for;
+	AHashSet<Ref<Resource>> resources_to_erase_history_for;
 	for (Ref<Resource> res : selected_resources) {
 		Vector<Ref<EditorResourceConversionPlugin>> conversions = EditorNode::get_singleton()->find_resource_conversion_plugin_for_resource(res);
 		for (const Ref<EditorResourceConversionPlugin> &conversion : conversions) {
@@ -1998,7 +1998,7 @@ void FileSystemDock::_move_operation_confirm(const String &p_to_path, bool p_cop
 		}
 
 		HashMap<String, ResourceUID::ID> uids;
-		HashSet<String> file_owners; // The files that use these moved/renamed resource files.
+		AHashSet<String> file_owners; // The files that use these moved/renamed resource files.
 		_before_move(uids, file_owners);
 
 		bool is_moved = false;
@@ -2030,8 +2030,8 @@ void FileSystemDock::_move_operation_confirm(const String &p_to_path, bool p_cop
 	}
 }
 
-void FileSystemDock::_before_move(HashMap<String, ResourceUID::ID> &r_uids, HashSet<String> &r_file_owners) const {
-	HashSet<String> renamed_files;
+void FileSystemDock::_before_move(HashMap<String, ResourceUID::ID> &r_uids, AHashSet<String> &r_file_owners) const {
+	AHashSet<String> renamed_files;
 	for (int i = 0; i < to_move.size(); i++) {
 		if (to_move[i].is_file) {
 			renamed_files.insert(to_move[i].path);
@@ -3485,7 +3485,7 @@ void FileSystemDock::_file_and_folders_fill_popup(PopupMenu *p_popup, const Vect
 		{
 			List<String> resource_extensions;
 			ResourceFormatImporter::get_singleton()->get_recognized_extensions_for_type("Resource", &resource_extensions);
-			HashSet<String> extension_list;
+			AHashSet<String> extension_list;
 			for (const String &extension : resource_extensions) {
 				extension_list.insert(extension);
 			}

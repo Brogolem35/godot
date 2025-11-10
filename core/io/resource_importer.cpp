@@ -200,7 +200,7 @@ Ref<Resource> ResourceFormatImporter::load_internal(const String &p_path, Error 
 }
 
 void ResourceFormatImporter::get_recognized_extensions(List<String> *p_extensions) const {
-	HashSet<String> found;
+	AHashSet<String> found;
 
 	for (int i = 0; i < importers.size(); i++) {
 		List<String> local_exts;
@@ -220,7 +220,7 @@ void ResourceFormatImporter::get_recognized_extensions_for_type(const String &p_
 		return;
 	}
 
-	HashSet<String> found;
+	AHashSet<String> found;
 
 	for (int i = 0; i < importers.size(); i++) {
 		String res_type = importers[i]->get_resource_type();
@@ -435,7 +435,7 @@ Variant ResourceFormatImporter::get_resource_metadata(const String &p_path) cons
 	return pat.metadata;
 }
 
-void ResourceFormatImporter::get_classes_used(const String &p_path, HashSet<StringName> *r_classes) {
+void ResourceFormatImporter::get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) {
 	PathAndType pat;
 	Error err = _get_path_and_type(p_path, pat, false);
 
@@ -457,7 +457,7 @@ void ResourceFormatImporter::get_dependencies(const String &p_path, List<String>
 	ResourceLoader::get_dependencies(pat.path, p_dependencies, p_add_types);
 }
 
-void ResourceFormatImporter::get_build_dependencies(const String &p_path, HashSet<String> *r_dependencies) {
+void ResourceFormatImporter::get_build_dependencies(const String &p_path, AHashSet<String> *r_dependencies) {
 	if (!exists(p_path)) {
 		return;
 	}
@@ -568,7 +568,7 @@ ResourceFormatImporter::ResourceFormatImporter() {
 
 //////////////
 
-void ResourceImporter::get_build_dependencies(const String &p_path, HashSet<String> *r_dependencies) {
+void ResourceImporter::get_build_dependencies(const String &p_path, AHashSet<String> *r_dependencies) {
 	Vector<String> ret;
 	if (GDVIRTUAL_CALL(_get_build_dependencies, p_path, ret)) {
 		for (int i = 0; i < ret.size(); i++) {

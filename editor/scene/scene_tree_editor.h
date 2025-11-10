@@ -99,7 +99,7 @@ class SceneTreeEditor : public Control {
 
 		SceneTreeEditor *editor;
 		HashMap<Node *, CachedNode> cache;
-		HashSet<CachedNode *> to_delete;
+		AHashSet<CachedNode *> to_delete;
 		Node *current_scene_node = nullptr;
 		Node *current_pinned_node = nullptr;
 		bool current_has_pin = false;
@@ -178,7 +178,7 @@ class SceneTreeEditor : public Control {
 	void _edited();
 	void _renamed(TreeItem *p_item, TreeItem *p_batch_item, Node *p_node = nullptr);
 
-	HashSet<Node *> marked;
+	AHashSet<Node *> marked;
 	bool marked_selectable = false;
 	bool marked_children_selectable = false;
 	bool display_foreign = false;
@@ -213,7 +213,7 @@ class SceneTreeEditor : public Control {
 	void _rmb_select(const Vector2 &p_pos, MouseButton p_button = MouseButton::RIGHT);
 
 	void _warning_changed(Node *p_for_node);
-	void _update_marking_list(const HashSet<Node *> &p_marked);
+	void _update_marking_list(const AHashSet<Node *> &p_marked);
 
 	Timer *update_timer = nullptr;
 
@@ -239,7 +239,7 @@ public:
 	void set_as_scene_tree_dock();
 	void set_display_foreign_nodes(bool p_display);
 
-	void set_marked(const HashSet<Node *> &p_marked, bool p_selectable = true, bool p_children_selectable = true);
+	void set_marked(const AHashSet<Node *> &p_marked, bool p_selectable = true, bool p_children_selectable = true);
 	void set_marked(Node *p_marked, bool p_selectable = true, bool p_children_selectable = true);
 	void set_selected(Node *p_node, bool p_emit_selected = true);
 	Node *get_selected();

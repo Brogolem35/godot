@@ -192,7 +192,7 @@ private:
 
 	String _search_term;
 	FilterOption _order_option = FilterOption::EDIT_DATE;
-	HashSet<String> _selected_project_paths;
+	AHashSet<String> _selected_project_paths;
 	String _last_clicked; // Project key
 
 	VBoxContainer *project_list_vbox = nullptr;
@@ -284,7 +284,7 @@ public:
 	void deselect_project(int p_index);
 	void select_first_visible_project();
 	Vector<Item> get_selected_projects() const;
-	const HashSet<String> &get_selected_project_keys() const;
+	const AHashSet<String> &get_selected_project_keys() const;
 	int get_single_selected_index() const;
 	void erase_selected_projects(bool p_delete_project_contents);
 

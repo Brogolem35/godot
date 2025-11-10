@@ -62,7 +62,7 @@ class TranslationServer : public Object {
 		String name;
 		String script;
 		String default_country;
-		HashSet<String> supported_countries;
+		AHashSet<String> supported_countries;
 	};
 	static inline Vector<LocaleScriptInfo> locale_script_info;
 

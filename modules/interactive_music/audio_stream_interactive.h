@@ -129,7 +129,7 @@ private:
 	uint64_t version = 1; // Used to stop playback instances for incompatibility.
 	int clip_count = 0;
 
-	HashSet<AudioStreamPlaybackInteractive *> playbacks;
+	AHashSet<AudioStreamPlaybackInteractive *> playbacks;
 
 #ifdef TOOLS_ENABLED
 

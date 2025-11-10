@@ -869,7 +869,7 @@ Error ExportTemplateManager::install_android_template_from_file(const String &p_
 
 	ProgressDialog::get_singleton()->add_task("uncompress_src", TTR("Uncompressing Android Build Sources"), total_files);
 
-	HashSet<String> dirs_tested;
+	AHashSet<String> dirs_tested;
 	int idx = 0;
 	while (ret == UNZ_OK) {
 		// Get file path.

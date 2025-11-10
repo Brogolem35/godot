@@ -31,7 +31,7 @@
 #include "quick_hull.h"
 
 #include "core/templates/hash_map.h"
-#include "core/templates/hash_set.h"
+#include "core/templates/a_hash_set.h"
 
 uint32_t QuickHull::debug_stop_after = 0xFFFFFFFF;
 
@@ -53,7 +53,7 @@ Error QuickHull::build(const Vector<Vector3> &p_points, Geometry3D::MeshData &r_
 
 	Vector<bool> valid_points;
 	valid_points.resize(p_points.size());
-	HashSet<Vector3> valid_cache;
+	AHashSet<Vector3> valid_cache;
 
 	for (int i = 0; i < p_points.size(); i++) {
 		Vector3 sp = p_points[i].snappedf(0.0001);

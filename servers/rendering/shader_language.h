@@ -550,7 +550,7 @@ public:
 		bool use_op_eval = true;
 
 		DataType expected_type = TYPE_VOID;
-		HashSet<int> constants;
+		AHashSet<int> constants;
 
 		BlockNode() :
 				Node(NODE_TYPE_BLOCK) {}
@@ -609,7 +609,7 @@ public:
 			StringName name;
 			StringName rname;
 			FunctionNode *function = nullptr;
-			HashSet<StringName> uses_function;
+			AHashSet<StringName> uses_function;
 			bool callable;
 		};
 
@@ -752,7 +752,7 @@ public:
 			bool is_const;
 			int array_size;
 
-			HashMap<StringName, HashSet<int>> tex_argument_connect;
+			HashMap<StringName, AHashSet<int>> tex_argument_connect;
 		};
 
 		StringName name;
@@ -984,7 +984,7 @@ private:
 	int error_line = 0;
 
 	Vector<FilePosition> include_positions;
-	HashSet<String> include_markers_handled;
+	AHashSet<String> include_markers_handled;
 	HashMap<StringName, int> function_overload_count;
 
 	// Additional function information (eg. call hierarchy). No need to expose it to compiler.
@@ -1222,11 +1222,11 @@ private:
 
 	Node *_parse_and_reduce_expression(BlockNode *p_block, const FunctionInfo &p_function_info, const ExpressionInfo *p_previous_expression_info = nullptr);
 	Error _parse_block(BlockNode *p_block, const FunctionInfo &p_function_info, bool p_just_one = false, bool p_can_break = false, bool p_can_continue = false);
-	String _get_shader_type_list(const HashSet<String> &p_shader_types) const;
+	String _get_shader_type_list(const AHashSet<String> &p_shader_types) const;
 	String _get_qualifier_str(ArgumentQualifier p_qualifier) const;
 
 	bool _parse_numeric_constant_expression(const FunctionInfo &p_function_info, float &r_constant);
-	Error _parse_shader(const HashMap<StringName, FunctionInfo> &p_functions, const Vector<ModeInfo> &p_render_modes, const Vector<ModeInfo> &p_stencil_modes, const HashSet<String> &p_shader_types);
+	Error _parse_shader(const HashMap<StringName, FunctionInfo> &p_functions, const Vector<ModeInfo> &p_render_modes, const Vector<ModeInfo> &p_stencil_modes, const AHashSet<String> &p_shader_types);
 
 	Error _find_last_flow_op_in_block(BlockNode *p_block, FlowOperation p_op);
 	Error _find_last_flow_op_in_op(ControlFlowNode *p_flow, FlowOperation p_op);
@@ -1256,7 +1256,7 @@ public:
 		Vector<ModeInfo> render_modes;
 		Vector<ModeInfo> stencil_modes;
 		VaryingFunctionNames varying_function_names;
-		HashSet<String> shader_types;
+		AHashSet<String> shader_types;
 		GlobalShaderUniformGetTypeFunc global_shader_uniform_type_func = nullptr;
 		bool is_include = false;
 		uint32_t base_varying_index = 0;

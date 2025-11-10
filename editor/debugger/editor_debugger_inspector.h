@@ -73,7 +73,7 @@ class EditorDebuggerInspector : public EditorInspector {
 
 private:
 	LocalVector<EditorDebuggerRemoteObjects *> remote_objects_list;
-	HashSet<Ref<Resource>> remote_dependencies;
+	AHashSet<Ref<Resource>> remote_dependencies;
 	EditorDebuggerRemoteObjects *variables = nullptr;
 
 	void _object_selected(ObjectID p_object);

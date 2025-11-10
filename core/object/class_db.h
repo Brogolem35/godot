@@ -39,6 +39,7 @@
 // Needs to come after method_bind and object have been included.
 #include "core/object/callable_method_pointer.h"
 #include "core/templates/a_hash_map.h"
+#include "core/templates/a_hash_set.h"
 #include "core/templates/hash_set.h"
 
 #include <type_traits>
@@ -142,7 +143,7 @@ public:
 #ifdef DEBUG_ENABLED
 		List<StringName> constant_order;
 		List<StringName> method_order;
-		HashSet<StringName> methods_in_properties;
+		AHashSet<StringName> methods_in_properties;
 		List<MethodInfo> virtual_methods;
 		HashMap<StringName, MethodInfo> virtual_methods_map;
 		HashMap<StringName, Vector<Error>> method_error_values;
@@ -224,7 +225,7 @@ public:
 	static void _add_class(const StringName &p_class, const StringName &p_inherits);
 
 	static HashMap<StringName, HashMap<StringName, Variant>> default_values;
-	static HashSet<StringName> default_values_cached;
+	static AHashSet<StringName> default_values_cached;
 
 	// Native structs, used by binder
 	struct NativeStruct {

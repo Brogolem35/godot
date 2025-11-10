@@ -196,13 +196,13 @@ class EditorFileSystem : public Node {
 	void _notify_filesystem_changed();
 	void _scan_filesystem();
 	void _first_scan_filesystem();
-	void _first_scan_process_scripts(const ScannedDirectory *p_scan_dir, List<String> &p_gdextension_extensions, HashSet<String> &p_existing_class_names, HashSet<String> &p_extensions);
+	void _first_scan_process_scripts(const ScannedDirectory *p_scan_dir, List<String> &p_gdextension_extensions, AHashSet<String> &p_existing_class_names, AHashSet<String> &p_extensions);
 
-	static void _scan_for_uid_directory(const ScannedDirectory *p_scan_dir, const HashSet<String> &p_import_extensions);
+	static void _scan_for_uid_directory(const ScannedDirectory *p_scan_dir, const AHashSet<String> &p_import_extensions);
 
 	static void _load_first_scan_root_dir();
 
-	HashSet<String> late_update_files;
+	AHashSet<String> late_update_files;
 
 	void _save_late_updated_files();
 
@@ -228,7 +228,7 @@ class EditorFileSystem : public Node {
 	};
 
 	HashMap<String, FileCache> file_cache;
-	HashSet<String> dep_update_list;
+	AHashSet<String> dep_update_list;
 
 	struct ScanProgress {
 		float hi = 0;
@@ -253,13 +253,13 @@ class EditorFileSystem : public Node {
 	void _delete_internal_files(const String &p_file);
 	int _insert_actions_delete_files_directory(EditorFileSystemDirectory *p_dir);
 
-	HashSet<String> textfile_extensions;
-	HashSet<String> other_file_extensions;
-	HashSet<String> valid_extensions;
-	HashSet<String> import_extensions;
+	AHashSet<String> textfile_extensions;
+	AHashSet<String> other_file_extensions;
+	AHashSet<String> valid_extensions;
+	AHashSet<String> import_extensions;
 
 	static int _scan_new_dir(ScannedDirectory *p_dir, Ref<DirAccess> &da);
-	void _process_file_system(const ScannedDirectory *p_scan_dir, EditorFileSystemDirectory *p_dir, ScanProgress &p_progress, HashSet<String> *p_processed_files);
+	void _process_file_system(const ScannedDirectory *p_scan_dir, EditorFileSystemDirectory *p_dir, ScanProgress &p_progress, AHashSet<String> *p_processed_files);
 
 	Thread thread_sources;
 	bool scanning_changes = false;
@@ -315,20 +315,20 @@ class EditorFileSystem : public Node {
 
 	Mutex update_script_mutex;
 	HashMap<String, ScriptClassInfoUpdate> update_script_paths;
-	HashSet<String> update_script_paths_documentation;
+	AHashSet<String> update_script_paths_documentation;
 	void _queue_update_script_class(const String &p_path, const ScriptClassInfoUpdate &p_script_update);
 	void _update_script_classes();
 	void _update_script_documentation();
 	void _process_update_pending();
-	void _process_removed_files(const HashSet<String> &p_processed_files);
+	void _process_removed_files(const AHashSet<String> &p_processed_files);
 	bool _should_reload_script(const String &p_path);
 
 	Mutex update_scene_mutex;
-	HashSet<String> update_scene_paths;
+	AHashSet<String> update_scene_paths;
 	void _queue_update_scene_groups(const String &p_path);
 	void _update_scene_groups();
 	void _update_pending_scene_groups();
-	void _get_all_scenes(EditorFileSystemDirectory *p_dir, HashSet<String> &r_list);
+	void _get_all_scenes(EditorFileSystemDirectory *p_dir, AHashSet<String> &r_list);
 
 	ScriptClassInfo _get_global_script_class(const String &p_type, const String &p_path) const;
 
@@ -337,15 +337,15 @@ class EditorFileSystem : public Node {
 
 	bool using_fat32_or_exfat; // Workaround for projects in FAT32 or exFAT filesystem (pendrives, most of the time)
 
-	void _find_group_files(EditorFileSystemDirectory *efd, HashMap<String, Vector<String>> &group_files, HashSet<String> &groups_to_reimport);
+	void _find_group_files(EditorFileSystemDirectory *efd, HashMap<String, Vector<String>> &group_files, AHashSet<String> &groups_to_reimport);
 
 	void _move_group_files(EditorFileSystemDirectory *efd, const String &p_group_file, const String &p_new_location);
 
-	HashSet<String> group_file_cache;
+	AHashSet<String> group_file_cache;
 	HashMap<String, String> file_icon_cache;
 
 	bool refresh_queued = false;
-	HashSet<ObjectID> folders_to_sort;
+	AHashSet<ObjectID> folders_to_sort;
 
 	Error _copy_file(const String &p_from, const String &p_to);
 	bool _copy_directory(const String &p_from, const String &p_to, HashMap<String, String> *p_files);
@@ -369,7 +369,7 @@ class EditorFileSystem : public Node {
 
 	void _update_file_icon_path(EditorFileSystemDirectory::FileInfo *file_info);
 	void _update_files_icon_path(EditorFileSystemDirectory *edp = nullptr);
-	bool _remove_invalid_global_class_names(const HashSet<String> &p_existing_class_names);
+	bool _remove_invalid_global_class_names(const AHashSet<String> &p_existing_class_names);
 	String _get_file_by_class_name(EditorFileSystemDirectory *p_dir, const String &p_class_name, EditorFileSystemDirectory::FileInfo *&r_file_info);
 
 	void _register_global_class_script(const String &p_search_path, const String &p_target_path, const ScriptClassInfoUpdate &p_script_update);
@@ -390,7 +390,7 @@ public:
 	void scan_changes();
 	void update_file(const String &p_file);
 	void update_files(const Vector<String> &p_script_paths);
-	HashSet<String> get_valid_extensions() const;
+	AHashSet<String> get_valid_extensions() const;
 	void register_global_class_script(const String &p_search_path, const String &p_target_path);
 
 	EditorFileSystemDirectory *get_filesystem_path(const String &p_path);

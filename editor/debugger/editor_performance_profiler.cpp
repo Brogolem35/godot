@@ -209,7 +209,7 @@ void EditorPerformanceProfiler::_monitor_draw() {
 }
 
 void EditorPerformanceProfiler::_build_monitor_tree() {
-	HashSet<StringName> monitor_checked;
+	AHashSet<StringName> monitor_checked;
 	for (KeyValue<StringName, Monitor> &E : monitors) {
 		if (E.value.item && E.value.item->is_checked(0)) {
 			monitor_checked.insert(E.key);

@@ -77,9 +77,9 @@ public:
 	};
 
 private:
-	HashSet<StringName> disabled_classes;
+	AHashSet<StringName> disabled_classes;
 
-	HashSet<StringName> collapsed_classes;
+	AHashSet<StringName> collapsed_classes;
 
 	String force_detect_classes;
 

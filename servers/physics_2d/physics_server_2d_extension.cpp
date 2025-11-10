@@ -34,7 +34,7 @@ bool PhysicsDirectSpaceState2DExtension::is_body_excluded_from_query(const RID &
 	return exclude && exclude->has(p_body);
 }
 
-thread_local const HashSet<RID> *PhysicsDirectSpaceState2DExtension::exclude = nullptr;
+thread_local const AHashSet<RID> *PhysicsDirectSpaceState2DExtension::exclude = nullptr;
 
 void PhysicsDirectSpaceState2DExtension::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_body_excluded_from_query", "body"), &PhysicsDirectSpaceState2DExtension::is_body_excluded_from_query);
@@ -121,8 +121,8 @@ void PhysicsDirectBodyState2DExtension::_bind_methods() {
 PhysicsDirectBodyState2DExtension::PhysicsDirectBodyState2DExtension() {
 }
 
-thread_local const HashSet<RID> *PhysicsServer2DExtension::exclude_bodies = nullptr;
-thread_local const HashSet<ObjectID> *PhysicsServer2DExtension::exclude_objects = nullptr;
+thread_local const AHashSet<RID> *PhysicsServer2DExtension::exclude_bodies = nullptr;
+thread_local const AHashSet<ObjectID> *PhysicsServer2DExtension::exclude_objects = nullptr;
 
 bool PhysicsServer2DExtension::body_test_motion_is_excluding_body(RID p_body) const {
 	return exclude_bodies && exclude_bodies->has(p_body);

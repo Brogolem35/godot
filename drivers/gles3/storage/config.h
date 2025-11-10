@@ -36,6 +36,7 @@
 #include "core/string/ustring.h"
 #include "core/templates/hash_set.h"
 
+#include "core/templates/a_hash_set.h"
 #include "platform_gl.h"
 
 #ifdef ANDROID_ENABLED
@@ -70,7 +71,7 @@ public:
 
 	bool generate_wireframes = false;
 
-	HashSet<String> extensions;
+	AHashSet<String> extensions;
 
 	bool float_texture_supported = false;
 	bool float_texture_linear_supported = false;

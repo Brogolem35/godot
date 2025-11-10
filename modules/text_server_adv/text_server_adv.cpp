@@ -7909,7 +7909,7 @@ PackedInt32Array TextServerAdvanced::_string_get_word_breaks(const String &p_str
 	// Convert to UTF-16.
 	Char16String utf16 = p_string.utf16();
 
-	HashSet<int> breaks;
+	AHashSet<int> breaks;
 	UErrorCode err = U_ZERO_ERROR;
 	UBreakIterator *bi = ubrk_open(UBRK_WORD, lang.ascii().get_data(), (const UChar *)utf16.get_data(), utf16.length(), &err);
 	if (U_SUCCESS(err)) {

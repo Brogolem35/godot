@@ -158,7 +158,7 @@ private:
 	int split_box_offset_h = 0;
 	int split_box_offset_v = 0;
 
-	HashSet<String> favorites;
+	AHashSet<String> favorites;
 
 	Button *button_dock_placement = nullptr;
 
@@ -261,7 +261,7 @@ private:
 
 	LocalVector<Ref<EditorResourceTooltipPlugin>> tooltip_plugins;
 
-	HashSet<String> cached_valid_conversion_targets;
+	AHashSet<String> cached_valid_conversion_targets;
 
 	Vector<String> prev_selection;
 
@@ -279,7 +279,7 @@ private:
 	void _file_list_gui_input(Ref<InputEvent> p_event);
 	void _tree_gui_input(Ref<InputEvent> p_event);
 
-	HashSet<String> _get_valid_conversions_for_file_paths(const Vector<String> &p_paths);
+	AHashSet<String> _get_valid_conversions_for_file_paths(const Vector<String> &p_paths);
 
 	void _update_file_list(bool p_keep_selection);
 	void _toggle_file_display();
@@ -296,11 +296,11 @@ private:
 	void _update_import_dock();
 
 	void _get_all_items_in_dir(EditorFileSystemDirectory *p_efsd, Vector<String> &r_files, Vector<String> &r_folders) const;
-	void _find_file_owners(EditorFileSystemDirectory *p_efsd, const HashSet<String> &p_renames, HashSet<String> &r_file_owners) const;
+	void _find_file_owners(EditorFileSystemDirectory *p_efsd, const AHashSet<String> &p_renames, AHashSet<String> &r_file_owners) const;
 	void _try_move_item(const FileOrFolder &p_item, const String &p_new_path, HashMap<String, String> &p_file_renames, HashMap<String, String> &p_folder_renames);
 	void _try_duplicate_item(const FileOrFolder &p_item, const String &p_new_path) const;
-	void _before_move(HashMap<String, ResourceUID::ID> &r_uids, HashSet<String> &r_file_owners) const;
-	void _update_dependencies_after_move(const HashMap<String, String> &p_renames, const HashSet<String> &p_file_owners) const;
+	void _before_move(HashMap<String, ResourceUID::ID> &r_uids, AHashSet<String> &r_file_owners) const;
+	void _update_dependencies_after_move(const HashMap<String, String> &p_renames, const AHashSet<String> &p_file_owners) const;
 	void _update_resource_paths_after_move(const HashMap<String, String> &p_renames, const HashMap<String, ResourceUID::ID> &p_uids) const;
 	void _update_favorites_after_move(const HashMap<String, String> &p_files_renames, const HashMap<String, String> &p_folders_renames) const;
 	void _update_project_settings_after_move(const HashMap<String, String> &p_renames, const HashMap<String, String> &p_folders_renames);

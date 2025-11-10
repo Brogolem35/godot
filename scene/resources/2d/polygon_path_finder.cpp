@@ -282,7 +282,7 @@ Vector<Vector2> PolygonPathFinder::find_path(const Vector2 &p_from, const Vector
 	}
 	//solve graph
 
-	HashSet<int> open_list;
+	AHashSet<int> open_list;
 
 	points.write[aidx].distance = 0;
 	points.write[aidx].prev = aidx;

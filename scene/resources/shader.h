@@ -57,7 +57,7 @@ private:
 	mutable Mutex shader_rid_mutex;
 
 	Mode mode = MODE_SPATIAL;
-	HashSet<Ref<ShaderInclude>> include_dependencies;
+	AHashSet<Ref<ShaderInclude>> include_dependencies;
 	String code;
 	String include_path;
 

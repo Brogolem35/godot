@@ -44,7 +44,7 @@ const Vector<ShaderLanguage::ModeInfo> &ShaderTypes::get_stencil_modes(RS::Shade
 	return shader_modes[p_mode].stencil_modes;
 }
 
-const HashSet<String> &ShaderTypes::get_types() const {
+const AHashSet<String> &ShaderTypes::get_types() const {
 	return shader_types;
 }
 

@@ -251,7 +251,7 @@ private:
 		RID unused_emission_storage_buffer;
 		RID unused_trail_storage_buffer;
 
-		HashSet<RID> collisions;
+		AHashSet<RID> collisions;
 
 		Dependency dependency;
 

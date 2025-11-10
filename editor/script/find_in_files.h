@@ -46,9 +46,9 @@ public:
 	void set_whole_words(bool p_whole_word);
 	void set_match_case(bool p_match_case);
 	void set_folder(const String &folder);
-	void set_filter(const HashSet<String> &exts);
-	void set_includes(const HashSet<String> &p_include_wildcards);
-	void set_excludes(const HashSet<String> &p_exclude_wildcards);
+	void set_filter(const AHashSet<String> &exts);
+	void set_includes(const AHashSet<String> &p_include_wildcards);
+	void set_excludes(const AHashSet<String> &p_exclude_wildcards);
 
 	String get_search_text() const { return _pattern; }
 
@@ -72,13 +72,13 @@ private:
 	void _scan_dir(const String &path, PackedStringArray &out_folders, PackedStringArray &out_files_to_scan);
 	void _scan_file(const String &fpath);
 
-	bool _is_file_matched(const HashSet<String> &p_wildcards, const String &p_file_path, bool p_case_sensitive) const;
+	bool _is_file_matched(const AHashSet<String> &p_wildcards, const String &p_file_path, bool p_case_sensitive) const;
 
 	// Config
 	String _pattern;
-	HashSet<String> _extension_filter;
-	HashSet<String> _include_wildcards;
-	HashSet<String> _exclude_wildcards;
+	AHashSet<String> _extension_filter;
+	AHashSet<String> _include_wildcards;
+	AHashSet<String> _exclude_wildcards;
 	String _root_dir;
 	bool _whole_words = true;
 	bool _match_case = true;
@@ -121,9 +121,9 @@ public:
 	bool is_match_case() const;
 	bool is_whole_words() const;
 	String get_folder() const;
-	HashSet<String> get_filter() const;
-	HashSet<String> get_includes() const;
-	HashSet<String> get_excludes() const;
+	AHashSet<String> get_filter() const;
+	AHashSet<String> get_includes() const;
+	AHashSet<String> get_excludes() const;
 
 protected:
 	void _notification(int p_what);

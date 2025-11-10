@@ -147,7 +147,7 @@ void AStar3D::connect_points(int64_t p_id, int64_t p_with_id, bool bidirectional
 		s.direction = Segment::BIDIRECTIONAL;
 	}
 
-	HashSet<Segment, Segment>::Iterator element = segments.find(s);
+	AHashSet<Segment, Segment>::Iterator element = segments.find(s);
 	if (element) {
 		s.direction |= element->direction;
 		if (s.direction == Segment::BIDIRECTIONAL) {
@@ -173,7 +173,7 @@ void AStar3D::disconnect_points(int64_t p_id, int64_t p_with_id, bool bidirectio
 	Segment s(p_id, p_with_id);
 	int remove_direction = bidirectional ? (int)Segment::BIDIRECTIONAL : (int)s.direction;
 
-	HashSet<Segment, Segment>::Iterator element = segments.find(s);
+	AHashSet<Segment, Segment>::Iterator element = segments.find(s);
 	if (element) {
 		// s is the new segment
 		// Erase the directions to be removed
@@ -230,7 +230,7 @@ Vector<int64_t> AStar3D::get_point_connections(int64_t p_id) {
 
 bool AStar3D::are_points_connected(int64_t p_id, int64_t p_with_id, bool bidirectional) const {
 	Segment s(p_id, p_with_id);
-	const HashSet<Segment, Segment>::Iterator element = segments.find(s);
+	const AHashSet<Segment, Segment>::Iterator element = segments.find(s);
 
 	return element &&
 			(bidirectional || (element->direction & s.direction) == s.direction);

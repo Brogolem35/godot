@@ -82,7 +82,7 @@ class EditorExportGDScript : public EditorExportPlugin {
 	int script_mode = DEFAULT_SCRIPT_MODE;
 
 protected:
-	virtual void _export_begin(const HashSet<String> &p_features, bool p_debug, const String &p_path, int p_flags) override {
+	virtual void _export_begin(const AHashSet<String> &p_features, bool p_debug, const String &p_path, int p_flags) override {
 		script_mode = DEFAULT_SCRIPT_MODE;
 
 		const Ref<EditorExportPreset> &preset = get_export_preset();
@@ -91,7 +91,7 @@ protected:
 		}
 	}
 
-	virtual void _export_file(const String &p_path, const String &p_type, const HashSet<String> &p_features) override {
+	virtual void _export_file(const String &p_path, const String &p_type, const AHashSet<String> &p_features) override {
 		if (p_path.get_extension() != "gd" || script_mode == EditorExportPreset::MODE_SCRIPT_TEXT) {
 			return;
 		}

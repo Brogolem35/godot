@@ -630,7 +630,7 @@ public:
 #else
 	bool is_part_of_edited_scene() const { return false; }
 #endif
-	void get_storable_properties(HashSet<StringName> &r_storable_properties) const;
+	void get_storable_properties(AHashSet<StringName> &r_storable_properties) const;
 
 	/* NOTIFICATIONS */
 
@@ -895,7 +895,7 @@ VARIANT_ENUM_CAST(Node::InternalMode);
 VARIANT_ENUM_CAST(Node::PhysicsInterpolationMode);
 VARIANT_ENUM_CAST(Node::AutoTranslateMode);
 
-typedef HashSet<Node *, Node::Comparator> NodeSet;
+typedef AHashSet<Node *, Node::Comparator> NodeSet;
 
 // Template definitions must be in the header so they are always fully initialized before their usage.
 // See this StackOverflow question for more information: https://stackoverflow.com/questions/495021/why-can-templates-only-be-implemented-in-the-header-file

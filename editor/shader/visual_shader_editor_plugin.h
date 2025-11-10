@@ -501,8 +501,8 @@ class VisualShaderEditor : public ShaderEditor {
 	Ref<GraphEdit::Connection> clicked_connection;
 	bool connection_node_insert_requested = false;
 
-	HashSet<int> selected_constants;
-	HashSet<int> selected_parameters;
+	AHashSet<int> selected_constants;
+	AHashSet<int> selected_parameters;
 	int selected_frame = -1;
 	int selected_float_constant = -1;
 
@@ -623,7 +623,7 @@ class VisualShaderEditor : public ShaderEditor {
 
 	bool _is_available(int p_mode);
 	void _update_parameters(bool p_update_refs);
-	void _update_parameter_refs(HashSet<String> &p_names);
+	void _update_parameter_refs(AHashSet<String> &p_names);
 	void _update_varyings();
 
 	void _update_options_menu_deferred();

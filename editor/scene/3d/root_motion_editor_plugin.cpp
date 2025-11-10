@@ -64,7 +64,7 @@ void EditorPropertyRootMotion::_node_assign() {
 		return;
 	}
 
-	HashSet<String> paths;
+	AHashSet<String> paths;
 	{
 		List<StringName> animations;
 		mixer->get_animation_list(&animations);

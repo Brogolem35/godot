@@ -171,7 +171,7 @@ bool JoltPhysicsDirectSpaceState3D::_cast_motion_impl(const JPH::Shape &p_jolt_s
 	return collided;
 }
 
-bool JoltPhysicsDirectSpaceState3D::_body_motion_recover(const JoltBody3D &p_body, const Transform3D &p_transform, float p_margin, const HashSet<RID> &p_excluded_bodies, const HashSet<ObjectID> &p_excluded_objects, Vector3 &r_recovery) const {
+bool JoltPhysicsDirectSpaceState3D::_body_motion_recover(const JoltBody3D &p_body, const Transform3D &p_transform, float p_margin, const AHashSet<RID> &p_excluded_bodies, const AHashSet<ObjectID> &p_excluded_objects, Vector3 &r_recovery) const {
 	const JPH::Shape *jolt_shape = p_body.get_jolt_shape();
 
 	const Vector3 com_scaled = to_godot(jolt_shape->GetCenterOfMass());
@@ -254,7 +254,7 @@ bool JoltPhysicsDirectSpaceState3D::_body_motion_recover(const JoltBody3D &p_bod
 	return recovered;
 }
 
-bool JoltPhysicsDirectSpaceState3D::_body_motion_cast(const JoltBody3D &p_body, const Transform3D &p_transform, const Vector3 &p_scale, const Vector3 &p_motion, bool p_collide_separation_ray, const HashSet<RID> &p_excluded_bodies, const HashSet<ObjectID> &p_excluded_objects, real_t &r_safe_fraction, real_t &r_unsafe_fraction) const {
+bool JoltPhysicsDirectSpaceState3D::_body_motion_cast(const JoltBody3D &p_body, const Transform3D &p_transform, const Vector3 &p_scale, const Vector3 &p_motion, bool p_collide_separation_ray, const AHashSet<RID> &p_excluded_bodies, const AHashSet<ObjectID> &p_excluded_objects, real_t &r_safe_fraction, real_t &r_unsafe_fraction) const {
 	const Transform3D body_transform = p_transform.scaled_local(p_scale);
 
 	const JPH::CollideShapeSettings settings;
@@ -299,7 +299,7 @@ bool JoltPhysicsDirectSpaceState3D::_body_motion_cast(const JoltBody3D &p_body, 
 	return collided;
 }
 
-bool JoltPhysicsDirectSpaceState3D::_body_motion_collide(const JoltBody3D &p_body, const Transform3D &p_transform, const Vector3 &p_motion, float p_margin, int p_max_collisions, const HashSet<RID> &p_excluded_bodies, const HashSet<ObjectID> &p_excluded_objects, PhysicsServer3D::MotionResult *p_result) const {
+bool JoltPhysicsDirectSpaceState3D::_body_motion_collide(const JoltBody3D &p_body, const Transform3D &p_transform, const Vector3 &p_motion, float p_margin, int p_max_collisions, const AHashSet<RID> &p_excluded_bodies, const AHashSet<ObjectID> &p_excluded_objects, PhysicsServer3D::MotionResult *p_result) const {
 	if (p_max_collisions == 0) {
 		return false;
 	}

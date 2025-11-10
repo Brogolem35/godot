@@ -33,6 +33,7 @@
 #include "core/object/gdvirtual.gen.inc"
 #include "core/object/ref_counted.h"
 #include "core/templates/a_hash_map.h"
+#include "core/templates/a_hash_set.h"
 
 /**
 	A* pathfinding algorithm.
@@ -111,7 +112,7 @@ class AStar3D : public RefCounted {
 	uint64_t pass = 1;
 
 	AHashMap<int64_t, Point *> points;
-	HashSet<Segment, Segment> segments;
+	AHashSet<Segment, Segment> segments;
 	Point *last_closest_point = nullptr;
 	bool neighbor_filter_enabled = false;
 

@@ -53,7 +53,7 @@ class JoltPhysicsServer3D final : public PhysicsServer3D {
 	mutable RID_PtrOwner<JoltShape3D, true> shape_owner;
 	mutable RID_PtrOwner<JoltJoint3D, true> joint_owner;
 
-	HashSet<JoltSpace3D *> active_spaces;
+	AHashSet<JoltSpace3D *> active_spaces;
 
 	JoltJobSystem *job_system = nullptr;
 

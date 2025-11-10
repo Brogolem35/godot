@@ -54,7 +54,7 @@ private:
 	Skeleton3D *godot_skeleton = nullptr;
 
 	// Set of unique bone names for the skeleton
-	HashSet<String> unique_names;
+	AHashSet<String> unique_names;
 
 	HashMap<int32_t, GLTFNodeIndex> godot_bone_node;
 

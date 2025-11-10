@@ -326,7 +326,7 @@ String ProjectSettingsEditor::_get_setting_name() const {
 }
 
 void ProjectSettingsEditor::_add_feature_overrides() {
-	HashSet<String> presets;
+	AHashSet<String> presets;
 
 	presets.insert("bptc");
 	presets.insert("s3tc");

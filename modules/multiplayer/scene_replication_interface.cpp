@@ -142,7 +142,7 @@ void SceneReplicationInterface::on_network_process() {
 	// Process syncs.
 	uint64_t usec = OS::get_singleton()->get_ticks_usec();
 	for (KeyValue<int, PeerInfo> &E : peers_info) {
-		const HashSet<ObjectID> to_sync = E.value.sync_nodes;
+		const AHashSet<ObjectID> to_sync = E.value.sync_nodes;
 		if (to_sync.is_empty()) {
 			continue; // Nothing to sync
 		}
@@ -386,7 +386,7 @@ Error SceneReplicationInterface::_update_spawn_visibility(int p_peer, const Obje
 	ERR_FAIL_NULL_V(spawner, ERR_BUG);
 	ERR_FAIL_COND_V(!_has_authority(spawner), ERR_BUG);
 	ERR_FAIL_COND_V(!tracked_nodes.has(p_oid), ERR_BUG);
-	const HashSet<ObjectID> synchronizers = tracked_nodes[p_oid].synchronizers;
+	const AHashSet<ObjectID> synchronizers = tracked_nodes[p_oid].synchronizers;
 	bool is_visible = true;
 	for (const ObjectID &sid : synchronizers) {
 		MultiplayerSynchronizer *sync = get_id_as<MultiplayerSynchronizer>(sid);
@@ -402,8 +402,8 @@ Error SceneReplicationInterface::_update_spawn_visibility(int p_peer, const Obje
 		is_visible = false;
 	}
 	// Spawn (and despawn) when needed.
-	HashSet<int> to_spawn;
-	HashSet<int> to_despawn;
+	AHashSet<int> to_spawn;
+	AHashSet<int> to_despawn;
 	if (p_peer) {
 		ERR_FAIL_COND_V(!peers_info.has(p_peer), ERR_INVALID_PARAMETER);
 		if (is_visible == peers_info[p_peer].spawn_nodes.has(p_oid)) {
@@ -490,7 +490,7 @@ Error SceneReplicationInterface::_make_spawn_packet(Node *p_node, MultiplayerSpa
 	// Prepare spawn state.
 	List<NodePath> state_props;
 	List<uint32_t> sync_ids;
-	const HashSet<ObjectID> synchronizers = tnode->synchronizers;
+	const AHashSet<ObjectID> synchronizers = tnode->synchronizers;
 	for (const ObjectID &sid : synchronizers) {
 		MultiplayerSynchronizer *sync = get_id_as<MultiplayerSynchronizer>(sid);
 		if (!_has_authority(sync)) {
@@ -706,7 +706,7 @@ MultiplayerSynchronizer *SceneReplicationInterface::_find_synchronizer(int p_pee
 	return sync;
 }
 
-void SceneReplicationInterface::_send_delta(int p_peer, const HashSet<ObjectID> &p_synchronizers, uint64_t p_usec, const HashMap<ObjectID, uint64_t> &p_last_watch_usecs) {
+void SceneReplicationInterface::_send_delta(int p_peer, const AHashSet<ObjectID> &p_synchronizers, uint64_t p_usec, const HashMap<ObjectID, uint64_t> &p_last_watch_usecs) {
 	MAKE_ROOM(/* header */ 1 + /* element */ 4 + 8 + 4 + delta_mtu);
 	uint8_t *ptr = packet_cache.ptrw();
 	ptr[0] = SceneMultiplayer::NETWORK_COMMAND_SYNC | (1 << SceneMultiplayer::CMD_FLAG_0_SHIFT);
@@ -798,7 +798,7 @@ Error SceneReplicationInterface::on_delta_receive(int p_from, const uint8_t *p_b
 	return OK;
 }
 
-void SceneReplicationInterface::_send_sync(int p_peer, const HashSet<ObjectID> &p_synchronizers, uint16_t p_sync_net_time, uint64_t p_usec) {
+void SceneReplicationInterface::_send_sync(int p_peer, const AHashSet<ObjectID> &p_synchronizers, uint16_t p_sync_net_time, uint64_t p_usec) {
 	MAKE_ROOM(/* header */ 3 + /* element */ 4 + 4 + sync_mtu);
 	uint8_t *ptr = packet_cache.ptrw();
 	ptr[0] = SceneMultiplayer::NETWORK_COMMAND_SYNC;

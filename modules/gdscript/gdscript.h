@@ -98,7 +98,7 @@ class GDScript : public Script {
 
 	// Members are just indices to the instantiated script.
 	HashMap<StringName, MemberInfo> member_indices; // Includes member info of all base GDScript classes.
-	HashSet<StringName> members; // Only members of the current class.
+	AHashSet<StringName> members; // Only members of the current class.
 
 	// Only static variables of the current class.
 	HashMap<StringName, MemberInfo> static_variables_indices;
@@ -154,7 +154,7 @@ private:
 	List<PropertyInfo> members_cache;
 	HashMap<StringName, Variant> member_default_values_cache;
 	Ref<GDScript> base_cache;
-	HashSet<ObjectID> inheriters_cache;
+	AHashSet<ObjectID> inheriters_cache;
 	bool source_changed_cache = false;
 	bool placeholder_fallback_enabled = false;
 	void _update_exports_values(HashMap<StringName, Variant> &values, List<PropertyInfo> &propnames);
@@ -199,7 +199,7 @@ private:
 	String _get_debug_path() const;
 
 #ifdef TOOLS_ENABLED
-	HashSet<PlaceHolderScriptInstance *> placeholders;
+	AHashSet<PlaceHolderScriptInstance *> placeholders;
 	//void _update_placeholder(PlaceHolderScriptInstance *p_placeholder);
 	virtual void _placeholder_erased(PlaceHolderScriptInstance *p_placeholder) override;
 	void _update_exports_down(bool p_base_exports_changed);
@@ -258,7 +258,7 @@ public:
 	String get_fully_qualified_name() const { return fully_qualified_name; }
 	const HashMap<StringName, Ref<GDScript>> &get_subclasses() const { return subclasses; }
 	const HashMap<StringName, Variant> &get_constants() const { return constants; }
-	const HashSet<StringName> &get_members() const { return members; }
+	const AHashSet<StringName> &get_members() const { return members; }
 	const GDScriptDataType &get_member_type(const StringName &p_member) const {
 		CRASH_COND(!member_indices.has(p_member));
 		return member_indices[p_member].data_type;
@@ -344,7 +344,7 @@ public:
 	}
 
 	virtual void get_constants(HashMap<StringName, Variant> *p_constants) override;
-	virtual void get_members(HashSet<StringName> *p_members) override;
+	virtual void get_members(AHashSet<StringName> *p_members) override;
 
 	virtual const Variant get_rpc_config() const override;
 
@@ -606,7 +606,7 @@ public:
 	virtual bool is_using_templates() override;
 	virtual Ref<Script> make_template(const String &p_template, const String &p_class_name, const String &p_base_class_name) const override;
 	virtual Vector<ScriptTemplate> get_built_in_templates(const StringName &p_object) override;
-	virtual bool validate(const String &p_script, const String &p_path = "", List<String> *r_functions = nullptr, List<ScriptLanguage::ScriptError> *r_errors = nullptr, List<ScriptLanguage::Warning> *r_warnings = nullptr, HashSet<int> *r_safe_lines = nullptr) const override;
+	virtual bool validate(const String &p_script, const String &p_path = "", List<String> *r_functions = nullptr, List<ScriptLanguage::ScriptError> *r_errors = nullptr, List<ScriptLanguage::Warning> *r_warnings = nullptr, AHashSet<int> *r_safe_lines = nullptr) const override;
 	virtual Script *create_script() const override;
 	virtual bool supports_builtin_mode() const override;
 	virtual bool supports_documentation() const override;
@@ -681,7 +681,7 @@ public:
 	virtual bool handles_type(const String &p_type) const override;
 	virtual String get_resource_type(const String &p_path) const override;
 	virtual void get_dependencies(const String &p_path, List<String> *p_dependencies, bool p_add_types = false) override;
-	virtual void get_classes_used(const String &p_path, HashSet<StringName> *r_classes) override;
+	virtual void get_classes_used(const String &p_path, AHashSet<StringName> *r_classes) override;
 };
 
 class ResourceFormatSaverGDScript : public ResourceFormatSaver {

@@ -48,7 +48,7 @@ private:
 		uint32_t net_id = 0;
 		uint32_t remote_peer = 0;
 		ObjectID spawner;
-		HashSet<ObjectID> synchronizers;
+		AHashSet<ObjectID> synchronizers;
 
 		bool operator==(const ObjectID &p_other) { return id == p_other; }
 
@@ -61,8 +61,8 @@ private:
 	};
 
 	struct PeerInfo {
-		HashSet<ObjectID> sync_nodes;
-		HashSet<ObjectID> spawn_nodes;
+		AHashSet<ObjectID> sync_nodes;
+		AHashSet<ObjectID> spawn_nodes;
 		HashMap<ObjectID, uint64_t> last_watch_usecs;
 		HashMap<uint32_t, ObjectID> recv_sync_ids;
 		HashMap<uint32_t, ObjectID> recv_nodes;
@@ -74,10 +74,10 @@ private:
 	uint32_t last_net_id = 0;
 	HashMap<ObjectID, TrackedNode> tracked_nodes;
 	RBSet<ObjectID> spawned_nodes;
-	HashSet<ObjectID> sync_nodes;
+	AHashSet<ObjectID> sync_nodes;
 
 	// Pending local spawn information (handles spawning nested nodes during ready).
-	HashSet<ObjectID> spawn_queue;
+	AHashSet<ObjectID> spawn_queue;
 
 	// Pending remote spawn information.
 	ObjectID pending_spawn;
@@ -101,8 +101,8 @@ private:
 	bool _verify_synchronizer(int p_peer, MultiplayerSynchronizer *p_sync, uint32_t &r_net_id);
 	MultiplayerSynchronizer *_find_synchronizer(int p_peer, uint32_t p_net_ida);
 
-	void _send_sync(int p_peer, const HashSet<ObjectID> &p_synchronizers, uint16_t p_sync_net_time, uint64_t p_usec);
-	void _send_delta(int p_peer, const HashSet<ObjectID> &p_synchronizers, uint64_t p_usec, const HashMap<ObjectID, uint64_t> &p_last_watch_usecs);
+	void _send_sync(int p_peer, const AHashSet<ObjectID> &p_synchronizers, uint16_t p_sync_net_time, uint64_t p_usec);
+	void _send_delta(int p_peer, const AHashSet<ObjectID> &p_synchronizers, uint64_t p_usec, const HashMap<ObjectID, uint64_t> &p_last_watch_usecs);
 	Error _make_spawn_packet(Node *p_node, MultiplayerSpawner *p_spawner, int &r_len);
 	Error _make_despawn_packet(Node *p_node, int &r_len);
 	Error _send_raw(const uint8_t *p_buffer, int p_size, int p_peer, bool p_reliable);

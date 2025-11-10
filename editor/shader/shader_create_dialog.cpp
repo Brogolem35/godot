@@ -468,7 +468,7 @@ String ShaderCreateDialog::_validate_path(const String &p_path) {
 
 	const ShaderCreateDialog::ShaderTypeData &current_type_data = type_data.get(current_type);
 	const String file_extension = stripped_file_path.get_extension();
-	HashSet<String> extensions;
+	AHashSet<String> extensions;
 
 	List<ShaderCreateDialog::ShaderTypeData>::ConstIterator itr = type_data.begin();
 	for (int i = 0; i < SHADER_TYPE_MAX; ++itr, ++i) {

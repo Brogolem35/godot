@@ -84,7 +84,7 @@ void NavigationRegion3DEditor::_bake_pressed() {
 		return;
 	}
 
-	HashSet<Ref<NavigationMesh>> unique_navmeshes;
+	AHashSet<Ref<NavigationMesh>> unique_navmeshes;
 	regions_to_bake.clear();
 	regions_with_navmesh_to_bake.clear();
 

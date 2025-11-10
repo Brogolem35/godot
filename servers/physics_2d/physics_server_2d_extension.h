@@ -125,7 +125,7 @@ GDVIRTUAL_NATIVE_PTR(PhysicsServer2DExtensionShapeRestInfo)
 class PhysicsDirectSpaceState2DExtension : public PhysicsDirectSpaceState2D {
 	GDCLASS(PhysicsDirectSpaceState2DExtension, PhysicsDirectSpaceState2D);
 
-	thread_local static const HashSet<RID> *exclude;
+	thread_local static const AHashSet<RID> *exclude;
 
 protected:
 	static void _bind_methods();
@@ -392,8 +392,8 @@ public:
 
 	GDVIRTUAL7RC_REQUIRED(bool, _body_test_motion, RID, const Transform2D &, const Vector2 &, real_t, bool, bool, GDExtensionPtr<PhysicsServer2DExtensionMotionResult>)
 
-	thread_local static const HashSet<RID> *exclude_bodies;
-	thread_local static const HashSet<ObjectID> *exclude_objects;
+	thread_local static const AHashSet<RID> *exclude_bodies;
+	thread_local static const AHashSet<ObjectID> *exclude_objects;
 
 	bool body_test_motion_is_excluding_body(RID p_body) const;
 	bool body_test_motion_is_excluding_object(ObjectID p_object) const;

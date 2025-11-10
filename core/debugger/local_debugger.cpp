@@ -242,14 +242,14 @@ void LocalDebugger::debug(bool p_can_continue, bool p_is_error_breakpoint) {
 
 		} else if (line.begins_with("br") || line.begins_with("break")) {
 			if (line.get_slice_count(" ") <= 1) {
-				const HashMap<int, HashSet<StringName>> &breakpoints = script_debugger->get_breakpoints();
+				const HashMap<int, AHashSet<StringName>> &breakpoints = script_debugger->get_breakpoints();
 				if (breakpoints.is_empty()) {
 					print_line("No Breakpoints.");
 					continue;
 				}
 
 				print_line("Breakpoint(s): " + itos(breakpoints.size()));
-				for (const KeyValue<int, HashSet<StringName>> &E : breakpoints) {
+				for (const KeyValue<int, AHashSet<StringName>> &E : breakpoints) {
 					print_line("\t" + String(*E.value.begin()) + ":" + itos(E.key));
 				}
 

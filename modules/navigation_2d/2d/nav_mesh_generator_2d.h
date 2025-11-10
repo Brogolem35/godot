@@ -76,7 +76,7 @@ class NavMeshGenerator2D : public Object {
 
 	static void generator_thread_bake(void *p_arg);
 
-	static HashSet<Ref<NavigationPolygon>> baking_navmeshes;
+	static AHashSet<Ref<NavigationPolygon>> baking_navmeshes;
 
 	static void generator_parse_geometry_node(Ref<NavigationPolygon> p_navigation_mesh, Ref<NavigationMeshSourceGeometryData2D> p_source_geometry_data, Node *p_node, bool p_recurse_children);
 	static void generator_parse_source_geometry_data(Ref<NavigationPolygon> p_navigation_mesh, Ref<NavigationMeshSourceGeometryData2D> p_source_geometry_data, Node *p_root_node);

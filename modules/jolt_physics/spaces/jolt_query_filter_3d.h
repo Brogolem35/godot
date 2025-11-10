@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "core/templates/hash_set.h"
+#include "core/templates/a_hash_set.h"
 #include "core/templates/rid.h"
 
 #include "Jolt/Jolt.h"
@@ -48,14 +48,14 @@ class JoltQueryFilter3D final
 		  public JPH::ObjectLayerFilter,
 		  public JPH::BodyFilter {
 	const JoltSpace3D &space;
-	const HashSet<RID> &excluded;
+	const AHashSet<RID> &excluded;
 	uint32_t collision_mask = 0;
 	bool collide_with_bodies = false;
 	bool collide_with_areas = false;
 	bool picking = false;
 
 public:
-	JoltQueryFilter3D(const JoltPhysicsDirectSpaceState3D &p_space_state, uint32_t p_collision_mask, bool p_collide_with_bodies, bool p_collide_with_areas, const HashSet<RID> &p_excluded, bool p_picking = false);
+	JoltQueryFilter3D(const JoltPhysicsDirectSpaceState3D &p_space_state, uint32_t p_collision_mask, bool p_collide_with_bodies, bool p_collide_with_areas, const AHashSet<RID> &p_excluded, bool p_picking = false);
 
 	virtual bool ShouldCollide(JPH::BroadPhaseLayer p_broad_phase_layer) const override;
 	virtual bool ShouldCollide(JPH::ObjectLayer p_object_layer) const override;
