@@ -33,12 +33,20 @@
 #include "core/os/memory.h"
 #include "core/templates/hashfuncs.h"
 
-class String;
-class StringName;
-class Variant;
+struct RawAHashTableMetadata {
+	uint32_t hash;
+	uint32_t element_idx;
+};
+
+// Must be a power of two.
+static constexpr uint32_t RAHT_INITIAL_CAPACITY = 16;
+static constexpr uint32_t RAHT_EMPTY_HASH = 0;
+static_assert(RAHT_EMPTY_HASH == 0, "RAHT_EMPTY_HASH must always be 0 for the memcpy() optimization.");
 
 /**
- * An array-based implementation of a hash map. It is very efficient in terms of performance and
+ * The abstract class behind the AHashMap and AHashSet containers.
+ *
+ * An array-based implementation of a hash table. It is very efficient in terms of performance and
  * memory usage. Works like a dynamic array, adding elements to the end of the array, and
  * allows you to access array elements by their index by using `get_by_index` method.
  * Example:
@@ -54,7 +62,7 @@ class Variant;
  *		map.get_by_index(p_id).value;
  *  }
  * ```
- * Still, don`t erase the elements because ID can break.
+ * IDs are not stable as they can break in the case of a deletion.
  *
  * When an element erase, its place is taken by the element from the end.
  *
@@ -63,26 +71,9 @@ class Variant;
  *  6 8 X 9 32 -1 5 -10 7 X X X
  *  6 8 7 9 32 -1 5 -10 X X X X
  *
+ *	Element pointers are not stable as they can break in the case of a deletion or rehash.
  *
- * Use RBMap if you need to iterate over sorted elements.
- *
- * Use HashMap if:
- *   - You need to keep an iterator or const pointer to Key and you intend to add/remove elements in the meantime.
- *   - You need to preserve the insertion order when using erase.
- *
- * It is recommended to use `HashMap` if `KeyValue` size is very large.
  */
-
-struct RawAHashTableMetadata {
-	uint32_t hash;
-	uint32_t element_idx;
-};
-
-// Must be a power of two.
-static constexpr uint32_t RAHT_INITIAL_CAPACITY = 16;
-static constexpr uint32_t RAHT_EMPTY_HASH = 0;
-static_assert(RAHT_EMPTY_HASH == 0, "RAHT_EMPTY_HASH must always be 0 for the memcpy() optimization.");
-
 template <typename TKey,
 		typename Hasher,
 		typename Comparator>
@@ -105,7 +96,7 @@ protected:
 		return (p_meta_idx - original_idx + p_capacity + 1) & p_capacity;
 	}
 
-	_FORCE_INLINE_ virtual const TKey &_get_key(uint32_t idx) const = 0;
+	_FORCE_INLINE_ virtual const TKey &_get_key(uint32_t p_idx) const = 0;
 	_FORCE_INLINE_ virtual void _resize_elements(uint32_t p_new_capacity) = 0;
 	_FORCE_INLINE_ virtual bool _is_elements_valid() const = 0;
 
@@ -233,6 +224,5 @@ protected:
 	}
 
 public:
-
-	virtual ~RawAHashTable(){}
+	virtual ~RawAHashTable() {}
 };

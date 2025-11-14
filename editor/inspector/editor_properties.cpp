@@ -32,6 +32,7 @@
 
 #include "core/config/project_settings.h"
 #include "core/input/input_map.h"
+#include "core/string/translation_server.h"
 #include "editor/docks/inspector_dock.h"
 #include "editor/docks/scene_tree_dock.h"
 #include "editor/editor_node.h"
@@ -870,6 +871,10 @@ void EditorPropertyEnum::set_option_button_clip(bool p_enable) {
 	options->set_clip_text(p_enable);
 }
 
+OptionButton *EditorPropertyEnum::get_option_button() {
+	return options;
+}
+
 EditorPropertyEnum::EditorPropertyEnum() {
 	options = memnew(OptionButton);
 	options->set_clip_text(true);
@@ -1698,7 +1703,6 @@ void EditorPropertyEasing::_drag_easing(const Ref<InputEvent> &p_ev) {
 		val = CLAMP(val, -1'000'000, 1'000'000);
 
 		emit_changed(get_edited_property(), val);
-		easing_draw->queue_redraw();
 	}
 }
 
@@ -1746,10 +1750,15 @@ void EditorPropertyEasing::_draw_easing() {
 	} else {
 		decimals = 1;
 	}
-	f->draw_string(ci, Point2(10, 10 + f->get_ascent(font_size)), TS->format_number(rtos(exp).pad_decimals(decimals)), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_color);
+
+	const String &formatted = TranslationServer::get_singleton()->format_number(rtos(exp).pad_decimals(decimals), _get_locale());
+	f->draw_string(ci, Point2(10, 10 + f->get_ascent(font_size)), formatted, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, font_color);
 }
 
 void EditorPropertyEasing::update_property() {
+	float val = get_edited_property_value();
+	spin->set_value_no_signal(val);
+
 	easing_draw->queue_redraw();
 }
 
@@ -1757,22 +1766,15 @@ void EditorPropertyEasing::_set_preset(int p_preset) {
 	static const float preset_value[EASING_MAX] = { 0.0, 1.0, 2.0, 0.5, -2.0, -0.5 };
 
 	emit_changed(get_edited_property(), preset_value[p_preset]);
-	easing_draw->queue_redraw();
 }
 
 void EditorPropertyEasing::_setup_spin() {
 	spin->setup_and_show();
-	spin->get_line_edit()->set_text(TS->format_number(rtos(get_edited_property_value())));
+	spin->get_line_edit()->set_text(TranslationServer::get_singleton()->format_number(rtos(get_edited_property_value()), _get_locale()));
 	spin->show();
 }
 
 void EditorPropertyEasing::_spin_value_changed(double p_value) {
-	// 0 is a singularity, but both positive and negative values
-	// are otherwise allowed. Enforce 0+ as workaround.
-	if (Math::is_zero_approx(p_value)) {
-		p_value = 0.00001;
-	}
-
 	// Limit to a reasonable value to prevent the curve going into infinity,
 	// which can cause crashes and other issues.
 	p_value = CLAMP(p_value, -1'000'000, 1'000'000);
@@ -3019,7 +3021,7 @@ void EditorPropertyNodePath::drop_data_fw(const Point2 &p_point, const Variant &
 }
 
 bool EditorPropertyNodePath::is_drop_valid(const Dictionary &p_drag_data) const {
-	if (p_drag_data["type"] != "nodes") {
+	if (!p_drag_data.has("type") || p_drag_data["type"] != "nodes") {
 		return false;
 	}
 	Array nodes = p_drag_data["nodes"];
@@ -3087,7 +3089,7 @@ void EditorPropertyNodePath::update_property() {
 	}
 
 	assign->set_text(target_node->get_name());
-	assign->set_button_icon(EditorNode::get_singleton()->get_object_icon(target_node, "Node"));
+	assign->set_button_icon(EditorNode::get_singleton()->get_object_icon(target_node));
 }
 
 void EditorPropertyNodePath::setup(const Vector<StringName> &p_valid_types, bool p_use_path_from_scene_root, bool p_editing_node) {
@@ -3864,6 +3866,7 @@ EditorProperty *EditorInspectorDefaultPlugin::get_editor_for_property(Object *p_
 				Vector<String> options;
 				Vector<String> option_names;
 				if (p_hint_text.begins_with(";")) {
+					// This is not supported officially. Only for `interface/editor/editor_language`.
 					for (const String &option : p_hint_text.split(";", false)) {
 						options.append(option.get_slicec('/', 0));
 						option_names.append(option.get_slicec('/', 1));
