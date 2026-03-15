@@ -36,7 +36,7 @@ TEST_FORCE_LINK(test_ring_buffer)
 
 namespace TestRingBuffer {
 
-TEST_CASE("[RingBuffer] Buffer initialization") {
+TEST_CASE("[RingBuffer] Initialization") {
 	constexpr int RB_SIZE_POW = 4;
 	RingBuffer<int> rb = RB_SIZE_POW;
 
@@ -59,7 +59,7 @@ TEST_CASE("[RingBuffer] Buffer initialization") {
 	}
 }
 
-TEST_CASE("[RingBuffer] Buffer copy 1") {
+TEST_CASE("[RingBuffer] Clone 1") {
 	constexpr int RB_SIZE_POW = 4;
 	RingBuffer<int> rb1 = RB_SIZE_POW;
 	RingBuffer<int> rb2 = rb1;
@@ -91,7 +91,7 @@ TEST_CASE("[RingBuffer] Buffer copy 1") {
 	}
 }
 
-TEST_CASE("[RingBuffer] Buffer copy 2") {
+TEST_CASE("[RingBuffer] Clone 2") {
 	constexpr int RB_SIZE_POW = 4;
 	RingBuffer<int> rb1 = RB_SIZE_POW;
 
@@ -111,7 +111,7 @@ TEST_CASE("[RingBuffer] Buffer copy 2") {
 	}
 }
 
-TEST_CASE("[RingBuffer] Buffer copy 3") {
+TEST_CASE("[RingBuffer] Clone 3") {
 	constexpr int RB_SIZE_POW = 4;
 	RingBuffer<int> rb1 = RB_SIZE_POW;
 
@@ -125,22 +125,25 @@ TEST_CASE("[RingBuffer] Buffer copy 3") {
 	CHECK(rb1.space_left() < rb2.space_left());
 }
 
-TEST_CASE("[RingBuffer] Read to buffer 1") {
+TEST_CASE("[RingBuffer] Read 1") {
 	RingBuffer<int> rb1 = 2;
 	int buf[3] = {7, 7, 7};
 
-	for (int i = 0; i < 3; i++)
-		rb1.write(i);
+	// Looping to test wrapping
+	for (int _i = 0; _i < 4; _i++) {
+		for (int i = 0; i < 3; i++)
+			rb1.write(i);
 
-	int r = rb1.read(buf, 3);
-	CHECK(r == 3);
+		int r = rb1.read(buf, 3);
+		CHECK(r == 3);
 
-	for (int i = 0; i < 3; i++) {
-		CHECK(buf[i] == i);
+		for (int i = 0; i < 3; i++) {
+			CHECK(buf[i] == i);
+		}
 	}
 }
 
-TEST_CASE("[RingBuffer] Read to buffer 2") {
+TEST_CASE("[RingBuffer] Read 2") {
 	RingBuffer<int> rb1 = 2;
 	int buf1[3] = {7, 7, 7};
 	int buf2[3] = {7, 7, 7};
@@ -161,7 +164,20 @@ TEST_CASE("[RingBuffer] Read to buffer 2") {
 	}
 }
 
-TEST_CASE("[RingBuffer] Copy to buffer 1") {
+TEST_CASE("[RingBuffer] Write 1") {
+	RingBuffer<int> rb1 = 4;
+	int buf1[6] = {72, 48, 49, 93, 64, 74};
+
+	rb1.write(buf1, 6);
+	CHECK(rb1.data_left() == 6);
+	CHECK(rb1.space_left() == rb1.size() - 1 - rb1.data_left());
+
+	for (int i = 0; i < 6; i++) {
+		CHECK(rb1.read() == buf1[i]);
+	}
+}
+
+TEST_CASE("[RingBuffer] Copy 1") {
 	RingBuffer<int> rb1 = 2;
 	int buf[3] = {7, 7, 7};
 
@@ -176,7 +192,7 @@ TEST_CASE("[RingBuffer] Copy to buffer 1") {
 	}
 }
 
-TEST_CASE("[RingBuffer] Copy to buffer 2") {
+TEST_CASE("[RingBuffer] Copy 2") {
 	RingBuffer<int> rb1 = 4;
 	int buf[6] = {7, 7, 7, 7, 7, 7};
 
@@ -193,6 +209,94 @@ TEST_CASE("[RingBuffer] Copy to buffer 2") {
 	for (int i = 2; i < 6; i++) {
 		CHECK(buf[i] == 7);
 	}
+}
+
+TEST_CASE("[RingBuffer] Find 1") {
+	RingBuffer<int> rb1 = 4;
+
+	for (int i = 0; i < 6; i++)
+		rb1.write(i);
+
+	for (int i = 0; i < 6; i++) {
+		int r = rb1.find(i, 0 , 6);
+		CHECK(r == i);
+	}
+
+	int r = rb1.find(7, 0 , 6);
+	CHECK(r == -1);
+}
+
+TEST_CASE("[RingBuffer] Advance read") {
+	RingBuffer<int> rb1 = 4;
+
+	for (int i = 0; i < 9; i++) {
+		for (int ii = 0; ii < 8; ii++)
+			rb1.write(ii);
+
+		int len = rb1.data_left();
+		int r = rb1.advance_read(i);
+		CHECK(r == MIN(len, i));
+		CHECK(rb1.data_left() == MAX(len - i, 0));
+
+		for (int ii = i; ii < 8; ii++) {
+			CHECK(rb1.read() == ii);
+		}
+	}
+}
+
+TEST_CASE("[RingBuffer] Decrease write") {
+	RingBuffer<int> rb1 = 4;
+
+	for (int i = 0; i < 9; i++) {
+		for (int ii = 0; ii < 8; ii++)
+			rb1.write(ii);
+
+		int len = rb1.data_left();
+		int r = rb1.decrease_write(i);
+		CHECK(r == MIN(len, i));
+		CHECK(rb1.data_left() == MAX(len - i, 0));
+
+		for (int ii = 0; ii < 8 - i; ii++) {
+			CHECK(rb1.read() == ii);
+		}
+	}
+}
+
+TEST_CASE("[RingBuffer] Resize 1") {
+	RingBuffer<int> rb1 = 2;
+	CHECK(rb1.size() == 1 << 2);
+	CHECK(rb1.space_left() == rb1.size() - 1);
+
+	rb1.resize(5);
+	CHECK(rb1.size() == 1 << 5);
+	CHECK(rb1.space_left() == rb1.size() - 1);
+
+	rb1.resize(1);
+	CHECK(rb1.size() == 1 << 1);
+	CHECK(rb1.space_left() == rb1.size() - 1);
+}
+
+TEST_CASE("[RingBuffer] Resize 2") {
+	RingBuffer<int> rb1 = 4;
+	CHECK(rb1.size() == 1 << 4);
+	CHECK(rb1.data_left() == 0);
+	CHECK(rb1.space_left() == (1 << 4) - 1);
+
+	for (int i = 0; i < rb1.size() - 1; i++) {
+		rb1.write(i);
+	}
+	CHECK(rb1.data_left() == (1 << 4) - 1);
+	CHECK(rb1.space_left() == 0);
+
+	rb1.resize(5);
+	CHECK(rb1.size() == 1 << 5);
+	CHECK(rb1.data_left() == (1 << 4) - 1);
+	CHECK(rb1.space_left() == ((1 << 5) - 1) - ((1 << 4) - 1));
+
+	rb1.resize(1);
+	CHECK(rb1.size() == 1 << 1);
+	CHECK(rb1.data_left() == (1 << 1) - 1);
+	CHECK(rb1.space_left() == 0);
 }
 
 } //namespace TestRingBuffer
