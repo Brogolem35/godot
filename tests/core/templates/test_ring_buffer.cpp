@@ -127,12 +127,13 @@ TEST_CASE("[RingBuffer] Clone 3") {
 
 TEST_CASE("[RingBuffer] Read 1") {
 	RingBuffer<int> rb1 = 2;
-	int buf[3] = {7, 7, 7};
+	int buf[3] = { 7, 7, 7 };
 
 	// Looping to test wrapping
 	for (int _i = 0; _i < 4; _i++) {
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++) {
 			rb1.write(i);
+		}
 
 		int r = rb1.read(buf, 3);
 		CHECK(r == 3);
@@ -145,11 +146,12 @@ TEST_CASE("[RingBuffer] Read 1") {
 
 TEST_CASE("[RingBuffer] Read 2") {
 	RingBuffer<int> rb1 = 2;
-	int buf1[3] = {7, 7, 7};
-	int buf2[3] = {7, 7, 7};
+	int buf1[3] = { 7, 7, 7 };
+	int buf2[3] = { 7, 7, 7 };
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++) {
 		rb1.write(i);
+	}
 
 	int r1 = rb1.read(buf1, 3, false);
 	CHECK(r1 == 3);
@@ -166,7 +168,7 @@ TEST_CASE("[RingBuffer] Read 2") {
 
 TEST_CASE("[RingBuffer] Write 1") {
 	RingBuffer<int> rb1 = 4;
-	int buf1[6] = {72, 48, 49, 93, 64, 74};
+	int buf1[6] = { 72, 48, 49, 93, 64, 74 };
 
 	rb1.write(buf1, 6);
 	CHECK(rb1.data_left() == 6);
@@ -179,10 +181,11 @@ TEST_CASE("[RingBuffer] Write 1") {
 
 TEST_CASE("[RingBuffer] Copy 1") {
 	RingBuffer<int> rb1 = 2;
-	int buf[3] = {7, 7, 7};
+	int buf[3] = { 7, 7, 7 };
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++) {
 		rb1.write(i);
+	}
 
 	int r = rb1.copy(buf, 0, 3);
 	CHECK(r == 3);
@@ -194,10 +197,11 @@ TEST_CASE("[RingBuffer] Copy 1") {
 
 TEST_CASE("[RingBuffer] Copy 2") {
 	RingBuffer<int> rb1 = 4;
-	int buf[6] = {7, 7, 7, 7, 7, 7};
+	int buf[6] = { 7, 7, 7, 7, 7, 7 };
 
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++) {
 		rb1.write(i);
+	}
 
 	int r = rb1.copy(buf, 4, 6);
 	CHECK(r == 2);
@@ -214,15 +218,16 @@ TEST_CASE("[RingBuffer] Copy 2") {
 TEST_CASE("[RingBuffer] Find 1") {
 	RingBuffer<int> rb1 = 4;
 
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++) {
 		rb1.write(i);
+	}
 
 	for (int i = 0; i < 6; i++) {
-		int r = rb1.find(i, 0 , 6);
+		int r = rb1.find(i, 0, 6);
 		CHECK(r == i);
 	}
 
-	int r = rb1.find(7, 0 , 6);
+	int r = rb1.find(7, 0, 6);
 	CHECK(r == -1);
 }
 
@@ -230,8 +235,9 @@ TEST_CASE("[RingBuffer] Advance read") {
 	RingBuffer<int> rb1 = 4;
 
 	for (int i = 0; i < 9; i++) {
-		for (int ii = 0; ii < 8; ii++)
+		for (int ii = 0; ii < 8; ii++) {
 			rb1.write(ii);
+		}
 
 		int len = rb1.data_left();
 		int r = rb1.advance_read(i);
@@ -248,8 +254,9 @@ TEST_CASE("[RingBuffer] Decrease write") {
 	RingBuffer<int> rb1 = 4;
 
 	for (int i = 0; i < 9; i++) {
-		for (int ii = 0; ii < 8; ii++)
+		for (int ii = 0; ii < 8; ii++) {
 			rb1.write(ii);
+		}
 
 		int len = rb1.data_left();
 		int r = rb1.decrease_write(i);
