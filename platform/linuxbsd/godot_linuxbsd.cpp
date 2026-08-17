@@ -28,18 +28,21 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
+#ifdef _WIN32
+#include <intrin.h>
+#else
+#include <x86intrin.h>
+#endif
+
+
 #include "os_linuxbsd.h"
 
-#include "core/profiling/profiling.h"
-#include "main/main.h"
+#include "core/templates/hash_set.h"
 
-#include <unistd.h>
+#include <iostream>
+#include <ostream>
 
-#include <clocale>
-#include <cstdio>
-#include <cstdlib>
-
-#if defined(ASAN_ENABLED)
+#if defined(SANITIZERS_ENABLED)
 #include <sys/resource.h>
 #endif
 
@@ -67,6 +70,14 @@ extern "C" const char *pck_section_dummy_call() {
 }
 #endif
 
+unsigned int _IA32_TSC_AUX;
+volatile int32_t big_arr[1024 * 1024 * 8] = { 0 };
+volatile int32_t big_arr2[1024 * 1024 * 8] = { 1 };
+[[gnu::noipa]]
+__attribute__((noinline)) void cache_flush() {
+	memcpy((void *)big_arr, (void *)big_arr2, sizeof(big_arr));
+}
+
 int main(int argc, char *argv[]) {
 #if defined(__x86_64) || defined(__x86_64__)
 	int cpuinfo[4];
@@ -89,49 +100,639 @@ int main(int argc, char *argv[]) {
 	}
 #endif
 
-#if defined(ASAN_ENABLED)
+#if defined(SANITIZERS_ENABLED)
 	// Note: Set stack size to be at least 30 MB (vs 8 MB default) to avoid overflow, address sanitizer can increase stack usage up to 3 times.
 	struct rlimit stack_lim = { 0x1E00000, 0x1E00000 };
 	setrlimit(RLIMIT_STACK, &stack_lim);
 #endif
+	constexpr int run_len = 20000;
+	volatile size_t volatile_size_t = 0;
 
-	godot_init_profiler();
+	for (const int size : { 1, 2, 8, 64, 1024, 4096, 20000 }) {
+		// HashSet<Variant>
+		std::cout << "HashSet<Variant>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<Variant> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
+				}
+			}
 
-	OS_LinuxBSD os;
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns << "\n";
 
-	setlocale(LC_CTYPE, "");
-
-	// We must override main when testing is enabled
-	TEST_MAIN_OVERRIDE
-
-	char *cwd = (char *)malloc(PATH_MAX);
-	ERR_FAIL_NULL_V(cwd, ERR_OUT_OF_MEMORY);
-	char *ret = getcwd(cwd, PATH_MAX);
-
-	Error err = Main::setup(argv[0], argc - 1, &argv[1]);
-
-	if (err != OK) {
-		free(cwd);
-		if (err == ERR_HELP) { // Returned by --help and --version, so success.
-			return EXIT_SUCCESS;
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 << "\n";
 		}
-		return EXIT_FAILURE;
-	}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<Variant> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+			}
 
-	if (Main::start() == EXIT_SUCCESS) {
-		os.run();
-	} else {
-		os.set_exit_code(EXIT_FAILURE);
-	}
-	Main::cleanup();
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<Variant> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
 
-	if (ret) { // Previous getcwd was successful
-		if (chdir(cwd) != 0) {
-			ERR_PRINT("Couldn't return to previous working directory.");
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+
+		// HashSet<int32_t>
+		std::cout << "HashSet<int32_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
+				}
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns << "\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+
+		// HashSet<int16_t>
+		std::cout << "HashSet<int16_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
+				}
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns << "\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+
+		// HashSet<int64_t>
+		std::cout << "HashSet<int64_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
+				}
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns << "\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns << "\n";
 		}
 	}
-	free(cwd);
 
-	godot_cleanup_profiler();
-	return os.get_exit_code();
+	for (const int size : { 1, 2, 8, 64, 1024, 4096, 20000 }) {
+		// HashSet<Variant>
+		std::cout << "HashSet<Variant>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<Variant> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
+				}
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns << "\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<Variant> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<Variant> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+
+		// HashSet<int32_t>
+		std::cout << "HashSet<int32_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
+				}
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns << "\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int32_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+
+		// HashSet<int16_t>
+		std::cout << "HashSet<int16_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
+				}
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns << "\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int16_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+
+		// HashSet<int64_t>
+		std::cout << "HashSet<int64_t>" << size << std::endl;
+		{
+			size_t time_ns = 0;
+			size_t time_ns1 = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					set.insert(idx);
+					auto t2 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns1 += t2 - t1;
+				}
+			}
+
+			std::cout << "insert:" << size << std::endl;
+			std::cout << time_ns << "\n";
+
+			std::cout << "insert existing:" << size << std::endl;
+			std::cout << time_ns1 << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					set.erase(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+			}
+
+			std::cout << "erase:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+		{
+			size_t time_ns = 0;
+			for (int run = 0; run < run_len / size; run++) {
+				HashSet<int64_t> set;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					set.insert(idx);
+				}
+				size_t total = 0;
+				for (int idx = 0; idx < size; idx++) {
+					// Test
+					cache_flush();
+					auto t0 = __rdtscp(&_IA32_TSC_AUX);
+					total += set.has(idx);
+					auto t1 = __rdtscp(&_IA32_TSC_AUX);
+					time_ns += t1 - t0;
+				}
+
+				// Prevent compiling this out.
+				volatile_size_t = total;
+			}
+
+			std::cout << "get:" << size << std::endl;
+			std::cout << time_ns << "\n";
+		}
+	}
 }
