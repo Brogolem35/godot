@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
 
 	for (const int size : { 1, 2, 8, 64, 1024, 4096, 20000 }) {
 		// HashSet<Variant>
-		std::cout << "HashSet<Variant>" << size << std::endl;
+		std::cout << "AHashSet<Variant>" << size << std::endl;
 		{
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
@@ -188,7 +188,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// HashSet<int32_t>
-		std::cout << "HashSet<int32_t>" << size << std::endl;
+		std::cout << "AHashSet<int32_t>" << size << std::endl;
 		{
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
@@ -266,7 +266,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// HashSet<int16_t>
-		std::cout << "HashSet<int16_t>" << size << std::endl;
+		std::cout << "AHashSet<int16_t>" << size << std::endl;
 		{
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
@@ -344,7 +344,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// HashSet<int64_t>
-		std::cout << "HashSet<int64_t>" << size << std::endl;
+		std::cout << "AHashSet<int64_t>" << size << std::endl;
 		{
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
@@ -424,7 +424,7 @@ int main(int argc, char *argv[]) {
 
 	for (const int size : { 1, 2, 8, 64, 1024, 4096, 20000 }) {
 		// HashSet<Variant>
-		std::cout << "HashSet<Variant>" << size << std::endl;
+		std::cout << "AHashSet<Variant>" << size << std::endl;
 		{
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
@@ -502,7 +502,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// HashSet<int32_t>
-		std::cout << "HashSet<int32_t>" << size << std::endl;
+		std::cout << "AHashSet<int32_t>" << size << std::endl;
 		{
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
@@ -580,7 +580,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// HashSet<int16_t>
-		std::cout << "HashSet<int16_t>" << size << std::endl;
+		std::cout << "AHashSet<int16_t>" << size << std::endl;
 		{
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
@@ -658,7 +658,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// HashSet<int64_t>
-		std::cout << "HashSet<int64_t>" << size << std::endl;
+		std::cout << "AHashSet<int64_t>" << size << std::endl;
 		{
 			size_t time_ns = 0;
 			size_t time_ns1 = 0;
