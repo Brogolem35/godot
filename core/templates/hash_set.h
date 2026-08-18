@@ -101,16 +101,19 @@ public:
 			return _inner.operator bool();
 		}
 
-		_FORCE_INLINE_ void operator=(const Iterator &p_it) {
-			_inner = p_it._inner;
-		}
+		_FORCE_INLINE_ Iterator() {}
 		_FORCE_INLINE_ Iterator(typename InnerTable::ConstIterator p_inner) {
 			_inner = p_inner;
+		}
+		_FORCE_INLINE_ Iterator(const Iterator &p_it) {
+			_inner = p_it._inner;
+		}
+		_FORCE_INLINE_ void operator=(const Iterator &p_it) {
+			_inner = p_it._inner;
 		}
 
 	private:
 		typename InnerTable::ConstIterator _inner;
-
 	};
 
 	_FORCE_INLINE_ Iterator begin() const _LIFETIME_BOUND_ {
@@ -136,7 +139,7 @@ public:
 	/* Insert */
 
 	Iterator insert(const TKey &p_key) _LIFETIME_BOUND_ {
-		return Iterator(_inner.insert(p_key, EmptyValue {}));
+		return Iterator(_inner.insert(p_key, EmptyValue{}));
 	}
 
 	/* Constructors */

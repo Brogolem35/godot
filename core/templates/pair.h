@@ -100,7 +100,5 @@ struct KeyValueSort {
 template <typename K, typename V>
 struct is_zero_constructible<KeyValue<K, V>> : std::conjunction<is_zero_constructible<K>, is_zero_constructible<V>> {};
 
+// Used for the TValue part of the Set type containers.
 struct EmptyValue {};
-
-template <typename K>
-using SetKey = KeyValue<K, EmptyValue> ;
