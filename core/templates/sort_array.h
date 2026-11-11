@@ -88,19 +88,19 @@ public:
 	inline void push_heap(int64_t p_first, int64_t p_hole_idx, int64_t p_top_index, T p_value, T *p_array) const {
 		int64_t parent = (p_hole_idx - 1) / 2;
 		while (p_hole_idx > p_top_index && compare(p_array[p_first + parent], p_value)) {
-			p_array[p_first + p_hole_idx] = p_array[p_first + parent];
+			p_array[p_first + p_hole_idx] = std::move(p_array[p_first + parent]);
 			p_hole_idx = parent;
 			parent = (p_hole_idx - 1) / 2;
 		}
-		p_array[p_first + p_hole_idx] = p_value;
+		p_array[p_first + p_hole_idx] = std::move(p_value);
 	}
 
 	inline void pop_heap(int64_t p_first, int64_t p_last, int64_t p_result, T p_value, T *p_array) const {
-		p_array[p_result] = p_array[p_first];
-		adjust_heap(p_first, 0, p_last - p_first, p_value, p_array);
+		p_array[p_result] = std::move(p_array[p_first]);
+		adjust_heap(p_first, 0, p_last - p_first, std::move(p_value), p_array);
 	}
 	inline void pop_heap(int64_t p_first, int64_t p_last, T *p_array) const {
-		pop_heap(p_first, p_last - 1, p_last - 1, p_array[p_last - 1], p_array);
+		pop_heap(p_first, p_last - 1, p_last - 1, std::move(p_array[p_last - 1]), p_array);
 	}
 
 	inline void adjust_heap(int64_t p_first, int64_t p_hole_idx, int64_t p_len, T p_value, T *p_array) const {
@@ -112,16 +112,16 @@ public:
 				second_child--;
 			}
 
-			p_array[p_first + p_hole_idx] = p_array[p_first + second_child];
+			p_array[p_first + p_hole_idx] = std::move(p_array[p_first + second_child]);
 			p_hole_idx = second_child;
 			second_child = 2 * (second_child + 1);
 		}
 
 		if (second_child == p_len) {
-			p_array[p_first + p_hole_idx] = p_array[p_first + (second_child - 1)];
+			p_array[p_first + p_hole_idx] = std::move(p_array[p_first + (second_child - 1)]);
 			p_hole_idx = second_child - 1;
 		}
-		push_heap(p_first, p_hole_idx, top_index, p_value, p_array);
+		push_heap(p_first, p_hole_idx, top_index, std::move(p_value), p_array);
 	}
 
 	inline void sort_heap(int64_t p_first, int64_t p_last, T *p_array) const {
@@ -131,14 +131,14 @@ public:
 	}
 
 	inline void make_heap(int64_t p_first, int64_t p_last, T *p_array) const {
-		if (p_last - p_first < 2) {
+		int64_t len = p_last - p_first;
+		if (len < 2) {
 			return;
 		}
-		int64_t len = p_last - p_first;
 		int64_t parent = (len - 2) / 2;
 
 		while (true) {
-			adjust_heap(p_first, parent, len, p_array[p_first + parent], p_array);
+			adjust_heap(p_first, parent, len, std::move(p_array[p_first + parent]), p_array);
 			if (parent == 0) {
 				return;
 			}
@@ -150,7 +150,7 @@ public:
 		make_heap(p_first, p_middle, p_array);
 		for (int64_t i = p_middle; i < p_last; i++) {
 			if (compare(p_array[i], p_array[p_first])) {
-				pop_heap(p_first, p_middle, i, p_array[i], p_array);
+				pop_heap(p_first, p_middle, i, std::move(p_array[i]), p_array);
 			}
 		}
 		sort_heap(p_first, p_middle, p_array);
@@ -160,7 +160,7 @@ public:
 		make_heap(p_first, p_middle, p_array);
 		for (int64_t i = p_middle; i < p_last; i++) {
 			if (compare(p_array[i], p_array[p_first])) {
-				pop_heap(p_first, p_middle, i, p_array[i], p_array);
+				pop_heap(p_first, p_middle, i, std::move(p_array[i]), p_array);
 			}
 		}
 	}
